@@ -1,10 +1,11 @@
 // ============================================================
-// FFS - MAP RENDERER v0.1
-// Lightweight prototype renderer.
+// FFS - MAP RENDERER v0.2
+// Lightweight isometric world renderer.
 // ============================================================
 
 
 export class MapRenderer {
+
 
     constructor(containerId) {
 
@@ -20,6 +21,18 @@ export class MapRenderer {
                 `[MapRenderer] Container "${containerId}" not found.`
             );
         }
+
+
+        this.tileWidth =
+            72;
+
+
+        this.tileHeight =
+            36;
+
+
+        this.mapScale =
+            1;
     }
 
 
@@ -43,180 +56,53 @@ export class MapRenderer {
 
 
         const mapRoot =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         mapRoot.className =
-            "ffs-map";
+            "ffs-map-v02";
 
 
         // ----------------------------------------------------
-        // CITY
+        // TERRAIN
         // ----------------------------------------------------
 
-        const city =
-            map.cities?.[0];
-
-
-        if (city) {
-
-            const cityElement =
-                document.createElement("div");
-
-
-            cityElement.className =
-                "map-city";
-
-
-            cityElement.textContent =
-                city.name;
-
-
-            mapRoot.appendChild(
-                cityElement
-            );
-        }
-
-
-        // ----------------------------------------------------
-        // PARK
-        // ----------------------------------------------------
-
-        const park =
-            map.buildings?.find(
-                building =>
-                    building.type === "park"
-            );
-
-
-        if (park) {
-
-            const parkElement =
-                document.createElement("div");
-
-
-            parkElement.className =
-                "map-object map-park";
-
-
-            parkElement.innerHTML =
-                `
-                    <div class="object-icon">🌳</div>
-                    <div class="object-label">
-                        ${park.name}
-                    </div>
-                `;
-
-
-            mapRoot.appendChild(
-                parkElement
-            );
-        }
-
-
-        // ----------------------------------------------------
-        // HOUSE
-        // ----------------------------------------------------
-
-        const house =
-            map.buildings?.find(
-                building =>
-                    building.type === "house"
-            );
-
-
-        if (house) {
-
-            const houseElement =
-                document.createElement("div");
-
-
-            houseElement.className =
-                "map-object map-house";
-
-
-            houseElement.innerHTML =
-                `
-                    <div class="object-icon">🏠</div>
-                    <div class="object-label">
-                        ${house.name}
-                    </div>
-                `;
-
-
-            mapRoot.appendChild(
-                houseElement
-            );
-        }
-
-
-        // ----------------------------------------------------
-        // SHOP
-        // ----------------------------------------------------
-
-        const shop =
-            map.buildings?.find(
-                building =>
-                    building.type === "shop"
-            );
-
-
-        if (shop) {
-
-            const shopElement =
-                document.createElement("div");
-
-
-            shopElement.className =
-                "map-object map-shop";
-
-
-            shopElement.innerHTML =
-                `
-                    <div class="object-icon">🏪</div>
-                    <div class="object-label">
-                        ${shop.name}
-                    </div>
-                `;
-
-
-            mapRoot.appendChild(
-                shopElement
-            );
-        }
+        this.renderTerrain(
+            mapRoot,
+            map
+        );
 
 
         // ----------------------------------------------------
         // ROAD
         // ----------------------------------------------------
 
-        const road =
-            map.roads?.[0];
+        this.renderRoads(
+            mapRoot,
+            map
+        );
 
 
-        if (road) {
+        // ----------------------------------------------------
+        // BUILDINGS
+        // ----------------------------------------------------
 
-            const roadElement =
-                document.createElement("div");
-
-
-            roadElement.className =
-                "map-road";
-
-
-            roadElement.innerHTML =
-                `
-                    <div class="road-line"></div>
-                    <div class="road-label">
-                        ${road.name}
-                    </div>
-                `;
+        this.renderBuildings(
+            mapRoot,
+            map
+        );
 
 
-            mapRoot.appendChild(
-                roadElement
-            );
-        }
+        // ----------------------------------------------------
+        // CITY LABEL
+        // ----------------------------------------------------
+
+        this.renderCityLabel(
+            mapRoot,
+            map
+        );
 
 
         this.container.appendChild(
@@ -225,7 +111,300 @@ export class MapRenderer {
 
 
         console.log(
-            "[MapRenderer] Map rendered."
+            "[MapRenderer] Map v0.2 rendered."
+        );
+    }
+
+
+    // ========================================================
+    // TERRAIN
+    // ========================================================
+
+    renderTerrain(
+        root,
+        map
+    ) {
+
+        const width =
+            map.terrain?.width
+            ?? 12;
+
+
+        const height =
+            map.terrain?.height
+            ?? 9;
+
+
+        const terrainLayer =
+            document.createElement(
+                "div"
+            );
+
+
+        terrainLayer.className =
+            "map-terrain-layer";
+
+
+        for (
+            let y = 0;
+            y < height;
+            y++
+        ) {
+
+            for (
+                let x = 0;
+                x < width;
+                x++
+            ) {
+
+                const tile =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                tile.className =
+                    "map-tile";
+
+
+                tile.style.left =
+                    `${x * this.tileWidth / 2}px`;
+
+
+                tile.style.top =
+                    `${y * this.tileHeight / 2}px`;
+
+
+                tile.style.transform =
+                    `
+                    translate(
+                        ${y * this.tileWidth / 2}px,
+                        ${x * this.tileHeight / 2}px
+                    )
+                    `;
+
+
+                tile.dataset.x =
+                    x;
+
+
+                tile.dataset.y =
+                    y;
+
+
+                terrainLayer.appendChild(
+                    tile
+                );
+            }
+        }
+
+
+        root.appendChild(
+            terrainLayer
+        );
+    }
+
+
+    // ========================================================
+    // ROAD
+    // ========================================================
+
+    renderRoads(
+        root,
+        map
+    ) {
+
+        const roads =
+            map.roads
+            ?? [];
+
+
+        roads.forEach(
+            road => {
+
+                const roadElement =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                roadElement.className =
+                    "map-road-v02";
+
+
+                const x =
+                    road.map?.x
+                    ?? 0;
+
+
+                const y =
+                    road.map?.y
+                    ?? 0;
+
+
+                const width =
+                    road.map?.width
+                    ?? 1;
+
+
+                roadElement.style.left =
+                    `${x * this.tileWidth / 2}px`;
+
+
+                roadElement.style.top =
+                    `${y * this.tileHeight / 2}px`;
+
+
+                roadElement.style.width =
+                    `${width * this.tileWidth}px`;
+
+
+                root.appendChild(
+                    roadElement
+                );
+            }
+        );
+    }
+
+
+    // ========================================================
+    // BUILDINGS
+    // ========================================================
+
+    renderBuildings(
+        root,
+        map
+    ) {
+
+        const buildings =
+            map.buildings
+            ?? [];
+
+
+        buildings.forEach(
+            building => {
+
+                const element =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                element.className =
+                    `map-building-v02 map-${building.type}`;
+
+
+                const x =
+                    building.map?.x
+                    ?? 0;
+
+
+                const y =
+                    building.map?.y
+                    ?? 0;
+
+
+                element.style.left =
+                    `${x * this.tileWidth / 2}px`;
+
+
+                element.style.top =
+                    `${y * this.tileHeight / 2}px`;
+
+
+                const icon =
+                    this.getBuildingIcon(
+                        building.type
+                    );
+
+
+                element.innerHTML =
+                    `
+                    <div class="building-icon">
+                        ${icon}
+                    </div>
+
+                    <div class="building-label">
+                        ${building.name}
+                    </div>
+                    `;
+
+
+                root.appendChild(
+                    element
+                );
+            }
+        );
+    }
+
+
+    // ========================================================
+    // BUILDING ICON
+    // ========================================================
+
+    getBuildingIcon(
+        type
+    ) {
+
+        switch (type) {
+
+            case "house":
+
+                return "🏠";
+
+
+            case "shop":
+
+                return "🏪";
+
+
+            case "park":
+
+                return "🌳";
+
+
+            default:
+
+                return "🏢";
+        }
+    }
+
+
+    // ========================================================
+    // CITY LABEL
+    // ========================================================
+
+    renderCityLabel(
+        root,
+        map
+    ) {
+
+        const city =
+            map.cities?.[0];
+
+
+        if (!city) {
+
+            return;
+        }
+
+
+        const label =
+            document.createElement(
+                "div"
+            );
+
+
+        label.className =
+            "map-city-label-v02";
+
+
+        label.textContent =
+            city.name;
+
+
+        root.appendChild(
+            label
         );
     }
 }

@@ -2,6 +2,7 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -11,49 +12,72 @@
 
     <meta
         name="description"
-        content="Founder Fantasy Simulator - A living world simulation built by Human and AI."
+        content="Founder Fantasy Simulator - Jurkon Studio"
     >
 
-    <title>Founder Fantasy Simulator</title>
+    <title>
+        Founder Fantasy Simulator
+    </title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <div id="app">
 
-        <!-- FFS Header -->
-        <header id="top-bar">
+    <!-- ======================================================
+         FFS APPLICATION
+         ====================================================== -->
 
-            <div id="brand">
+    <main id="ffs-app">
 
-                <div id="brand-name">
-                    FFS
+
+        <!-- ==================================================
+             HEADER
+             ================================================== -->
+
+        <header class="ffs-header">
+
+            <div class="ffs-brand">
+
+                <div
+                    id="app-title"
+                    class="ffs-title"
+                >
+                    Founder Fantasy Simulator
                 </div>
 
-                <div id="brand-title">
-                    Founder Fantasy Simulator
+                <div class="ffs-studio">
+                    Jurkon Studio
                 </div>
 
             </div>
 
 
-            <!-- Language Selection -->
-            <div id="language-selector">
+            <!-- ==============================================
+                 LANGUAGE
+                 ============================================== -->
+
+            <div class="ffs-language">
 
                 <button
                     id="language-id"
                     type="button"
                 >
-                    🇮🇩 Indonesia
+                    Indonesia
                 </button>
+
 
                 <button
                     id="language-en"
                     type="button"
                 >
-                    🇬🇧 English
+                    English
                 </button>
 
             </div>
@@ -61,47 +85,74 @@
         </header>
 
 
-        <!-- Time Information -->
-        <section id="time-panel">
 
-            <div class="time-box">
+        <!-- ==================================================
+             WORLD TIME
+             ================================================== -->
+
+        <section
+            class="ffs-time-panel"
+            aria-label="FFS World Time"
+        >
+
+
+            <!-- ==============================================
+                 REAL WORLD
+                 ============================================== -->
+
+            <div class="ffs-time-card">
 
                 <div
-                    class="time-label"
                     id="real-world-label"
+                    class="ffs-time-label"
                 >
                     DUNIA NYATA
                 </div>
 
+
                 <div
-                    class="time-value"
                     id="real-world-time"
+                    class="ffs-time-value"
                 >
-                    29 August 2026
+                    -
                 </div>
 
             </div>
 
 
-            <div class="time-divider">
+
+            <!-- ==============================================
+                 TIME ARROW
+                 ============================================== -->
+
+            <div
+                class="ffs-time-arrow"
+                aria-hidden="true"
+            >
                 →
             </div>
 
 
-            <div class="time-box">
+
+            <!-- ==============================================
+                 FFS WORLD
+                 ============================================== -->
+
+            <div class="ffs-time-card">
 
                 <div
-                    class="time-label"
                     id="ffs-world-label"
+                    class="ffs-time-label"
                 >
                     DUNIA FFS
                 </div>
 
+
                 <div
-                    class="time-value"
                     id="ffs-world-time"
+                    class="ffs-time-value"
                 >
-                    29 August 1996
+                    -
                 </div>
 
             </div>
@@ -109,61 +160,89 @@
         </section>
 
 
-        <!-- Game World -->
-        <main id="game-world">
 
-            <div id="world-placeholder">
+        <!-- ==================================================
+             WORLD INTRODUCTION
+             ================================================== -->
 
-                <div id="world-title">
-                    FFS WORLD
-                </div>
+        <section class="ffs-world-intro">
 
-                <div id="loading-message">
-                    Menyiapkan Dunia FFS...
-                </div>
+            <h1>
+                FFS WORLD
+            </h1>
 
-                <div id="world-description">
-                    World Engine akan dibangun pada tahap berikutnya.
-                </div>
 
+            <p>
+                Menyiapkan Dunia FFS...
+            </p>
+
+
+            <p
+                id="world-description"
+            >
+                World Engine akan dibangun
+                pada tahap berikutnya.
+            </p>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             MAP CONTAINER
+             ================================================== -->
+
+        <section
+            class="ffs-world-section"
+            aria-label="FFS World Map"
+        >
+
+            <div
+                id="ffs-map-container"
+            ></div>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             FOOTER
+             ================================================== -->
+
+        <footer class="ffs-footer">
+
+            <div>
+                Jurkon Studio
             </div>
 
-        </main>
-
-
-        <!-- Footer -->
-        <footer id="footer">
-
-            <span>
-                Jurkon Studio
-            </span>
-
-            <span>
+            <div>
                 Founder Fantasy Simulator
-            </span>
+            </div>
+
+            <div>
+                FFS
+            </div>
 
         </footer>
 
-    </div>
+
+    </main>
 
 
-    <!-- Language dictionaries -->
-    <script src="i18n/id.js"></script>
-    <script src="i18n/en.js"></script>
 
-    <!-- Main application -->
-    <script src="main.js"></script>
-    
+    <!-- ======================================================
+         FFS MAIN MODULE
+         
+         PENTING:
+         type="module" WAJIB
+         ====================================================== -->
+
+    <script
+        type="module"
+        src="./main.js"
+    ></script>
+
+
 </body>
 
-    <!-- UI FFS -->
-
-    <div id="ffs-map-container"></div>
-
-
-    <!-- MAIN APPLICATION -->
-    <script type="module" src="main.js"></script>
-
-</body>
-    
 </html>

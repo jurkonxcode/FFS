@@ -1,11 +1,11 @@
-
 // ============================================================
-// FFS - MAP ENGINE v0.1
-// Converts WorldState into a visual map model.
+// FFS - MAP ENGINE v0.2
+// Converts WorldState into a spatial visual map model.
 // ============================================================
 
 
 export class MapEngine {
+
 
     constructor(worldState) {
 
@@ -32,19 +32,46 @@ export class MapEngine {
 
 
         console.log(
-            "[MapEngine] Initializing Map Engine..."
+            "[MapEngine] Initializing Map Engine v0.2..."
         );
 
 
         this.map = {
 
-            id: "map_001",
+            id:
+                "map_001",
 
-            type: "isometric",
+            type:
+                "isometric",
+
+            version:
+                "0.2",
 
             worldId:
                 this.worldState.world?.world_id
                 ?? null,
+
+
+            terrain: {
+
+                width:
+                    this.worldState
+                        .terrain
+                        ?.width
+                    ?? 12,
+
+                height:
+                    this.worldState
+                        .terrain
+                        ?.height
+                    ?? 9,
+
+                type:
+                    this.worldState
+                        .terrain
+                        ?.type
+                    ?? "grass"
+            },
 
 
             regions: [],
@@ -53,7 +80,9 @@ export class MapEngine {
 
             roads: [],
 
-            buildings: []
+            buildings: [],
+
+            objects: []
         };
 
 
@@ -88,25 +117,26 @@ export class MapEngine {
 
 
         this.map.regions =
-            Object.values(regions).map(
-                (region, index) => {
+            Object.values(regions)
+                .map(
+                    (region, index) => {
 
-                    return {
+                        return {
 
-                        id:
-                            region.id
-                            ?? `region_${index + 1}`,
+                            id:
+                                region.id
+                                ?? `region_${index + 1}`,
 
-                        name:
-                            region.name
-                            ?? "Unnamed Region",
+                            name:
+                                region.name
+                                ?? "Unnamed Region",
 
-                        type:
-                            region.type
-                            ?? "region"
-                    };
-                }
-            );
+                            type:
+                                region.type
+                                ?? "region"
+                        };
+                    }
+                );
     }
 
 
@@ -186,7 +216,21 @@ export class MapEngine {
                                 ?? null,
 
                             type:
-                                "road"
+                                "road",
+
+                            map:
+                                road.map
+                                ?? {
+
+                                    x: 0,
+
+                                    y: 0,
+
+                                    width: 1,
+
+                                    direction:
+                                        "horizontal"
+                                }
                         };
                     }
                 );
@@ -234,10 +278,23 @@ export class MapEngine {
 
                             status:
                                 building.status
-                                ?? "active"
+                                ?? "active",
+
+                            map:
+                                building.map
+                                ?? {
+
+                                    x: 0,
+
+                                    y: 0
+                                }
                         };
                     }
                 );
+
+
+        this.map.objects =
+            this.map.buildings;
     }
 
 
@@ -258,6 +315,14 @@ export class MapEngine {
     getMapSummary() {
 
         return {
+
+            version:
+                this.map?.version
+                ?? null,
+
+            terrain:
+                this.map?.terrain
+                ?? null,
 
             regions:
                 this.map?.regions?.length

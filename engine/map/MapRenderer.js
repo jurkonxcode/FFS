@@ -7,8 +7,8 @@ export default class MapRenderer {
         }
 
         // =========================================================
-        // FFS v0.9-G.1
-        // FIRST LIVING CITY BLOCK
+        // FFS v0.9-G.2
+        // LIVING CITY BLOCK — LIVING DETAILS
         // =========================================================
 
         // ---------------------------------------------------------
@@ -73,6 +73,7 @@ export default class MapRenderer {
         this.npcs = [];
         this.vehicles = [];
         this.ambientObjects = [];
+        this.livingLights = [];
 
         this.prefersReducedMotion =
             window.matchMedia &&
@@ -158,7 +159,8 @@ export default class MapRenderer {
         layerNames.forEach((name) => {
             const layer = document.createElement("div");
 
-            layer.className = `ffs-map-layer ffs-map-layer-${name}`;
+            layer.className =
+                `ffs-map-layer ffs-map-layer-${name}`;
 
             this.layers[name] = layer;
 
@@ -187,8 +189,8 @@ export default class MapRenderer {
         this.renderTerrain(mapData);
         this.renderRoads(mapData);
 
-        // v0.9-G.1
-        // First Living City Block
+        // v0.9-G.2
+        // Living City Block
         this.renderLivingBlock(mapData);
 
         this.renderBuildings(mapData);
@@ -309,6 +311,7 @@ export default class MapRenderer {
                 top: 20px;
                 border-radius: 2px;
                 background: #30343a;
+                transform-origin: 50% 0;
             }
 
             .ffs-v09g-npc-leg-left {
@@ -435,8 +438,8 @@ export default class MapRenderer {
     }
 
     // ============================================================
-    // v0.9-G.1
-    // FIRST LIVING CITY BLOCK
+    // v0.9-G.2
+    // LIVING CITY BLOCK
     // ============================================================
 
     renderLivingBlock(mapData) {
@@ -450,7 +453,8 @@ export default class MapRenderer {
 
         const block = document.createElement("div");
 
-        block.className = "ffs-v09g1-living-block";
+        block.className =
+            "ffs-v09g1-living-block";
 
         // --------------------------------------------------------
         // INTERNAL STYLE
@@ -459,12 +463,13 @@ export default class MapRenderer {
         if (!document.getElementById("ffs-v09g1-living-block-style")) {
             const style = document.createElement("style");
 
-            style.id = "ffs-v09g1-living-block-style";
+            style.id =
+                "ffs-v09g1-living-block-style";
 
             style.textContent = `
                 /* =================================================
-                   FFS v0.9-G.1
-                   FIRST LIVING CITY BLOCK
+                   FFS v0.9-G.2
+                   LIVING CITY BLOCK
                    ================================================= */
 
                 .ffs-v09g1-living-block {
@@ -703,6 +708,73 @@ export default class MapRenderer {
                     background:
                         rgba(76,119,73,.88);
                 }
+
+                /* -------------------------------------------------
+                   PLAZA LIGHTS
+                   FFS v0.9-G.2
+                   ------------------------------------------------- */
+
+                .ffs-v09g2-light {
+                    position: absolute;
+
+                    width: 7px;
+                    height: 7px;
+
+                    border-radius: 50%;
+
+                    background:
+                        rgba(255,235,165,.92);
+
+                    border:
+                        1px solid rgba(255,255,255,.75);
+
+                    box-shadow:
+                        0 0 5px rgba(255,220,130,.42),
+                        0 3px 6px rgba(0,0,0,.15);
+
+                    transform:
+                        translate(-50%, -50%);
+
+                    pointer-events: none;
+                }
+
+                .ffs-v09g2-light-pole {
+                    position: absolute;
+
+                    width: 3px;
+                    height: 18px;
+
+                    left: 50%;
+                    top: 5px;
+
+                    transform:
+                        translateX(-50%);
+
+                    border-radius: 2px;
+
+                    background:
+                        rgba(65,70,72,.78);
+                }
+
+                .ffs-v09g2-light-glow {
+                    position: absolute;
+
+                    width: 20px;
+                    height: 20px;
+
+                    left: 50%;
+                    top: 50%;
+
+                    transform:
+                        translate(-50%, -50%);
+
+                    border-radius: 50%;
+
+                    background:
+                        rgba(255,220,130,.12);
+
+                    pointer-events: none;
+                }
             `;
 
             document.head.appendChild(style);
@@ -713,15 +785,36 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const place = (element, x, y, z = 0) => {
-            const point = this.worldToScreen(x, y, z);
+            const point =
+                this.worldToScreen(
+                    x,
+                    y,
+                    z
+                );
 
-            element.style.left = `${point.left}px`;
-            element.style.top = `${point.top}px`;
+            element.style.left =
+                `${point.left}px`;
 
-            element.dataset.worldX = String(x);
-            element.dataset.worldY = String(y);
-            element.dataset.worldZ = String(z);
-            element.dataset.depth = String(this.getDepth(x, y, z));
+            element.style.top =
+                `${point.top}px`;
+
+            element.dataset.worldX =
+                String(x);
+
+            element.dataset.worldY =
+                String(y);
+
+            element.dataset.worldZ =
+                String(z);
+
+            element.dataset.depth =
+                String(
+                    this.getDepth(
+                        x,
+                        y,
+                        z
+                    )
+                );
 
             return point;
         };
@@ -730,7 +823,8 @@ export default class MapRenderer {
         // CENTRAL PLAZA
         // --------------------------------------------------------
 
-        const plaza = document.createElement("div");
+        const plaza =
+            document.createElement("div");
 
         plaza.className =
             "ffs-v09g-zone ffs-v09g1-plaza";
@@ -739,17 +833,25 @@ export default class MapRenderer {
             plaza,
             7,
             5.5,
-            this.getGroundZ(7, 5.5) + 0.05
+            this.getGroundZ(
+                7,
+                5.5
+            ) + 0.05
         );
 
-        const plazaInner = document.createElement("div");
+        const plazaInner =
+            document.createElement("div");
 
         plazaInner.className =
             "ffs-v09g1-plaza-inner";
 
-        plaza.appendChild(plazaInner);
+        plaza.appendChild(
+            plazaInner
+        );
 
-        block.appendChild(plaza);
+        block.appendChild(
+            plaza
+        );
 
         // --------------------------------------------------------
         // PEDESTRIAN PATHS
@@ -782,21 +884,29 @@ export default class MapRenderer {
             }
         ];
 
-        paths.forEach((item) => {
-            const path = document.createElement("div");
+        paths.forEach(
+            (item) => {
+                const path =
+                    document.createElement("div");
 
-            path.className =
-                `ffs-v09g1-zone ${item.className}`;
+                path.className =
+                    `ffs-v09g1-zone ${item.className}`;
 
-            place(
-                path,
-                item.x,
-                item.y,
-                this.getGroundZ(item.x, item.y) + 0.02
-            );
+                place(
+                    path,
+                    item.x,
+                    item.y,
+                    this.getGroundZ(
+                        item.x,
+                        item.y
+                    ) + 0.02
+                );
 
-            block.appendChild(path);
-        });
+                block.appendChild(
+                    path
+                );
+            }
+        );
 
         // --------------------------------------------------------
         // CROSSWALKS
@@ -829,27 +939,42 @@ export default class MapRenderer {
             }
         ];
 
-        crosswalks.forEach((item) => {
-            const crosswalk = document.createElement("div");
+        crosswalks.forEach(
+            (item) => {
+                const crosswalk =
+                    document.createElement("div");
 
-            crosswalk.className =
-                `ffs-v09g1-zone ffs-v09g1-crosswalk ${item.className}`;
+                crosswalk.className =
+                    `ffs-v09g1-zone ffs-v09g1-crosswalk ${item.className}`;
 
-            for (let i = 0; i < 5; i++) {
-                const stripe = document.createElement("span");
+                for (
+                    let i = 0;
+                    i < 5;
+                    i++
+                ) {
+                    const stripe =
+                        document.createElement("span");
 
-                crosswalk.appendChild(stripe);
+                    crosswalk.appendChild(
+                        stripe
+                    );
+                }
+
+                place(
+                    crosswalk,
+                    item.x,
+                    item.y,
+                    this.getGroundZ(
+                        item.x,
+                        item.y
+                    ) + 0.04
+                );
+
+                block.appendChild(
+                    crosswalk
+                );
             }
-
-            place(
-                crosswalk,
-                item.x,
-                item.y,
-                this.getGroundZ(item.x, item.y) + 0.04
-            );
-
-            block.appendChild(crosswalk);
-        });
+        );
 
         // --------------------------------------------------------
         // ACTIVITY POINTS
@@ -870,21 +995,29 @@ export default class MapRenderer {
             }
         ];
 
-        activities.forEach((item) => {
-            const activity = document.createElement("div");
+        activities.forEach(
+            (item) => {
+                const activity =
+                    document.createElement("div");
 
-            activity.className =
-                "ffs-v09g-zone ffs-v09g1-activity";
+                activity.className =
+                    "ffs-v09g-zone ffs-v09g1-activity";
 
-            place(
-                activity,
-                item.x,
-                item.y,
-                this.getGroundZ(item.x, item.y) + 0.08
-            );
+                place(
+                    activity,
+                    item.x,
+                    item.y,
+                    this.getGroundZ(
+                        item.x,
+                        item.y
+                    ) + 0.08
+                );
 
-            block.appendChild(activity);
-        });
+                block.appendChild(
+                    activity
+                );
+            }
+        );
 
         // --------------------------------------------------------
         // PLANTERS
@@ -909,27 +1042,112 @@ export default class MapRenderer {
             }
         ];
 
-        planters.forEach((item) => {
-            const planter = document.createElement("div");
+        planters.forEach(
+            (item) => {
+                const planter =
+                    document.createElement("div");
 
-            planter.className =
-                "ffs-v09g1-zone ffs-v09g1-planter";
+                planter.className =
+                    "ffs-v09g-zone ffs-v09g1-planter";
 
-            place(
-                planter,
-                item.x,
-                item.y,
-                this.getGroundZ(item.x, item.y) + 0.1
-            );
+                place(
+                    planter,
+                    item.x,
+                    item.y,
+                    this.getGroundZ(
+                        item.x,
+                        item.y
+                    ) + 0.1
+                );
 
-            block.appendChild(planter);
-        });
+                block.appendChild(
+                    planter
+                );
+            }
+        );
+
+        // --------------------------------------------------------
+        // PLAZA LIGHTS
+        // FFS v0.9-G.2
+        // --------------------------------------------------------
+
+        this.livingLights = [];
+
+        const plazaLights = [
+            {
+                x: 6.05,
+                y: 4.85
+            },
+            {
+                x: 7.95,
+                y: 4.85
+            },
+            {
+                x: 6.05,
+                y: 6.15
+            },
+            {
+                x: 7.95,
+                y: 6.15
+            }
+        ];
+
+        plazaLights.forEach(
+            (item, index) => {
+                const light =
+                    document.createElement("div");
+
+                light.className =
+                    "ffs-v09g-zone ffs-v09g2-light";
+
+                const pole =
+                    document.createElement("div");
+
+                pole.className =
+                    "ffs-v09g2-light-pole";
+
+                const glow =
+                    document.createElement("div");
+
+                glow.className =
+                    "ffs-v09g2-light-glow";
+
+                light.appendChild(
+                    glow
+                );
+
+                light.appendChild(
+                    pole
+                );
+
+                place(
+                    light,
+                    item.x,
+                    item.y,
+                    this.getGroundZ(
+                        item.x,
+                        item.y
+                    ) + 0.16
+                );
+
+                block.appendChild(
+                    light
+                );
+
+                this.livingLights.push({
+                    element: light,
+                    glow,
+                    index
+                });
+            }
+        );
 
         // --------------------------------------------------------
         // LABEL
         // --------------------------------------------------------
 
-        const label = document.createElement("div");
+        const label =
+            document.createElement("div");
 
         label.className =
             "ffs-v09g1-label";
@@ -941,18 +1159,26 @@ export default class MapRenderer {
             label,
             7,
             5.5,
-            this.getGroundZ(7, 5.5) + 0.35
+            this.getGroundZ(
+                7,
+                5.5
+            ) + 0.35
         );
 
-        label.style.marginTop = "-52px";
+        label.style.marginTop =
+            "-52px";
 
-        block.appendChild(label);
+        block.appendChild(
+            label
+        );
 
         // --------------------------------------------------------
         // MOUNT
         // --------------------------------------------------------
 
-        this.layers.props.appendChild(block);
+        this.layers.props.appendChild(
+            block
+        );
     }
 
     // ============================================================
@@ -962,12 +1188,15 @@ export default class MapRenderer {
     worldToScreen(x, y, z = 0) {
         const screenX =
             this.origin.x +
-            (x - y) * this.halfTileWidth;
+            (x - y) *
+            this.halfTileWidth;
 
         const screenY =
             this.origin.y +
-            (x + y) * this.halfTileHeight -
-            z * this.heightUnit;
+            (x + y) *
+            this.halfTileHeight -
+            z *
+            this.heightUnit;
 
         return {
             left: screenX,
@@ -978,28 +1207,42 @@ export default class MapRenderer {
     }
 
     gridToScreen(x, y, z = 0) {
-        return this.worldToScreen(x, y, z);
+        return this.worldToScreen(
+            x,
+            y,
+            z
+        );
     }
 
-    screenToWorld(screenX, screenY, z = 0) {
+    screenToWorld(
+        screenX,
+        screenY,
+        z = 0
+    ) {
         const adjustedX =
-            screenX - this.origin.x;
+            screenX -
+            this.origin.x;
 
         const adjustedY =
             screenY -
             this.origin.y +
-            z * this.heightUnit;
+            z *
+            this.heightUnit;
 
         const x =
             (
-                adjustedY / this.halfTileHeight +
-                adjustedX / this.halfTileWidth
+                adjustedY /
+                this.halfTileHeight +
+                adjustedX /
+                this.halfTileWidth
             ) / 2;
 
         const y =
             (
-                adjustedY / this.halfTileHeight -
-                adjustedX / this.halfTileWidth
+                adjustedY /
+                this.halfTileHeight -
+                adjustedX /
+                this.halfTileWidth
             ) / 2;
 
         return {
@@ -1027,7 +1270,11 @@ export default class MapRenderer {
     // DEPTH
     // ============================================================
 
-    getDepth(x, y, z = 0) {
+    getDepth(
+        x,
+        y,
+        z = 0
+    ) {
         return x + y + z;
     }
 
@@ -1041,22 +1288,33 @@ export default class MapRenderer {
             object;
 
         const x =
-            Number(map.x) || 0;
+            Number(map.x) ||
+            0;
 
         const y =
-            Number(map.y) || 0;
+            Number(map.y) ||
+            0;
 
         const z =
-            Number(map.z) || 0;
+            Number(map.z) ||
+            0;
 
-        return this.getDepth(x, y, z);
+        return this.getDepth(
+            x,
+            y,
+            z
+        );
     }
 
     // ============================================================
     // TERRAIN ELEVATION
     // ============================================================
 
-    getTerrainElevation(x, y, terrain = null) {
+    getTerrainElevation(
+        x,
+        y,
+        terrain = null
+    ) {
         terrain =
             terrain ||
             this.mapData?.terrain ||
@@ -1066,21 +1324,32 @@ export default class MapRenderer {
             return 0;
         }
 
-        const ix = Math.round(x);
-        const iy = Math.round(y);
+        const ix =
+            Math.round(x);
+
+        const iy =
+            Math.round(y);
 
         // --------------------------------------------------------
         // elevation[][]
         // --------------------------------------------------------
 
         if (
-            Array.isArray(terrain.elevation) &&
-            Array.isArray(terrain.elevation[iy]) &&
+            Array.isArray(
+                terrain.elevation
+            ) &&
+            Array.isArray(
+                terrain.elevation[iy]
+            ) &&
             Number.isFinite(
-                Number(terrain.elevation[iy][ix])
+                Number(
+                    terrain.elevation[iy][ix]
+                )
             )
         ) {
-            return Number(terrain.elevation[iy][ix]);
+            return Number(
+                terrain.elevation[iy][ix]
+            );
         }
 
         // --------------------------------------------------------
@@ -1088,32 +1357,53 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         if (
-            Array.isArray(terrain.heights) &&
-            Array.isArray(terrain.heights[iy]) &&
+            Array.isArray(
+                terrain.heights
+            ) &&
+            Array.isArray(
+                terrain.heights[iy]
+            ) &&
             Number.isFinite(
-                Number(terrain.heights[iy][ix])
+                Number(
+                    terrain.heights[iy][ix]
+                )
             )
         ) {
-            return Number(terrain.heights[iy][ix]);
+            return Number(
+                terrain.heights[iy][ix]
+            );
         }
 
         // --------------------------------------------------------
         // tiles[]
         // --------------------------------------------------------
 
-        if (Array.isArray(terrain.tiles)) {
-            const tile = terrain.tiles.find(
-                (item) =>
-                    Number(item?.x) === ix &&
-                    Number(item?.y) === iy
-            );
+        if (
+            Array.isArray(
+                terrain.tiles
+            )
+        ) {
+            const tile =
+                terrain.tiles.find(
+                    (item) =>
+                        Number(item?.x) === ix &&
+                        Number(item?.y) === iy
+                );
 
             if (tile) {
-                if (Number.isFinite(Number(tile.z))) {
+                if (
+                    Number.isFinite(
+                        Number(tile.z)
+                    )
+                ) {
                     return Number(tile.z);
                 }
 
-                if (Number.isFinite(Number(tile.height))) {
+                if (
+                    Number.isFinite(
+                        Number(tile.height)
+                    )
+                ) {
                     return Number(tile.height);
                 }
             }
@@ -1124,8 +1414,18 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const distance =
-            Math.abs(ix - Math.floor(this.mapWidth / 2)) +
-            Math.abs(iy - Math.floor(this.mapHeight / 2));
+            Math.abs(
+                ix -
+                Math.floor(
+                    this.mapWidth / 2
+                )
+            ) +
+            Math.abs(
+                iy -
+                Math.floor(
+                    this.mapHeight / 2
+                )
+            );
 
         if (distance <= 1) {
             return 2;
@@ -1139,21 +1439,23 @@ export default class MapRenderer {
     }
 
     getGroundZ(x, y) {
-        const ix = Math.max(
-            0,
-            Math.min(
-                this.mapWidth - 1,
-                Math.round(x)
-            )
-        );
+        const ix =
+            Math.max(
+                0,
+                Math.min(
+                    this.mapWidth - 1,
+                    Math.round(x)
+                )
+            );
 
-        const iy = Math.max(
-            0,
-            Math.min(
-                this.mapHeight - 1,
-                Math.round(y)
-            )
-        );
+        const iy =
+            Math.max(
+                0,
+                Math.min(
+                    this.mapHeight - 1,
+                    Math.round(y)
+                )
+            );
 
         return this.getTerrainElevation(
             ix,
@@ -1172,36 +1474,70 @@ export default class MapRenderer {
             return max;
         }
 
-        if (Array.isArray(terrain.elevation)) {
-            terrain.elevation.forEach((row) => {
-                if (!Array.isArray(row)) {
-                    return;
-                }
-
-                row.forEach((value) => {
-                    const z = Number(value);
-
-                    if (Number.isFinite(z)) {
-                        max = Math.max(max, z);
+        if (
+            Array.isArray(
+                terrain.elevation
+            )
+        ) {
+            terrain.elevation.forEach(
+                (row) => {
+                    if (
+                        !Array.isArray(row)
+                    ) {
+                        return;
                     }
-                });
-            });
+
+                    row.forEach(
+                        (value) => {
+                            const z =
+                                Number(value);
+
+                            if (
+                                Number.isFinite(z)
+                            ) {
+                                max =
+                                    Math.max(
+                                        max,
+                                        z
+                                    );
+                            }
+                        }
+                    );
+                }
+            );
         }
 
-        if (Array.isArray(terrain.heights)) {
-            terrain.heights.forEach((row) => {
-                if (!Array.isArray(row)) {
-                    return;
-                }
-
-                row.forEach((value) => {
-                    const z = Number(value);
-
-                    if (Number.isFinite(z)) {
-                        max = Math.max(max, z);
+        if (
+            Array.isArray(
+                terrain.heights
+            )
+        ) {
+            terrain.heights.forEach(
+                (row) => {
+                    if (
+                        !Array.isArray(row)
+                    ) {
+                        return;
                     }
-                });
-            });
+
+                    row.forEach(
+                        (value) => {
+                            const z =
+                                Number(value);
+
+                            if (
+                                Number.isFinite(z)
+                            ) {
+                                max =
+                                    Math.max(
+                                        max,
+                                        z
+                                    );
+                            }
+                        }
+                    );
+                }
+            );
         }
 
         return max;
@@ -1262,16 +1598,29 @@ export default class MapRenderer {
         ];
 
         const xs =
-            points.map((point) => point.x);
+            points.map(
+                (point) =>
+                    point.x
+            );
 
         const ys =
-            points.map((point) => point.y);
+            points.map(
+                (point) =>
+                    point.y
+            );
 
         return {
-            minX: Math.min(...xs),
-            maxX: Math.max(...xs),
-            minY: Math.min(...ys),
-            maxY: Math.max(...ys)
+            minX:
+                Math.min(...xs),
+
+            maxX:
+                Math.max(...xs),
+
+            minY:
+                Math.min(...ys),
+
+            maxY:
+                Math.max(...ys)
         };
     }
 
@@ -1289,8 +1638,12 @@ export default class MapRenderer {
         const minus =
             document.createElement("button");
 
-        minus.type = "button";
-        minus.textContent = "−";
+        minus.type =
+            "button";
+
+        minus.textContent =
+            "−";
+
         minus.setAttribute(
             "aria-label",
             "Zoom out"
@@ -1299,7 +1652,9 @@ export default class MapRenderer {
         const value =
             document.createElement("button");
 
-        value.type = "button";
+        value.type =
+            "button";
+
         value.className =
             "ffs-map-zoom-value";
 
@@ -1314,8 +1669,12 @@ export default class MapRenderer {
         const plus =
             document.createElement("button");
 
-        plus.type = "button";
-        plus.textContent = "+";
+        plus.type =
+            "button";
+
+        plus.textContent =
+            "+";
+
         plus.setAttribute(
             "aria-label",
             "Zoom in"
@@ -1348,11 +1707,21 @@ export default class MapRenderer {
             }
         );
 
-        controls.appendChild(minus);
-        controls.appendChild(value);
-        controls.appendChild(plus);
+        controls.appendChild(
+            minus
+        );
 
-        this.renderer.appendChild(controls);
+        controls.appendChild(
+            value
+        );
+
+        controls.appendChild(
+            plus
+        );
+
+        this.renderer.appendChild(
+            controls
+        );
 
         this.zoomControls = {
             root: controls,
@@ -1373,13 +1742,17 @@ export default class MapRenderer {
             );
 
         this.zoom =
-            Math.round(next * 10) / 10;
+            Math.round(
+                next * 10
+            ) / 10;
 
         this.applyZoom();
     }
 
     getZoomLabel() {
-        return `${Math.round(this.zoom * 100)}%`;
+        return `${Math.round(
+            this.zoom * 100
+        )}%`;
     }
 
     applyZoom() {
@@ -1390,7 +1763,9 @@ export default class MapRenderer {
         this.content.style.transform =
             `translate(${this.contentOffset.x}px, ${this.contentOffset.y}px) scale(${this.zoom})`;
 
-        if (this.zoomControls?.value) {
+        if (
+            this.zoomControls?.value
+        ) {
             this.zoomControls.value.textContent =
                 this.getZoomLabel();
         }
@@ -1401,15 +1776,21 @@ export default class MapRenderer {
     // ============================================================
 
     updateMapLayout() {
-        if (!this.renderer || !this.content) {
+        if (
+            !this.renderer ||
+            !this.content
+        ) {
             return;
         }
 
         const bounds =
             this.getMapProjectionBounds();
 
-        const paddingX = 220;
-        const paddingY = 220;
+        const paddingX =
+            220;
+
+        const paddingY =
+            220;
 
         const projectedWidth =
             bounds.maxX -
@@ -1515,7 +1896,9 @@ export default class MapRenderer {
                     );
 
                 const tile =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 tile.className =
                     "ffs-terrain-tile";
@@ -1543,7 +1926,8 @@ export default class MapRenderer {
 
                 tile.style.setProperty(
                     "--terrain-height",
-                    z * this.heightUnit
+                    z *
+                    this.heightUnit
                 );
 
                 tile.dataset.worldX =
@@ -1573,7 +1957,9 @@ export default class MapRenderer {
                     );
 
                     const volume =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
 
                     volume.className =
                         "ffs-v09g-terrain-volume";
@@ -1584,28 +1970,44 @@ export default class MapRenderer {
                     );
 
                     const left =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
 
                     left.className =
                         "ffs-v09g-terrain-side-left";
 
                     const right =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
 
                     right.className =
                         "ffs-v09g-terrain-side-right";
 
                     const shadow =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
 
                     shadow.className =
                         "ffs-v09g-terrain-shadow";
 
-                    volume.appendChild(left);
-                    volume.appendChild(right);
-                    volume.appendChild(shadow);
+                    volume.appendChild(
+                        left
+                    );
 
-                    tile.appendChild(volume);
+                    volume.appendChild(
+                        right
+                    );
+
+                    volume.appendChild(
+                        shadow
+                    );
+
+                    tile.appendChild(
+                        volume
+                    );
                 }
 
                 if (z >= 2) {
@@ -1621,12 +2023,20 @@ export default class MapRenderer {
         tiles
             .sort(
                 (a, b) =>
-                    Number(a.dataset.depth) -
-                    Number(b.dataset.depth)
+                    Number(
+                        a.dataset.depth
+                    ) -
+                    Number(
+                        b.dataset.depth
+                    )
             )
-            .forEach((tile) => {
-                terrainLayer.appendChild(tile);
-            });
+            .forEach(
+                (tile) => {
+                    terrainLayer.appendChild(
+                        tile
+                    );
+                }
+            );
     }
 
     // ============================================================
@@ -1645,134 +2055,149 @@ export default class MapRenderer {
         }
 
         const roads =
-            Array.isArray(mapData.roads)
+            Array.isArray(
+                mapData.roads
+            )
                 ? mapData.roads
                 : [];
 
-        roads.forEach((road) => {
-            const map =
-                road.map ||
-                road;
+        roads.forEach(
+            (road) => {
+                const map =
+                    road.map ||
+                    road;
 
-            const x =
-                Number(map.x) || 0;
+                const x =
+                    Number(map.x) ||
+                    0;
 
-            const y =
-                Number(map.y) || 0;
+                const y =
+                    Number(map.y) ||
+                    0;
 
-            const width =
-                Math.max(
-                    1,
-                    Number(map.width) || 1
-                );
+                const width =
+                    Math.max(
+                        1,
+                        Number(map.width) ||
+                        1
+                    );
 
-            const direction =
-                map.direction ||
-                "horizontal";
+                const direction =
+                    map.direction ||
+                    "horizontal";
 
-            for (
-                let i = 0;
-                i < width;
-                i++
-            ) {
-                const tileX =
-                    direction === "vertical"
-                        ? x
-                        : x + i;
+                for (
+                    let i = 0;
+                    i < width;
+                    i++
+                ) {
+                    const tileX =
+                        direction === "vertical"
+                            ? x
+                            : x + i;
 
-                const tileY =
-                    direction === "vertical"
-                        ? y + i
-                        : y;
+                    const tileY =
+                        direction === "vertical"
+                            ? y + i
+                            : y;
 
-                const z =
-                    Number.isFinite(
-                        Number(map.z)
-                    )
-                        ? Number(map.z)
-                        : this.getGroundZ(
+                    const z =
+                        Number.isFinite(
+                            Number(map.z)
+                        )
+                            ? Number(map.z)
+                            : this.getGroundZ(
+                                tileX,
+                                tileY
+                            );
+
+                    const point =
+                        this.worldToScreen(
                             tileX,
-                            tileY
+                            tileY,
+                            z
                         );
 
-                const point =
-                    this.worldToScreen(
-                        tileX,
-                        tileY,
-                        z
+                    const sidewalk =
+                        document.createElement(
+                            "div"
+                        );
+
+                    sidewalk.className =
+                        "ffs-sidewalk";
+
+                    sidewalk.classList.add(
+                        `road-${direction}`
                     );
 
-                const sidewalk =
-                    document.createElement("div");
+                    sidewalk.style.left =
+                        `${point.left}px`;
 
-                sidewalk.className =
-                    "ffs-sidewalk";
+                    sidewalk.style.top =
+                        `${point.top}px`;
 
-                sidewalk.classList.add(
-                    `road-${direction}`
-                );
+                    sidewalk.dataset.worldX =
+                        String(tileX);
 
-                sidewalk.style.left =
-                    `${point.left}px`;
+                    sidewalk.dataset.worldY =
+                        String(tileY);
 
-                sidewalk.style.top =
-                    `${point.top}px`;
+                    sidewalk.dataset.worldZ =
+                        String(z);
 
-                sidewalk.dataset.worldX =
-                    String(tileX);
+                    if (
+                        sidewalksLayer
+                    ) {
+                        sidewalksLayer.appendChild(
+                            sidewalk
+                        );
+                    }
 
-                sidewalk.dataset.worldY =
-                    String(tileY);
+                    const roadElement =
+                        document.createElement(
+                            "div"
+                        );
 
-                sidewalk.dataset.worldZ =
-                    String(z);
+                    roadElement.className =
+                        "ffs-road";
 
-                if (sidewalksLayer) {
-                    sidewalksLayer.appendChild(
-                        sidewalk
+                    roadElement.classList.add(
+                        `road-${direction}`
+                    );
+
+                    roadElement.style.left =
+                        `${point.left}px`;
+
+                    roadElement.style.top =
+                        `${point.top}px`;
+
+                    roadElement.dataset.worldX =
+                        String(tileX);
+
+                    roadElement.dataset.worldY =
+                        String(tileY);
+
+                    roadElement.dataset.worldZ =
+                        String(z);
+
+                    const marking =
+                        document.createElement(
+                            "div"
+                        );
+
+                    marking.className =
+                        "ffs-road-marking";
+
+                    roadElement.appendChild(
+                        marking
+                    );
+
+                    roadsLayer.appendChild(
+                        roadElement
                     );
                 }
-
-                const roadElement =
-                    document.createElement("div");
-
-                roadElement.className =
-                    "ffs-road";
-
-                roadElement.classList.add(
-                    `road-${direction}`
-                );
-
-                roadElement.style.left =
-                    `${point.left}px`;
-
-                roadElement.style.top =
-                    `${point.top}px`;
-
-                roadElement.dataset.worldX =
-                    String(tileX);
-
-                roadElement.dataset.worldY =
-                    String(tileY);
-
-                roadElement.dataset.worldZ =
-                    String(z);
-
-                const marking =
-                    document.createElement("div");
-
-                marking.className =
-                    "ffs-road-marking";
-
-                roadElement.appendChild(
-                    marking
-                );
-
-                roadsLayer.appendChild(
-                    roadElement
-                );
             }
-        });
+        );
     }
 
     // ============================================================
@@ -1781,7 +2206,9 @@ export default class MapRenderer {
 
     renderBuildings(mapData) {
         const buildings =
-            Array.isArray(mapData.buildings)
+            Array.isArray(
+                mapData.buildings
+            )
                 ? mapData.buildings
                 : [];
 
@@ -1792,9 +2219,13 @@ export default class MapRenderer {
                     this.getObjectDepth(a) -
                     this.getObjectDepth(b)
             )
-            .forEach((building) => {
-                this.createBuilding(building);
-            });
+            .forEach(
+                (building) => {
+                    this.createBuilding(
+                        building
+                    );
+                }
+            );
     }
 
     createBuilding(building) {
@@ -1810,21 +2241,25 @@ export default class MapRenderer {
             building;
 
         const x =
-            Number(map.x) || 0;
+            Number(map.x) ||
+            0;
 
         const y =
-            Number(map.y) || 0;
+            Number(map.y) ||
+            0;
 
         const width =
             Math.max(
                 1,
-                Number(map.width) || 1
+                Number(map.width) ||
+                1
             );
 
         const height =
             Math.max(
                 1,
-                Number(map.height) || 1
+                Number(map.height) ||
+                1
             );
 
         const z =
@@ -1852,7 +2287,9 @@ export default class MapRenderer {
             );
 
         const element =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         element.className =
             `ffs-building building-${type}`;
@@ -1916,7 +2353,9 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const shadow =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         shadow.className =
             "ffs-building-shadow";
@@ -1930,7 +2369,9 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const footprint =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         footprint.className =
             "ffs-building-footprint";
@@ -1944,7 +2385,9 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const side =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         side.className =
             "ffs-building-side";
@@ -1958,7 +2401,9 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const body =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         body.className =
             "ffs-building-body";
@@ -1972,7 +2417,9 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const roof =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         roof.className =
             "ffs-building-roof";
@@ -2003,7 +2450,9 @@ export default class MapRenderer {
             type === "commercial"
         ) {
             const door =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             door.className =
                 "ffs-building-door";
@@ -2018,7 +2467,9 @@ export default class MapRenderer {
         // --------------------------------------------------------
 
         const label =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         label.className =
             "ffs-building-label";
@@ -2062,22 +2513,26 @@ export default class MapRenderer {
     getBuildingType(building) {
         const type =
             String(
-                building?.type || ""
+                building?.type ||
+                ""
             ).toLowerCase();
 
         const id =
             String(
-                building?.id || ""
+                building?.id ||
+                ""
             ).toLowerCase();
 
         const name =
             String(
-                building?.name || ""
+                building?.name ||
+                ""
             ).toLowerCase();
 
         const district =
             String(
-                building?.district || ""
+                building?.district ||
+                ""
             ).toLowerCase();
 
         if (
@@ -2146,7 +2601,9 @@ export default class MapRenderer {
                 column++
             ) {
                 const window =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 window.className =
                     "ffs-window";
@@ -2221,7 +2678,9 @@ export default class MapRenderer {
                     );
 
                 const tree =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 tree.className =
                     "ffs-tree";
@@ -2327,7 +2786,9 @@ export default class MapRenderer {
                     );
 
                 const element =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 element.className =
                     `ffs-prop prop-${item.type}`;
@@ -2407,7 +2868,9 @@ export default class MapRenderer {
         vehicles.forEach(
             (item, index) => {
                 const vehicle =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 vehicle.className =
                     "ffs-v09g-vehicle";
@@ -2419,31 +2882,41 @@ export default class MapRenderer {
                     item.direction;
 
                 const shadow =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 shadow.className =
                     "ffs-v09g-vehicle-shadow";
 
                 const body =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 body.className =
                     "ffs-v09g-vehicle-body";
 
                 const window =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 window.className =
                     "ffs-v09g-vehicle-window";
 
                 const wheelLeft =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 wheelLeft.className =
                     "ffs-v09g-vehicle-wheel ffs-v09g-vehicle-wheel-left";
 
                 const wheelRight =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 wheelRight.className =
                     "ffs-v09g-vehicle-wheel ffs-v09g-vehicle-wheel-right";
@@ -2473,18 +2946,24 @@ export default class MapRenderer {
                 );
 
                 this.vehicles.push({
-                    element: vehicle,
+                    element:
+                        vehicle,
 
-                    startX: item.x,
-                    startY: item.y,
+                    startX:
+                        item.x,
 
-                    route: item.direction,
+                    startY:
+                        item.y,
+
+                    route:
+                        item.direction,
 
                     index,
 
                     speed:
                         0.0015 +
-                        index * 0.00025
+                        index *
+                        0.00025
                 });
             }
         );
@@ -2534,37 +3013,49 @@ export default class MapRenderer {
         npcs.forEach(
             (item, index) => {
                 const npc =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 npc.className =
                     "ffs-v09g-npc";
 
                 const shadow =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 shadow.className =
                     "ffs-v09g-npc-shadow";
 
                 const head =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 head.className =
                     "ffs-v09g-npc-head";
 
                 const body =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 body.className =
                     "ffs-v09g-npc-body";
 
                 const legLeft =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 legLeft.className =
                     "ffs-v09g-npc-leg ffs-v09g-npc-leg-left";
 
                 const legRight =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 legRight.className =
                     "ffs-v09g-npc-leg ffs-v09g-npc-leg-right";
@@ -2593,22 +3084,30 @@ export default class MapRenderer {
                     npc
                 );
 
-                // v0.9-G.1
-                // Faster pedestrian movement
+                // v0.9-G.2
+                // Living pedestrian movement
                 this.npcs.push({
-                    element: npc,
+                    element:
+                        npc,
 
-                    startX: item.x,
-                    startY: item.y,
+                    startX:
+                        item.x,
 
-                    endX: item.endX,
-                    endY: item.endY,
+                    startY:
+                        item.y,
+
+                    endX:
+                        item.endX,
+
+                    endY:
+                        item.endY,
 
                     index,
 
                     speed:
                         0.00065 +
-                        index * 0.00008
+                        index *
+                        0.00008
                 });
             }
         );
@@ -2665,7 +3164,9 @@ export default class MapRenderer {
                     );
 
                 const sign =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 sign.className =
                     "ffs-sign";
@@ -2755,7 +3256,9 @@ export default class MapRenderer {
                     );
 
                 const label =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 label.className =
                     "ffs-district-label";
@@ -2813,17 +3316,23 @@ export default class MapRenderer {
             {};
 
         const environmentRoot =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         environmentRoot.className =
             "ffs-environment";
 
-        if (environment.weather) {
+        if (
+            environment.weather
+        ) {
             environmentRoot.dataset.weather =
                 environment.weather;
         }
 
-        if (environment.lighting) {
+        if (
+            environment.lighting
+        ) {
             environmentRoot.dataset.lighting =
                 environment.lighting;
         }
@@ -2848,7 +3357,9 @@ export default class MapRenderer {
         clouds.forEach(
             (item, index) => {
                 const cloud =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 cloud.className =
                     "ffs-v09g-cloud";
@@ -2864,11 +3375,21 @@ export default class MapRenderer {
                 );
 
                 this.ambientObjects.push({
-                    element: cloud,
-                    type: "cloud",
-                    baseX: item.x,
-                    speed: item.speed,
-                    range: 260,
+                    element:
+                        cloud,
+
+                    type:
+                        "cloud",
+
+                    baseX:
+                        item.x,
+
+                    speed:
+                        item.speed,
+
+                    range:
+                        260,
+
                     index
                 });
             }
@@ -2899,7 +3420,9 @@ export default class MapRenderer {
         birds.forEach(
             (item, index) => {
                 const bird =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 bird.className =
                     "ffs-v09g-bird";
@@ -2915,11 +3438,21 @@ export default class MapRenderer {
                 );
 
                 this.ambientObjects.push({
-                    element: bird,
-                    type: "bird",
-                    baseX: item.x,
-                    speed: item.speed,
-                    range: 260,
+                    element:
+                        bird,
+
+                    type:
+                        "bird",
+
+                    baseX:
+                        item.x,
+
+                    speed:
+                        item.speed,
+
+                    range:
+                        260,
+
                     index
                 });
             }
@@ -2943,7 +3476,9 @@ export default class MapRenderer {
         }
 
         const title =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         title.className =
             "ffs-city-title";
@@ -2964,24 +3499,30 @@ export default class MapRenderer {
     // ============================================================
 
     startAnimation() {
-        if (this.prefersReducedMotion) {
-            this.updateAnimatedObjects(0);
+        if (
+            this.prefersReducedMotion
+        ) {
+            this.updateAnimatedObjects(
+                0
+            );
+
             return;
         }
 
-        const animate = (timestamp) => {
-            this.animationTime =
-                timestamp;
+        const animate =
+            (timestamp) => {
+                this.animationTime =
+                    timestamp;
 
-            this.updateAnimatedObjects(
-                timestamp
-            );
-
-            this.animationFrame =
-                window.requestAnimationFrame(
-                    animate
+                this.updateAnimatedObjects(
+                    timestamp
                 );
-        };
+
+                this.animationFrame =
+                    window.requestAnimationFrame(
+                        animate
+                    );
+            };
 
         this.animationFrame =
             window.requestAnimationFrame(
@@ -2990,26 +3531,40 @@ export default class MapRenderer {
     }
 
     stopAnimation() {
-        if (this.animationFrame) {
+        if (
+            this.animationFrame
+        ) {
             window.cancelAnimationFrame(
                 this.animationFrame
             );
         }
 
-        this.animationFrame = null;
+        this.animationFrame =
+            null;
 
-        this.animationTime = 0;
+        this.animationTime =
+            0;
 
-        this.animatedObjects = [];
+        this.animatedObjects =
+            [];
 
-        this.npcs = [];
-        this.vehicles = [];
-        this.ambientObjects = [];
+        this.npcs =
+            [];
+
+        this.vehicles =
+            [];
+
+        this.ambientObjects =
+            [];
+
+        this.livingLights =
+            [];
     }
 
     updateAnimatedObjects(timestamp) {
         const time =
-            Number(timestamp) || 0;
+            Number(timestamp) ||
+            0;
 
         // ========================================================
         // VEHICLES
@@ -3031,15 +3586,18 @@ export default class MapRenderer {
                 let y;
 
                 if (
-                    vehicle.route === "west"
+                    vehicle.route ===
+                    "west"
                 ) {
                     x =
                         14 -
-                        progress * 11;
+                        progress *
+                        11;
                 } else {
                     x =
                         3 +
-                        progress * 11;
+                        progress *
+                        11;
                 }
 
                 y =
@@ -3089,7 +3647,8 @@ export default class MapRenderer {
                     );
 
                 if (
-                    vehicle.route === "west"
+                    vehicle.route ===
+                    "west"
                 ) {
                     vehicle.element.style.transform =
                         "scaleX(-1)";
@@ -3186,6 +3745,74 @@ export default class MapRenderer {
                             z
                         )
                     );
+
+                // ------------------------------------------------
+                // WALKING LEG MOVEMENT
+                // FFS v0.9-G.2
+                // ------------------------------------------------
+
+                const legs =
+                    npc.element.querySelectorAll(
+                        ".ffs-v09g-npc-leg"
+                    );
+
+                const walk =
+                    Math.sin(
+                        time *
+                        0.018 +
+                        npc.index *
+                        1.7
+                    );
+
+                if (
+                    legs.length >= 2
+                ) {
+                    legs[0].style.transform =
+                        `translateY(${walk * 1.1}px)`;
+
+                    legs[1].style.transform =
+                        `translateY(${-walk * 1.1}px)`;
+                }
+            }
+        );
+
+        // ========================================================
+        // LIVING PLAZA LIGHTS
+        // FFS v0.9-G.2
+        // ========================================================
+
+        this.livingLights.forEach(
+            (light) => {
+                if (!light.glow) {
+                    return;
+                }
+
+                const pulse =
+                    (
+                        Math.sin(
+                            time *
+                            0.0022 +
+                            light.index *
+                            1.4
+                        ) +
+                        1
+                    ) / 2;
+
+                const opacity =
+                    0.08 +
+                    pulse *
+                    0.09;
+
+                const scale =
+                    0.9 +
+                    pulse *
+                    0.18;
+
+                light.glow.style.opacity =
+                    String(opacity);
+
+                light.glow.style.transform =
+                    `translate(-50%, -50%) scale(${scale})`;
             }
         );
 
@@ -3237,4 +3864,4 @@ export default class MapRenderer {
             }
         );
     }
-                    }
+            }

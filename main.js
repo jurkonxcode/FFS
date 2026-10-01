@@ -7,6 +7,7 @@ import { MapEngine }
 import { MapRenderer }
     from "./engine/map/MapRenderer.js";
 
+
 // ============================================================
 // FFS - FOUNDER FANTASY SIMULATOR
 // MAIN APPLICATION
@@ -18,11 +19,20 @@ import { MapRenderer }
 // ============================================================
 
 const FFS_CONFIG = {
-    realWorldStart: "2026-08-29T00:00:00Z",
-    ffsWorldStart: "1996-08-29T00:00:00Z",
+
+    realWorldStart:
+        "2026-08-29T00:00:00Z",
+
+    ffsWorldStart:
+        "1996-08-29T00:00:00Z",
+
 
     // Prototype:
-    // 1 real-world hour = 24 FFS hours
+    //
+    // 1 real-world hour
+    // =
+    // 24 FFS hours
+
     ffsTimeMultiplier: 24
 };
 
@@ -32,34 +42,61 @@ const FFS_CONFIG = {
 // ============================================================
 
 const FFS_LANGUAGE = {
+
     current: "id",
 
+
     dictionaries: {
+
         id: ID,
+
         en: EN
     }
 };
 
 
 function t(path) {
+
     const dictionary =
-        FFS_LANGUAGE.dictionaries[FFS_LANGUAGE.current];
+        FFS_LANGUAGE
+            .dictionaries[
+                FFS_LANGUAGE.current
+            ];
+
 
     if (!dictionary) {
+
         return path;
     }
 
-    const parts = path.split(".");
 
-    let value = dictionary;
+    const parts =
+        path.split(".");
+
+
+    let value =
+        dictionary;
+
 
     for (const part of parts) {
-        if (value && Object.prototype.hasOwnProperty.call(value, part)) {
-            value = value[part];
+
+        if (
+            value &&
+            Object.prototype.hasOwnProperty.call(
+                value,
+                part
+            )
+        ) {
+
+            value =
+                value[part];
+
         } else {
+
             return path;
         }
     }
+
 
     return value;
 }
@@ -70,32 +107,59 @@ function t(path) {
 // ============================================================
 
 const FFS_TIME = {
-    realWorldStart: new Date(FFS_CONFIG.realWorldStart),
-    ffsWorldStart: new Date(FFS_CONFIG.ffsWorldStart),
 
-    currentRealWorldTime: null,
-    currentFFSWorldTime: null
+    realWorldStart:
+        new Date(
+            FFS_CONFIG.realWorldStart
+        ),
+
+
+    ffsWorldStart:
+        new Date(
+            FFS_CONFIG.ffsWorldStart
+        ),
+
+
+    currentRealWorldTime:
+        null,
+
+
+    currentFFSWorldTime:
+        null
 };
 
 
 function updateFFSTime() {
-    const now = new Date();
 
-    FFS_TIME.currentRealWorldTime = now;
+    const now =
+        new Date();
+
+
+    FFS_TIME.currentRealWorldTime =
+        now;
+
 
     const elapsedRealMilliseconds =
         now.getTime() -
-        FFS_TIME.realWorldStart.getTime();
+        FFS_TIME
+            .realWorldStart
+            .getTime();
+
 
     const elapsedFFSMilliseconds =
         elapsedRealMilliseconds *
-        FFS_CONFIG.ffsTimeMultiplier;
+        FFS_CONFIG
+            .ffsTimeMultiplier;
+
 
     FFS_TIME.currentFFSWorldTime =
         new Date(
-            FFS_TIME.ffsWorldStart.getTime() +
+            FFS_TIME
+                .ffsWorldStart
+                .getTime() +
             elapsedFFSMilliseconds
         );
+
 
     updateTimeUI();
 }
@@ -105,21 +169,37 @@ function updateFFSTime() {
 // 4. DATE FORMATTER
 // ============================================================
 
-function formatDate(date, language = FFS_LANGUAGE.current) {
-    if (!(date instanceof Date) || isNaN(date.getTime())) {
+function formatDate(
+    date,
+    language = FFS_LANGUAGE.current
+) {
+
+    if (
+        !(date instanceof Date) ||
+        isNaN(date.getTime())
+    ) {
+
         return "-";
     }
+
 
     const locale =
         language === "en"
             ? "en-GB"
             : "id-ID";
 
-    return new Intl.DateTimeFormat(locale, {
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-    }).format(date);
+
+    return new Intl.DateTimeFormat(
+        locale,
+        {
+
+            day: "2-digit",
+
+            month: "long",
+
+            year: "numeric"
+        }
+    ).format(date);
 }
 
 
@@ -128,23 +208,35 @@ function formatDate(date, language = FFS_LANGUAGE.current) {
 // ============================================================
 
 function updateTimeUI() {
+
     const realWorldElement =
-        document.getElementById("real-world-time");
+        document.getElementById(
+            "real-world-time"
+        );
+
 
     const ffsWorldElement =
-        document.getElementById("ffs-world-time");
+        document.getElementById(
+            "ffs-world-time"
+        );
+
 
     if (realWorldElement) {
+
         realWorldElement.textContent =
             formatDate(
-                FFS_TIME.currentRealWorldTime
+                FFS_TIME
+                    .currentRealWorldTime
             );
     }
 
+
     if (ffsWorldElement) {
+
         ffsWorldElement.textContent =
             formatDate(
-                FFS_TIME.currentFFSWorldTime
+                FFS_TIME
+                    .currentFFSWorldTime
             );
     }
 }
@@ -155,56 +247,80 @@ function updateTimeUI() {
 // ============================================================
 
 function updateLanguageUI() {
+
     const titleElement =
-        document.getElementById("app-title");
+        document.getElementById(
+            "app-title"
+        );
+
 
     const realWorldLabel =
-        document.getElementById("real-world-label");
+        document.getElementById(
+            "real-world-label"
+        );
+
 
     const ffsWorldLabel =
-        document.getElementById("ffs-world-label");
+        document.getElementById(
+            "ffs-world-label"
+        );
+
 
     const worldDescription =
-        document.getElementById("world-description");
+        document.getElementById(
+            "world-description"
+        );
+
 
     const indonesiaButton =
-        document.getElementById("language-id");
+        document.getElementById(
+            "language-id"
+        );
+
 
     const englishButton =
-        document.getElementById("language-en");
+        document.getElementById(
+            "language-en"
+        );
 
 
     if (titleElement) {
+
         titleElement.textContent =
             t("app.title");
     }
 
 
     if (realWorldLabel) {
+
         realWorldLabel.textContent =
             t("time.realWorld");
     }
 
 
     if (ffsWorldLabel) {
+
         ffsWorldLabel.textContent =
             t("time.ffsWorld");
     }
 
 
     if (worldDescription) {
+
         worldDescription.textContent =
             t("system.worldDescription");
     }
 
 
     if (indonesiaButton) {
+
         indonesiaButton.textContent =
             t("language.indonesia");
     }
 
 
     if (englishButton) {
+
         englishButton.textContent =
             t("language.english");
     }
@@ -219,7 +335,12 @@ function updateLanguageUI() {
 // ============================================================
 
 function setLanguage(language) {
-    if (!FFS_LANGUAGE.dictionaries[language]) {
+
+    if (
+        !FFS_LANGUAGE
+            .dictionaries[language]
+    ) {
+
         console.warn(
             `[FFS] Language "${language}" is not available.`
         );
@@ -227,9 +348,13 @@ function setLanguage(language) {
         return;
     }
 
-    FFS_LANGUAGE.current = language;
+
+    FFS_LANGUAGE.current =
+        language;
+
 
     updateLanguageUI();
+
 
     console.log(
         `[FFS] Language changed to: ${language}`
@@ -242,14 +367,21 @@ function setLanguage(language) {
 // ============================================================
 
 function setupLanguageButtons() {
+
     const indonesiaButton =
-        document.getElementById("language-id");
+        document.getElementById(
+            "language-id"
+        );
+
 
     const englishButton =
-        document.getElementById("language-en");
+        document.getElementById(
+            "language-en"
+        );
 
 
     if (indonesiaButton) {
+
         indonesiaButton.addEventListener(
             "click",
             () => setLanguage("id")
@@ -258,6 +390,7 @@ function setupLanguageButtons() {
 
 
     if (englishButton) {
+
         englishButton.addEventListener(
             "click",
             () => setLanguage("en")
@@ -270,16 +403,24 @@ function setupLanguageButtons() {
 // 9. WORLD ENGINE
 // ============================================================
 
-let WORLD_ENGINE = null;
+let WORLD_ENGINE =
+    null;
 
-let WORLD_STATE = null;
 
-let MAP_ENGINE = null;
+let WORLD_STATE =
+    null;
 
-let MAP_RENDERER = null;
+
+let MAP_ENGINE =
+    null;
+
+
+let MAP_RENDERER =
+    null;
 
 
 function initializeWorldEngine() {
+
     console.log(
         "[FFS] Starting World Engine..."
     );
@@ -304,11 +445,7 @@ function initializeWorldEngine() {
 
 
 // ============================================================
-// 10. WORLD ENGINE DEBUG INFORMATION
-// ============================================================
-
-// ============================================================
-// MAP ENGINE
+// 10. MAP ENGINE
 // ============================================================
 
 function initializeMapEngine() {
@@ -354,6 +491,42 @@ function initializeMapEngine() {
         MAP_ENGINE.getMapSummary()
     );
 }
+
+
+// ============================================================
+// 11. WORLD ENGINE DEBUG INFORMATION
+// ============================================================
+
+function logWorldInformation() {
+
+    if (!WORLD_ENGINE) {
+
+        console.warn(
+            "[FFS] World Engine has not been initialized."
+        );
+
+        return;
+    }
+
+
+    const world =
+        WORLD_STATE?.world;
+
+
+    console.log(
+        "========================================"
+    );
+
+
+    console.log(
+        "[FFS] WORLD ENGINE v0.2"
+    );
+
+
+    console.log(
+        "========================================"
+    );
+
 
     // --------------------------------------------------------
     // WORLD
@@ -435,7 +608,8 @@ function initializeMapEngine() {
 
     console.log(
         "[FFS] World Summary:",
-        WORLD_ENGINE.getWorldSummary()
+        WORLD_ENGINE
+            .getWorldSummary()
     );
 
 
@@ -446,60 +620,71 @@ function initializeMapEngine() {
 
 
 // ============================================================
-// 11. APPLICATION INITIALIZATION
+// 12. APPLICATION INITIALIZATION
 // ============================================================
 
 function initializeFFS() {
+
     console.log(
         "========================================"
     );
+
 
     console.log(
         "Founder Fantasy Simulator"
     );
 
+
     console.log(
         "Initializing FFS..."
     );
+
 
     console.log(
         "========================================"
     );
 
 
-    // ----------------------------------------
-    // Language
-    // ----------------------------------------
+    // --------------------------------------------------------
+    // LANGUAGE
+    // --------------------------------------------------------
 
     setupLanguageButtons();
 
     updateLanguageUI();
 
 
-    // ----------------------------------------
-    // Time
-    // ----------------------------------------
+    // --------------------------------------------------------
+    // TIME
+    // --------------------------------------------------------
 
     updateFFSTime();
 
 
-    // ----------------------------------------
-    // World
-    // ----------------------------------------
+    // --------------------------------------------------------
+    // WORLD
+    // --------------------------------------------------------
 
     initializeWorldEngine();
 
 
-    // ----------------------------------------
-    // Debug
-    // ----------------------------------------
+    // --------------------------------------------------------
+    // MAP
+    // --------------------------------------------------------
+
+    initializeMapEngine();
+
+
+    // --------------------------------------------------------
+    // DEBUG
+    // --------------------------------------------------------
 
     logWorldInformation();
 
 
-    // ----------------------------------------
-    // Time Update Loop
-    // ----------------------------------------
+    // --------------------------------------------------------
+    // TIME UPDATE LOOP
+    // --------------------------------------------------------
 
     setInterval(
         updateFFSTime,
@@ -514,7 +699,7 @@ function initializeFFS() {
 
 
 // ============================================================
-// 12. START APPLICATION
+// 13. START APPLICATION
 // ============================================================
 
 document.addEventListener(

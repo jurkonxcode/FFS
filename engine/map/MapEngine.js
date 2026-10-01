@@ -312,33 +312,17 @@ export class MapEngine {
     // GET MAP SUMMARY
     // ========================================================
 
-    getMapSummary() {
+    return {
 
-        return {
+    terrain:
+        this.state.terrain,
 
-            version:
-                this.map?.version
-                ?? null,
+    roads:
+        this.state.roads,
 
-            terrain:
-                this.map?.terrain
-                ?? null,
+    buildings:
+        this.state.buildings,
 
-            regions:
-                this.map?.regions?.length
-                ?? 0,
-
-            cities:
-                this.map?.cities?.length
-                ?? 0,
-
-            roads:
-                this.map?.roads?.length
-                ?? 0,
-
-            buildings:
-                this.map?.buildings?.length
-                ?? 0
-        };
-    }
-}
+    environment:
+        this.state.environment
+};

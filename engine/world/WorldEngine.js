@@ -27,6 +27,10 @@ export class WorldEngine {
     }
 
 
+    // ========================================================
+    // INITIALIZE WORLD
+    // ========================================================
+
     initialize() {
 
         console.log(
@@ -34,45 +38,45 @@ export class WorldEngine {
         );
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // WORLD
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         this.state.world =
             this.initializer
                 .createInitialWorld();
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // REGIONS
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         this.state.regions =
             this.initializer
                 .createInitialRegions();
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // CITIES / LOCATIONS
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         this.state.locations =
             this.initializer
                 .createInitialLocations();
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // INFRASTRUCTURE
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         const infrastructure =
             this.initializer
                 .createInitialInfrastructure();
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // ROADS
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         for (const roadId in infrastructure.roads) {
 
@@ -80,9 +84,8 @@ export class WorldEngine {
                 infrastructure.roads[roadId];
 
 
-            this.state.locations[
-                roadId
-            ] = {
+            this.state.roads[roadId] = {
+
                 ...road,
 
                 location_type: "road"
@@ -90,14 +93,16 @@ export class WorldEngine {
         }
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // INITIAL BUILDINGS
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         this.state.buildings = {
 
             building_001: {
+
                 id: "building_001",
+
                 cityId: "city_001",
 
                 type: "house",
@@ -111,7 +116,9 @@ export class WorldEngine {
 
 
             building_002: {
+
                 id: "building_002",
+
                 cityId: "city_001",
 
                 type: "shop",
@@ -125,7 +132,9 @@ export class WorldEngine {
 
 
             building_003: {
+
                 id: "building_003",
+
                 cityId: "city_001",
 
                 type: "park",
@@ -139,23 +148,26 @@ export class WorldEngine {
         };
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // NPC
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         // NPC belum dibuat pada tahap ini.
-        // Dunia harus terbentuk terlebih dahulu.
-
+        //
+        // Dunia harus dapat terbentuk
+        // sebelum NPC hidup di dalamnya.
 
         this.state.npcs = {};
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // PLAYER
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         // Player belum ada.
-
+        //
+        // Player akan diperkenalkan
+        // setelah World + NPC berjalan.
 
         this.state.players = {};
 
@@ -164,9 +176,9 @@ export class WorldEngine {
         this.state.families = {};
 
 
-        // ----------------------------------------
+        // ----------------------------------------------------
         // TIME
-        // ----------------------------------------
+        // ----------------------------------------------------
 
         this.state.time = {
 
@@ -179,6 +191,10 @@ export class WorldEngine {
         };
 
 
+        // ----------------------------------------------------
+        // DEBUG
+        // ----------------------------------------------------
+
         console.log(
             "[WorldEngine] FFS World initialized:",
             this.state
@@ -189,17 +205,29 @@ export class WorldEngine {
     }
 
 
+    // ========================================================
+    // GET WORLD STATE
+    // ========================================================
+
     getState() {
 
         return this.state;
     }
 
 
+    // ========================================================
+    // GET REAL WORLD DATA
+    // ========================================================
+
     getRealWorldData() {
 
         return this.realWorldData;
     }
 
+
+    // ========================================================
+    // WORLD SUMMARY
+    // ========================================================
 
     getWorldSummary() {
 
@@ -216,6 +244,11 @@ export class WorldEngine {
             locations:
                 Object.keys(
                     this.state.locations
+                ).length,
+
+            roads:
+                Object.keys(
+                    this.state.roads
                 ).length,
 
             buildings:

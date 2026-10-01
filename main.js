@@ -1,360 +1,398 @@
 import { WorldEngine } from "./engine/world/WorldEngine.js";
+
+// ============================================================
+// FFS - FOUNDER FANTASY SIMULATOR
+// MAIN APPLICATION
+// ============================================================
+
+
+// ============================================================
+// 1. FFS CONFIGURATION
+// ============================================================
+
 const FFS_CONFIG = {
     realWorldStart: "2026-08-29T00:00:00Z",
     ffsWorldStart: "1996-08-29T00:00:00Z",
+
+    // Prototype:
+    // 1 real-world hour = 24 FFS hours
     ffsTimeMultiplier: 24
 };
-/* =========================================================
-   FOUNDER FANTASY SIMULATOR
-   MAIN APPLICATION
-   ========================================================= */
 
 
-/* =========================================================
-   FFS CONFIGURATION
-   ========================================================= */
-
-const FFS_CONFIG = {
-
-    /*
-     * Real-world starting point.
-     */
-    realWorldStart:
-        "2026-08-29T00:00:00Z",
-
-
-    /*
-     * FFS world starting point.
-     */
-    ffsWorldStart:
-        "1996-08-29T00:00:00Z",
-
-
-    /*
-     * Initial prototype time acceleration.
-     *
-     * 1 real-world hour
-     * =
-     * 24 FFS hours
-     */
-    ffsTimeMultiplier: 24
-
-};
-
-
-/* =========================================================
-   FFS LANGUAGE SYSTEM
-   ========================================================= */
+// ============================================================
+// 2. LANGUAGE SYSTEM
+// ============================================================
 
 const FFS_LANGUAGE = {
-
     current: "id",
 
     dictionaries: {
-
         id: ID,
-
         en: EN
-
     }
-
 };
 
 
-/* =========================================================
-   TRANSLATION FUNCTION
-   ========================================================= */
-
 function t(path) {
+    const dictionary =
+        FFS_LANGUAGE.dictionaries[FFS_LANGUAGE.current];
+
+    if (!dictionary) {
+        return path;
+    }
 
     const parts = path.split(".");
 
-    let value =
-        FFS_LANGUAGE
-            .dictionaries[
-                FFS_LANGUAGE.current
-            ];
-
+    let value = dictionary;
 
     for (const part of parts) {
-
-        value = value?.[part];
-
+        if (value && Object.prototype.hasOwnProperty.call(value, part)) {
+            value = value[part];
+        } else {
+            return path;
+        }
     }
 
-
-    return value ?? path;
-
+    return value;
 }
 
 
-/* =========================================================
-   FFS TIME STATE
-   ========================================================= */
+// ============================================================
+// 3. FFS TIME SYSTEM
+// ============================================================
 
 const FFS_TIME = {
+    realWorldStart: new Date(FFS_CONFIG.realWorldStart),
+    ffsWorldStart: new Date(FFS_CONFIG.ffsWorldStart),
 
-    realWorld: new Date(
-        FFS_CONFIG.realWorldStart
-    ),
-
-    world: new Date(
-        FFS_CONFIG.ffsWorldStart
-    )
-
+    currentRealWorldTime: null,
+    currentFFSWorldTime: null
 };
 
 
-/* =========================================================
-   UPDATE FFS TIME
-   ========================================================= */
-
 function updateFFSTime() {
+    const now = new Date();
 
-    const now = Date.now();
-
-
-    const realWorldStart =
-        new Date(
-            FFS_CONFIG.realWorldStart
-        ).getTime();
-
-
-    const ffsWorldStart =
-        new Date(
-            FFS_CONFIG.ffsWorldStart
-        ).getTime();
-
+    FFS_TIME.currentRealWorldTime = now;
 
     const elapsedRealMilliseconds =
-        now - realWorldStart;
-
+        now.getTime() -
+        FFS_TIME.realWorldStart.getTime();
 
     const elapsedFFSMilliseconds =
         elapsedRealMilliseconds *
         FFS_CONFIG.ffsTimeMultiplier;
 
-
-    FFS_TIME.realWorld =
-        new Date(now);
-
-
-    FFS_TIME.world =
+    FFS_TIME.currentFFSWorldTime =
         new Date(
-            ffsWorldStart +
+            FFS_TIME.ffsWorldStart.getTime() +
             elapsedFFSMilliseconds
         );
 
+    updateTimeUI();
 }
 
 
-/* =========================================================
-   DATE FORMATTER
-   ========================================================= */
+// ============================================================
+// 4. DATE FORMATTER
+// ============================================================
 
-function formatDate(date) {
+function formatDate(date, language = FFS_LANGUAGE.current) {
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+        return "-";
+    }
 
-    const language =
-        FFS_LANGUAGE.current === "id"
-            ? "id-ID"
-            : "en-US";
+    const locale =
+        language === "en"
+            ? "en-GB"
+            : "id-ID";
 
-
-    return date.toLocaleDateString(
-        language,
-        {
-            day: "2-digit",
-            month: "long",
-            year: "numeric"
-        }
-    );
-
+    return new Intl.DateTimeFormat(locale, {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+    }).format(date);
 }
 
 
-/* =========================================================
-   UPDATE TIME UI
-   ========================================================= */
+// ============================================================
+// 5. TIME UI
+// ============================================================
 
 function updateTimeUI() {
+    const realWorldElement =
+        document.getElementById("real-world-time");
+
+    const ffsWorldElement =
+        document.getElementById("ffs-world-time");
+
+    if (realWorldElement) {
+        realWorldElement.textContent =
+            formatDate(
+                FFS_TIME.currentRealWorldTime
+            );
+    }
+
+    if (ffsWorldElement) {
+        ffsWorldElement.textContent =
+            formatDate(
+                FFS_TIME.currentFFSWorldTime
+            );
+    }
+}
+
+
+// ============================================================
+// 6. LANGUAGE UI
+// ============================================================
+
+function updateLanguageUI() {
+    const titleElement =
+        document.getElementById("app-title");
+
+    const realWorldLabel =
+        document.getElementById("real-world-label");
+
+    const ffsWorldLabel =
+        document.getElementById("ffs-world-label");
+
+    const worldDescription =
+        document.getElementById("world-description");
+
+    const indonesiaButton =
+        document.getElementById("language-id");
+
+    const englishButton =
+        document.getElementById("language-en");
+
+
+    if (titleElement) {
+        titleElement.textContent =
+            t("app.title");
+    }
+
+
+    if (realWorldLabel) {
+        realWorldLabel.textContent =
+            t("time.realWorld");
+    }
+
+
+    if (ffsWorldLabel) {
+        ffsWorldLabel.textContent =
+            t("time.ffsWorld");
+    }
+
+
+    if (worldDescription) {
+        worldDescription.textContent =
+            t("system.worldDescription");
+    }
+
+
+    if (indonesiaButton) {
+        indonesiaButton.textContent =
+            t("language.indonesia");
+    }
+
+
+    if (englishButton) {
+        englishButton.textContent =
+            t("language.english");
+    }
+
+
+    updateTimeUI();
+}
+
+
+// ============================================================
+// 7. LANGUAGE SWITCHING
+// ============================================================
+
+function setLanguage(language) {
+    if (!FFS_LANGUAGE.dictionaries[language]) {
+        console.warn(
+            `[FFS] Language "${language}" is not available.`
+        );
+
+        return;
+    }
+
+    FFS_LANGUAGE.current = language;
+
+    updateLanguageUI();
+
+    console.log(
+        `[FFS] Language changed to: ${language}`
+    );
+}
+
+
+// ============================================================
+// 8. LANGUAGE BUTTON EVENTS
+// ============================================================
+
+function setupLanguageButtons() {
+    const indonesiaButton =
+        document.getElementById("language-id");
+
+    const englishButton =
+        document.getElementById("language-en");
+
+
+    if (indonesiaButton) {
+        indonesiaButton.addEventListener(
+            "click",
+            () => setLanguage("id")
+        );
+    }
+
+
+    if (englishButton) {
+        englishButton.addEventListener(
+            "click",
+            () => setLanguage("en")
+        );
+    }
+}
+
+
+// ============================================================
+// 9. WORLD ENGINE
+// ============================================================
+
+let WORLD_ENGINE = null;
+let WORLD_STATE = null;
+
+
+function initializeWorldEngine() {
+    console.log(
+        "[FFS] Starting World Engine..."
+    );
+
+
+    WORLD_ENGINE =
+        new WorldEngine();
+
+
+    WORLD_STATE =
+        WORLD_ENGINE.initialize();
+
+
+    console.log(
+        "[FFS] World State:",
+        WORLD_STATE
+    );
+
+
+    return WORLD_STATE;
+}
+
+
+// ============================================================
+// 10. WORLD ENGINE DEBUG INFORMATION
+// ============================================================
+
+function logWorldInformation() {
+    if (!WORLD_ENGINE) {
+        console.warn(
+            "[FFS] World Engine has not been initialized."
+        );
+
+        return;
+    }
+
+
+    const world =
+        WORLD_STATE?.world;
+
+
+    console.log(
+        "[FFS] World Information:",
+        {
+            world,
+            realWorldData:
+                WORLD_ENGINE.getRealWorldData()
+        }
+    );
+}
+
+
+// ============================================================
+// 11. APPLICATION INITIALIZATION
+// ============================================================
+
+function initializeFFS() {
+    console.log(
+        "========================================"
+    );
+
+    console.log(
+        "Founder Fantasy Simulator"
+    );
+
+    console.log(
+        "Initializing FFS..."
+    );
+
+    console.log(
+        "========================================"
+    );
+
+
+    // ----------------------------------------
+    // Language
+    // ----------------------------------------
+
+    setupLanguageButtons();
+
+    updateLanguageUI();
+
+
+    // ----------------------------------------
+    // Time
+    // ----------------------------------------
 
     updateFFSTime();
 
 
-    document
-        .getElementById("real-world-time")
-        .textContent =
-        formatDate(
-            FFS_TIME.realWorld
-        );
+    // ----------------------------------------
+    // World
+    // ----------------------------------------
+
+    initializeWorldEngine();
 
 
-    document
-        .getElementById("ffs-world-time")
-        .textContent =
-        formatDate(
-            FFS_TIME.world
-        );
+    // ----------------------------------------
+    // Debug
+    // ----------------------------------------
 
-}
+    logWorldInformation();
 
 
-/* =========================================================
-   UPDATE LANGUAGE UI
-   ========================================================= */
-
-function updateLanguageUI() {
-
-    document.documentElement.lang =
-        FFS_LANGUAGE.current;
-
-
-    document.title =
-        t("app.title");
-
-
-    document
-        .getElementById("real-world-label")
-        .textContent =
-        t("time.realWorld");
-
-
-    document
-        .getElementById("ffs-world-label")
-        .textContent =
-        t("time.ffsWorld");
-
-
-    document
-        .getElementById("loading-message")
-        .textContent =
-        t("system.loading");
-
-
-    document
-        .getElementById("world-description")
-        .textContent =
-        t("system.worldDescription");
-
-
-    document
-        .getElementById("language-id")
-        .textContent =
-        `🇮🇩 ${t("language.indonesia")}`;
-
-
-    document
-        .getElementById("language-en")
-        .textContent =
-        `🇬🇧 ${t("language.english")}`;
-
-
-    document
-        .getElementById("language-id")
-        .classList.toggle(
-            "active",
-            FFS_LANGUAGE.current === "id"
-        );
-
-
-    document
-        .getElementById("language-en")
-        .classList.toggle(
-            "active",
-            FFS_LANGUAGE.current === "en"
-        );
-
-
-    updateTimeUI();
-
-}
-
-
-/* =========================================================
-   CHANGE LANGUAGE
-   ========================================================= */
-
-function setLanguage(language) {
-
-    if (
-        !FFS_LANGUAGE.dictionaries[language]
-    ) {
-
-        console.warn(
-            "Unsupported language:",
-            language
-        );
-
-        return;
-
-    }
-
-
-    FFS_LANGUAGE.current =
-        language;
-
-
-    updateLanguageUI();
-
-}
-
-
-/* =========================================================
-   LANGUAGE BUTTONS
-   ========================================================= */
-
-document
-    .getElementById("language-id")
-    .addEventListener(
-        "click",
-        () => setLanguage("id")
-    );
-
-
-document
-    .getElementById("language-en")
-    .addEventListener(
-        "click",
-        () => setLanguage("en")
-    );
-
-
-/* =========================================================
-   INITIALIZATION
-   ========================================================= */
-
-function initializeFFS() {
-
-    console.log(
-        "Founder Fantasy Simulator initialized."
-    );
-
-
-    console.log(
-        "Real World:",
-        FFS_TIME.realWorld
-    );
-
-
-    console.log(
-        "FFS World:",
-        FFS_TIME.world
-    );
-
-
-    updateLanguageUI();
-
+    // ----------------------------------------
+    // Time Update Loop
+    // ----------------------------------------
 
     setInterval(
-        updateTimeUI,
+        updateFFSTime,
         1000
     );
 
+
+    console.log(
+        "[FFS] Initialization complete."
+    );
 }
 
 
-/* =========================================================
-   START FFS
-   ========================================================= */
+// ============================================================
+// 12. START APPLICATION
+// ============================================================
 
-initializeFFS();
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeFFS
+);

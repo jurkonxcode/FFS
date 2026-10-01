@@ -1,7 +1,7 @@
 // ============================================================
-// FFS - MAP RENDERER v0.6
-// Visual Proof v0.2
-// Spatial Alignment Pass
+// FFS - MAP RENDERER v0.7
+// Visual Proof v0.3
+// Centered Isometric Map + Zoom System
 // ============================================================
 
 export class MapRenderer {
@@ -26,14 +26,39 @@ export class MapRenderer {
         this.tileWidth = 72;
         this.tileHeight = 36;
 
-        // Visual vertical depth of buildings
         this.buildingDepth = 52;
+
+        // ====================================================
+        // ZOOM
+        // ====================================================
+
+        this.zoom = 1;
+
+        this.minZoom = 0.5;
+        this.maxZoom = 1.5;
+        this.zoomStep = 0.1;
 
         // ====================================================
         // RENDERING LAYERS
         // ====================================================
 
         this.layers = {};
+
+        // ====================================================
+        // MAP REFERENCES
+        // ====================================================
+
+        this.mapData = null;
+        this.renderer = null;
+        this.world = null;
+        this.content = null;
+
+        // ====================================================
+        // MAP DIMENSIONS
+        // ====================================================
+
+        this.mapWidth = 12;
+        this.mapHeight = 9;
 
     }
 
@@ -52,23 +77,61 @@ export class MapRenderer {
 
         }
 
+        this.mapData = mapData;
+
+        const terrain =
+            mapData.terrain ?? {};
+
+        this.mapWidth =
+            terrain.width ?? 12;
+
+        this.mapHeight =
+            terrain.height ?? 9;
+
+
+        // ====================================================
+        // CLEAR CONTAINER
+        // ====================================================
 
         this.container.innerHTML = "";
 
 
-        const renderer =
+        // ====================================================
+        // MAP VIEWPORT
+        // ====================================================
+
+        this.renderer =
             document.createElement("div");
 
-        renderer.className =
+        this.renderer.className =
             "ffs-map-renderer";
 
 
-        const world =
+        // ====================================================
+        // MAP WORLD
+        // ====================================================
+
+        this.world =
             document.createElement("div");
 
-        world.className =
+        this.world.className =
             "ffs-map-world";
 
+
+        // ====================================================
+        // MAP CONTENT
+        // ====================================================
+
+        this.content =
+            document.createElement("div");
+
+        this.content.className =
+            "ffs-map-content";
+
+
+        // ====================================================
+        // LAYERS
+        // ====================================================
 
         this.layers = {
 
@@ -108,19 +171,39 @@ export class MapRenderer {
         Object.values(
             this.layers
         ).forEach(
-            layer => world.appendChild(layer)
+            layer =>
+                this.content.appendChild(layer)
         );
 
 
-        renderer.appendChild(world);
+        this.world.appendChild(
+            this.content
+        );
 
-        this.container.appendChild(
-            renderer
+
+        this.renderer.appendChild(
+            this.world
         );
 
 
         // ====================================================
-        // WORLD LAYERS
+        // ZOOM CONTROLS
+        // ====================================================
+
+        this.createZoomControls();
+
+
+        // ====================================================
+        // APPEND MAP
+        // ====================================================
+
+        this.container.appendChild(
+            this.renderer
+        );
+
+
+        // ====================================================
+        // RENDER WORLD
         // ====================================================
 
         this.renderTerrain(mapData);
@@ -143,6 +226,15 @@ export class MapRenderer {
 
         this.renderCityTitle(mapData);
 
+
+        // ====================================================
+        // CENTER MAP
+        // ====================================================
+
+        this.updateMapLayout();
+
+        this.applyZoom();
+
     }
 
 
@@ -159,6 +251,339 @@ export class MapRenderer {
             `ffs-map-layer ffs-layer-${name}`;
 
         return layer;
+
+    }
+
+
+    // ========================================================
+    // ZOOM CONTROLS
+    // ========================================================
+
+    createZoomControls() {
+
+        const controls =
+            document.createElement("div");
+
+        controls.className =
+            "ffs-map-controls";
+
+
+        // ====================================================
+        // ZOOM OUT
+        // ====================================================
+
+        const zoomOut =
+            document.createElement("button");
+
+        zoomOut.type =
+            "button";
+
+        zoomOut.className =
+            "ffs-map-control";
+
+        zoomOut.textContent =
+            "−";
+
+        zoomOut.setAttribute(
+            "aria-label",
+            "Zoom out"
+        );
+
+
+        zoomOut.addEventListener(
+            "click",
+            () => {
+
+                this.setZoom(
+                    this.zoom -
+                    this.zoomStep
+                );
+
+            }
+        );
+
+
+        // ====================================================
+        // RESET
+        // ====================================================
+
+        const reset =
+            document.createElement("button");
+
+        reset.type =
+            "button";
+
+        reset.className =
+            "ffs-map-zoom-value";
+
+        reset.textContent =
+            this.getZoomLabel();
+
+        reset.setAttribute(
+            "aria-label",
+            "Reset zoom"
+        );
+
+
+        reset.addEventListener(
+            "click",
+            () => {
+
+                this.setZoom(1);
+
+            }
+        );
+
+
+        // ====================================================
+        // ZOOM IN
+        // ====================================================
+
+        const zoomIn =
+            document.createElement("button");
+
+        zoomIn.type =
+            "button";
+
+        zoomIn.className =
+            "ffs-map-control";
+
+        zoomIn.textContent =
+            "+";
+
+        zoomIn.setAttribute(
+            "aria-label",
+            "Zoom in"
+        );
+
+
+        zoomIn.addEventListener(
+            "click",
+            () => {
+
+                this.setZoom(
+                    this.zoom +
+                    this.zoomStep
+                );
+
+            }
+        );
+
+
+        controls.appendChild(
+            zoomOut
+        );
+
+        controls.appendChild(
+            reset
+        );
+
+        controls.appendChild(
+            zoomIn
+        );
+
+
+        this.renderer.appendChild(
+            controls
+        );
+
+    }
+
+
+    // ========================================================
+    // SET ZOOM
+    // ========================================================
+
+    setZoom(value) {
+
+        const nextZoom =
+            Math.max(
+                this.minZoom,
+                Math.min(
+                    this.maxZoom,
+                    value
+                )
+            );
+
+
+        this.zoom =
+            Math.round(
+                nextZoom * 10
+            ) / 10;
+
+
+        this.applyZoom();
+
+    }
+
+
+    // ========================================================
+    // ZOOM LABEL
+    // ========================================================
+
+    getZoomLabel() {
+
+        return `${Math.round(this.zoom * 100)}%`;
+
+    }
+
+
+    // ========================================================
+    // APPLY ZOOM
+    // ========================================================
+
+    applyZoom() {
+
+        if (!this.world) {
+            return;
+        }
+
+
+        this.world.style.transform =
+            `translate(-50%, -50%) scale(${this.zoom})`;
+
+
+        const zoomValue =
+            this.renderer?.querySelector(
+                ".ffs-map-zoom-value"
+            );
+
+
+        if (zoomValue) {
+
+            zoomValue.textContent =
+                this.getZoomLabel();
+
+        }
+
+    }
+
+
+    // ========================================================
+    // UPDATE MAP LAYOUT
+    // ========================================================
+
+    updateMapLayout() {
+
+        if (
+            !this.world ||
+            !this.content
+        ) {
+
+            return;
+
+        }
+
+
+        const terrainWidth =
+            this.mapWidth *
+            this.tileWidth;
+
+
+        const terrainHeight =
+            this.mapHeight *
+            this.tileHeight;
+
+
+        // ====================================================
+        // ISO MAP BOUNDS
+        // ====================================================
+
+        const leftExtent =
+            Math.max(
+                0,
+                this.mapHeight *
+                (this.tileWidth / 2)
+            );
+
+
+        const rightExtent =
+            Math.max(
+                0,
+                this.mapWidth *
+                (this.tileWidth / 2)
+            );
+
+
+        const topExtent =
+            0;
+
+
+        const bottomExtent =
+            (
+                this.mapWidth +
+                this.mapHeight
+            ) *
+            (this.tileHeight / 2);
+
+
+        const contentWidth =
+            Math.max(
+                1000,
+                terrainWidth +
+                terrainHeight
+            );
+
+
+        const contentHeight =
+            Math.max(
+                700,
+                bottomExtent +
+                160
+            );
+
+
+        this.world.style.width =
+            `${contentWidth}px`;
+
+        this.world.style.height =
+            `${contentHeight}px`;
+
+
+        this.content.style.width =
+            `${contentWidth}px`;
+
+        this.content.style.height =
+            `${contentHeight}px`;
+
+
+        // ====================================================
+        // MAP CENTER
+        // ====================================================
+
+        const gridCenter =
+            this.gridToScreen(
+                this.mapWidth / 2,
+                this.mapHeight / 2
+            );
+
+
+        const contentCenterX =
+            contentWidth / 2;
+
+        const contentCenterY =
+            contentHeight / 2;
+
+
+        const offsetX =
+            contentCenterX -
+            gridCenter.left;
+
+
+        const offsetY =
+            contentCenterY -
+            gridCenter.top;
+
+
+        this.content.style.transform =
+            `translate(${offsetX}px, ${offsetY}px)`;
+
+
+        // Prevent unused-variable lint issues in
+        // environments that inspect the source.
+        void leftExtent;
+        void rightExtent;
+        void topExtent;
 
     }
 
@@ -351,21 +776,11 @@ export class MapRenderer {
                         `${position.top}px`;
 
 
-                    if (
+                    sidewalk.classList.add(
                         direction === "vertical"
-                    ) {
-
-                        sidewalk.classList.add(
-                            "road-direction-y"
-                        );
-
-                    } else {
-
-                        sidewalk.classList.add(
-                            "road-direction-x"
-                        );
-
-                    }
+                            ? "road-direction-y"
+                            : "road-direction-x"
+                    );
 
 
                     this.layers
@@ -394,21 +809,11 @@ export class MapRenderer {
                         `${position.top}px`;
 
 
-                    if (
+                    roadElement.classList.add(
                         direction === "vertical"
-                    ) {
-
-                        roadElement.classList.add(
-                            "road-direction-y"
-                        );
-
-                    } else {
-
-                        roadElement.classList.add(
-                            "road-direction-x"
-                        );
-
-                    }
+                            ? "road-direction-y"
+                            : "road-direction-x"
+                    );
 
 
                     // =================================================
@@ -423,21 +828,11 @@ export class MapRenderer {
                         "ffs-road-marking";
 
 
-                    if (
+                    marking.classList.add(
                         direction === "vertical"
-                    ) {
-
-                        marking.classList.add(
-                            "marking-direction-y"
-                        );
-
-                    } else {
-
-                        marking.classList.add(
-                            "marking-direction-x"
-                        );
-
-                    }
+                            ? "marking-direction-y"
+                            : "marking-direction-x"
+                    );
 
 
                     roadElement.appendChild(
@@ -555,12 +950,6 @@ export class MapRenderer {
             map.height ?? 2;
 
 
-        // ====================================================
-        // IMPORTANT:
-        // Position building using the CENTER of its
-        // spatial footprint rather than its top-left corner.
-        // ====================================================
-
         const position =
             this.footprintToScreen(
                 x,
@@ -590,10 +979,6 @@ export class MapRenderer {
         element.style.top =
             `${position.top}px`;
 
-
-        // ====================================================
-        // VISUAL FOOTPRINT
-        // ====================================================
 
         const footprintWidth =
             width *
@@ -632,7 +1017,6 @@ export class MapRenderer {
         element.style.width =
             `${footprintWidth}px`;
 
-
         element.style.height =
             `${visualHeight}px`;
 
@@ -644,10 +1028,8 @@ export class MapRenderer {
         const shadow =
             document.createElement("div");
 
-
         shadow.className =
             "ffs-building-shadow";
-
 
         element.appendChild(
             shadow
@@ -661,10 +1043,8 @@ export class MapRenderer {
         const footprint =
             document.createElement("div");
 
-
         footprint.className =
             "ffs-building-footprint";
-
 
         element.appendChild(
             footprint
@@ -678,10 +1058,8 @@ export class MapRenderer {
         const side =
             document.createElement("div");
 
-
         side.className =
             "ffs-building-side";
-
 
         element.appendChild(
             side
@@ -695,10 +1073,8 @@ export class MapRenderer {
         const body =
             document.createElement("div");
 
-
         body.className =
             "ffs-building-body";
-
 
         element.appendChild(
             body
@@ -712,10 +1088,8 @@ export class MapRenderer {
         const roof =
             document.createElement("div");
 
-
         roof.className =
             "ffs-building-roof";
-
 
         element.appendChild(
             roof
@@ -751,10 +1125,8 @@ export class MapRenderer {
             const door =
                 document.createElement("div");
 
-
             door.className =
                 "ffs-building-door";
-
 
             body.appendChild(
                 door
@@ -770,15 +1142,12 @@ export class MapRenderer {
         const label =
             document.createElement("div");
 
-
         label.className =
             "ffs-building-label";
-
 
         label.textContent =
             building.name ??
             "Building";
-
 
         element.appendChild(
             label
@@ -1418,4 +1787,4 @@ export class MapRenderer {
 
     }
 
-    }
+            }

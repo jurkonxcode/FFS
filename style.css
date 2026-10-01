@@ -1,41 +1,41 @@
 /* ============================================================
-   FFS - FOUNDER FANTASY SIMULATOR
-   VISUAL PROOF v0.1
+   FFS - STYLE v0.5
+   Visual Proof v0.1
+   City Atmosphere & Detail Pass
    ============================================================ */
 
+
+/* ============================================================
+   GLOBAL
+   ============================================================ */
 
 * {
     box-sizing: border-box;
 }
 
 
-html,
-body {
-    margin: 0;
-    padding: 0;
+html {
     min-height: 100%;
 }
 
 
 body {
-    background:
-        linear-gradient(
-            180deg,
-            #10151a 0%,
-            #1b2228 100%
-        );
 
-    color: #e8edf0;
+    margin: 0;
+
+    min-height: 100vh;
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
-}
 
+    background:
+        #10131a;
 
-button {
-    font: inherit;
+    color:
+        #e8edf5;
+
 }
 
 
@@ -44,146 +44,231 @@ button {
    ============================================================ */
 
 #ffs-app {
+
     width: 100%;
-    min-height: 100vh;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    padding: 20px;
+
 }
 
 
+/* ============================================================
+   HEADER
+   ============================================================ */
+
 .ffs-header {
+
     display: flex;
-    justify-content: space-between;
-    align-items: center;
 
-    padding: 18px 22px;
+    justify-content:
+        space-between;
 
-    background: #171d22;
+    align-items:
+        center;
 
-    border-bottom:
-        1px solid #38434b;
+    gap: 20px;
+
+    padding:
+        18px 20px;
+
+    background:
+        #181d27;
+
+    border:
+        1px solid #2c3442;
+
+    border-radius:
+        14px;
+
 }
 
 
 .ffs-title {
-    font-size: 21px;
-    font-weight: 700;
+
+    font-size:
+        24px;
+
+    font-weight:
+        700;
+
 }
 
 
 .ffs-studio {
-    margin-top: 4px;
 
-    font-size: 12px;
+    margin-top:
+        4px;
 
-    color: #9aa8b1;
+    font-size:
+        12px;
 
-    letter-spacing: 1px;
+    opacity:
+        .6;
+
 }
 
 
 .ffs-language {
-    display: flex;
-    gap: 6px;
+
+    display:
+        flex;
+
+    gap:
+        8px;
+
 }
 
 
 .ffs-language button {
-    padding: 7px 10px;
+
+    padding:
+        8px 12px;
 
     border:
-        1px solid #46525a;
+        1px solid #3b4658;
 
-    border-radius: 5px;
+    border-radius:
+        8px;
 
-    background: #222a30;
+    background:
+        #202735;
 
-    color: #dfe7eb;
+    color:
+        #e8edf5;
 
-    cursor: pointer;
+    cursor:
+        pointer;
+
 }
 
 
 /* ============================================================
-   TIME
+   TIME PANEL
    ============================================================ */
 
 .ffs-time-panel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    gap: 14px;
+    display:
+        grid;
 
-    padding: 18px;
+    grid-template-columns:
+        1fr auto 1fr;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+
+    margin-top:
+        16px;
+
 }
 
 
 .ffs-time-card {
-    min-width: 155px;
 
-    padding: 12px;
+    padding:
+        16px;
 
-    background: #1c242a;
+    background:
+        #181d27;
 
     border:
-        1px solid #39464f;
+        1px solid #2c3442;
 
-    border-radius: 7px;
+    border-radius:
+        12px;
 
-    text-align: center;
 }
 
 
 .ffs-time-label {
-    font-size: 10px;
 
-    letter-spacing: 1.5px;
+    font-size:
+        11px;
 
-    color: #8998a2;
+    letter-spacing:
+        1px;
+
+    opacity:
+        .65;
+
 }
 
 
 .ffs-time-value {
-    margin-top: 6px;
 
-    font-size: 15px;
+    margin-top:
+        6px;
 
-    font-weight: 700;
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+
 }
 
 
 .ffs-time-arrow {
-    font-size: 22px;
 
-    color: #8d9ba4;
+    font-size:
+        24px;
+
+    opacity:
+        .5;
+
 }
 
 
 /* ============================================================
-   INTRO
+   WORLD INTRO
    ============================================================ */
 
 .ffs-world-intro {
-    max-width: 1100px;
 
-    margin:
-        0 auto;
+    margin-top:
+        16px;
 
     padding:
-        10px 20px 18px;
+        18px;
+
+    background:
+        #181d27;
+
+    border:
+        1px solid #2c3442;
+
+    border-radius:
+        12px;
+
 }
 
 
 .ffs-world-intro h1 {
-    margin: 0 0 6px;
 
-    font-size: 28px;
+    margin:
+        0 0 8px;
+
+    font-size:
+        22px;
+
 }
 
 
 .ffs-world-intro p {
-    margin: 4px 0;
 
-    color: #9eabb3;
+    margin:
+        6px 0;
+
+    opacity:
+        .75;
+
 }
 
 
@@ -192,64 +277,104 @@ button {
    ============================================================ */
 
 .ffs-world-section {
-    width: 100%;
 
-    padding:
-        0 12px 30px;
+    margin-top:
+        16px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid #30394a;
+
+    border-radius:
+        16px;
+
+    background:
+        #0b0e14;
+
 }
 
 
 #ffs-map-container {
-    width: 100%;
 
-    min-height: 680px;
+    width:
+        100%;
 
-    overflow: auto;
+    min-height:
+        620px;
 
-    background:
-        #0d1114;
+    overflow:
+        auto;
 
-    border:
-        1px solid #39454d;
+    position:
+        relative;
 
-    border-radius: 10px;
-
-    box-shadow:
-        0 15px 45px
-        rgba(0, 0, 0, 0.45);
-
-    position: relative;
-}
-
-
-.ffs-map-renderer {
-    position: relative;
-
-    min-width: 100%;
-
-    min-height: 680px;
-
-    overflow: auto;
-}
-
-
-.ffs-map-world {
-    position: relative;
-
-    margin: 0 auto;
 }
 
 
 /* ============================================================
-   GENERIC LAYER
+   MAP RENDERER
+   ============================================================ */
+
+.ffs-map-renderer {
+
+    position:
+        relative;
+
+    min-width:
+        900px;
+
+    min-height:
+        700px;
+
+    overflow:
+        hidden;
+
+    background:
+        #151b18;
+
+}
+
+
+.ffs-map-world {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        55px;
+
+    transform:
+        translateX(-50%);
+
+    width:
+        1000px;
+
+    height:
+        700px;
+
+}
+
+
+/* ============================================================
+   MAP LAYERS
    ============================================================ */
 
 .ffs-map-layer {
-    position: absolute;
 
-    inset: 0;
+    position:
+        absolute;
 
-    pointer-events: none;
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
 }
 
 
@@ -257,58 +382,104 @@ button {
    TERRAIN
    ============================================================ */
 
-.ffs-terrain-layer {
-    z-index: 1;
-}
-
-
 .ffs-terrain-tile {
-    position: absolute;
 
-    width: 72px;
-    height: 36px;
+    position:
+        absolute;
+
+    width:
+        72px;
+
+    height:
+        36px;
 
     transform:
-        translate(-50%, -50%)
-        rotate(30deg)
-        skewX(-30deg);
+        translate(-36px, -18px)
+        rotate(0deg);
+
+    clip-path:
+        polygon(
+            50% 0%,
+            100% 50%,
+            50% 100%,
+            0% 50%
+        );
 
     background:
-        #657354;
+        #3f6246;
 
     border:
-        1px solid
-        rgba(35, 45, 34, 0.6);
-
-    box-shadow:
-        inset 0 0 0 1px
-        rgba(255, 255, 255, 0.04);
-}
-
-
-.ffs-terrain-tile::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    opacity: 0.18;
-
-    background:
-        repeating-linear-gradient(
-            135deg,
-            transparent 0,
-            transparent 4px,
-            #1d271f 5px,
-            transparent 6px
+        1px solid rgba(
+            255,
+            255,
+            255,
+            .06
         );
+
 }
 
 
-.terrain-variation {
+.terrain-variation-0 {
+    background: #3f6246;
+}
+
+
+.terrain-variation-1 {
+    background: #456a4a;
+}
+
+
+.terrain-variation-2 {
+    background: #3a5b41;
+}
+
+
+.terrain-variation-3 {
+    background: #4a6945;
+}
+
+
+/* ============================================================
+   SIDEWALKS
+   ============================================================ */
+
+.ffs-sidewalk {
+
+    position:
+        absolute;
+
+    width:
+        72px;
+
+    height:
+        36px;
+
+    transform:
+        translate(-36px, -18px);
+
+    clip-path:
+        polygon(
+            50% 0%,
+            100% 50%,
+            50% 100%,
+            0% 50%
+        );
+
     background:
-        #71805e;
+        #999b96;
+
+    opacity:
+        .9;
+
+}
+
+
+.ffs-sidewalk.road-vertical {
+
+    transform:
+        translate(-36px, -18px)
+        rotate(90deg);
+
 }
 
 
@@ -316,123 +487,69 @@ button {
    ROADS
    ============================================================ */
 
-.ffs-road-layer {
-    z-index: 20;
-}
-
-
 .ffs-road {
-    position: absolute;
 
-    height: 48px;
+    position:
+        absolute;
 
-    transform:
-        translate(-5%, -50%);
+    width:
+        72px;
 
-    background:
-        #30363a;
-
-    border-top:
-        5px solid #777c7e;
-
-    border-bottom:
-        5px solid #777c7e;
-
-    box-shadow:
-        0 5px 0
-        rgba(0, 0, 0, 0.25);
-}
-
-
-.road-horizontal {
-    transform:
-        translate(-5%, -50%);
-}
-
-
-.road-vertical {
-    width: 48px !important;
-
-    height: 500px;
+    height:
+        36px;
 
     transform:
-        translate(-50%, -5%);
-}
+        translate(-36px, -18px);
 
-
-.ffs-road::before {
-    content: "";
-
-    position: absolute;
-
-    left: 20px;
-    right: 20px;
-
-    top: 50%;
-
-    height: 3px;
-
-    transform:
-        translateY(-50%);
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            #d9c866 0 24px,
-            transparent 24px 45px
+    clip-path:
+        polygon(
+            50% 0%,
+            100% 50%,
+            50% 100%,
+            0% 50%
         );
-}
-
-
-.road-vertical::before {
-    top: 20px;
-    bottom: 20px;
-
-    left: 50%;
-
-    width: 3px;
-    height: auto;
 
     background:
-        repeating-linear-gradient(
-            180deg,
-            #d9c866 0 24px,
-            transparent 24px 45px
-        );
+        #30343a;
+
+    border:
+        1px solid #202329;
+
 }
 
 
-.ffs-sidewalk {
-    position: absolute;
-
-    height: 62px;
+.ffs-road.road-vertical {
 
     transform:
-        translate(-5%, -50%);
+        translate(-36px, -18px)
+        rotate(90deg);
 
-    background:
-        #aaa59a;
-
-    opacity: 0.65;
-
-    z-index: 19;
 }
 
 
-.ffs-sidewalk::after {
-    content: "";
+.ffs-road-marking {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 5px;
+    width:
+        26px;
+
+    height:
+        2px;
+
+    left:
+        23px;
+
+    top:
+        17px;
 
     background:
-        repeating-linear-gradient(
-            90deg,
-            transparent 0 22px,
-            rgba(55, 55, 55, 0.25) 23px,
-            transparent 24px
-        );
+        #d7c66c;
+
+    opacity:
+        .8;
+
 }
 
 
@@ -440,119 +557,151 @@ button {
    BUILDINGS
    ============================================================ */
 
-.ffs-building-layer {
-    z-index: 100;
-}
-
-
 .ffs-building {
-    position: absolute;
+
+    position:
+        absolute;
 
     transform:
         translate(-50%, -100%);
 
-    filter:
-        drop-shadow(
-            8px 12px 4px
-            rgba(0, 0, 0, 0.30)
+    z-index:
+        20;
+
+}
+
+
+.ffs-building-shadow {
+
+    position:
+        absolute;
+
+    width:
+        90%;
+
+    height:
+        30px;
+
+    left:
+        10%;
+
+    bottom:
+        -8px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            .35
         );
-}
-
-
-.building-shadow {
-    position: absolute;
-
-    left: 8px;
-    bottom: -8px;
-
-    width: 100%;
-    height: 22px;
-
-    background:
-        rgba(0, 0, 0, 0.32);
-
-    transform:
-        skewX(-35deg);
 
     filter:
-        blur(3px);
-}
-
-
-.building-body {
-    position: absolute;
-
-    left: 0;
-    bottom: 0;
-
-    width: 72%;
-    height: 72%;
-
-    overflow: hidden;
-
-    background:
-        #a74d3c;
-
-    border:
-        2px solid
-        rgba(45, 35, 30, 0.75);
-
-    box-shadow:
-        inset -12px 0 0
-        rgba(0, 0, 0, 0.16);
-}
-
-
-.building-side {
-    position: absolute;
-
-    right: 0;
-    bottom: 0;
-
-    width: 30%;
-    height: 72%;
-
-    background:
-        #70372f;
-
-    border-right:
-        2px solid
-        rgba(35, 30, 28, 0.8);
-
-    border-bottom:
-        2px solid
-        rgba(35, 30, 28, 0.8);
+        blur(4px);
 
     transform:
-        skewY(-18deg);
+        skewX(-30deg);
+
 }
 
 
-.building-roof {
-    position: absolute;
+.ffs-building-body {
 
-    left: 0;
-    top: 0;
+    position:
+        absolute;
 
-    width: 72%;
-    height: 27%;
+    left:
+        0;
 
-    background:
-        #b96a52;
+    top:
+        0;
+
+    width:
+        100%;
+
+    height:
+        calc(
+            100% - 52px
+        );
 
     border:
-        2px solid
-        #583c34;
+        1px solid rgba(
+            0,
+            0,
+            0,
+            .4
+        );
+
+    overflow:
+        hidden;
+
+}
+
+
+.ffs-building-side {
+
+    position:
+        absolute;
+
+    right:
+        -14px;
+
+    top:
+        8px;
+
+    width:
+        15px;
+
+    height:
+        calc(
+            100% - 44px
+        );
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            .22
+        );
 
     transform:
-        skewX(-35deg);
+        skewY(32deg);
 
-    transform-origin:
-        bottom left;
+}
 
-    box-shadow:
-        inset 0 -6px 0
-        rgba(0, 0, 0, 0.15);
+
+.ffs-building-roof {
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        -18px;
+
+    width:
+        100%;
+
+    height:
+        38px;
+
+    background:
+        #687078;
+
+    border:
+        1px solid rgba(
+            0,
+            0,
+            0,
+            .4
+        );
+
+    transform:
+        skewY(-10deg);
+
 }
 
 
@@ -560,41 +709,65 @@ button {
    RESIDENTIAL
    ============================================================ */
 
-.building-residential .building-body {
-    background:
-        repeating-linear-gradient(
-            0deg,
-            #a84f3c 0 9px,
-            #8f4134 9px 11px
-        );
+.building-residential {
+
+    width:
+        145px;
+
+    height:
+        135px;
+
 }
 
 
-.building-residential .building-roof {
+.building-residential
+.ffs-building-body {
+
     background:
-        #743d35;
+        #8d5143;
+
 }
 
 
-.building-concrete .building-body {
+.building-residential
+.ffs-building-roof {
+
     background:
-        repeating-linear-gradient(
-            0deg,
-            #9b9d99 0 12px,
-            #858783 12px 14px
-        );
+        #64413a;
+
 }
 
 
-.building-concrete .building-side {
-    background:
-        #676965;
+/* ============================================================
+   CONCRETE
+   ============================================================ */
+
+.building-concrete {
+
+    width:
+        145px;
+
+    height:
+        145px;
+
 }
 
 
-.building-concrete .building-roof {
+.building-concrete
+.ffs-building-body {
+
     background:
-        #777976;
+        #777b7e;
+
+}
+
+
+.building-concrete
+.ffs-building-roof {
+
+    background:
+        #555b60;
+
 }
 
 
@@ -602,87 +775,95 @@ button {
    COMMERCIAL
    ============================================================ */
 
-.building-commercial .building-body {
-    background:
-        #bd874a;
+.building-commercial {
+
+    width:
+        155px;
+
+    height:
+        150px;
+
 }
 
 
-.building-commercial .building-side {
+.building-commercial
+.ffs-building-body {
+
     background:
-        #795632;
+        #6f6260;
+
 }
 
 
-.building-commercial .building-roof {
-    background:
-        #d2a15e;
-}
-
-
-.building-commercial .building-body::after {
-    content: "";
-
-    position: absolute;
-
-    left: 7px;
-    right: 7px;
-    bottom: 8px;
-
-    height: 25px;
+.building-commercial
+.ffs-building-roof {
 
     background:
-        #20282c;
+        #48484c;
 
-    border:
-        2px solid #e1d4a2;
 }
 
 
 /* ============================================================
-   CBD / GLASS
+   CBD
    ============================================================ */
 
-.building-cbd .building-body {
-    background:
-        repeating-linear-gradient(
-            90deg,
-            #23586b 0 12px,
-            #43839a 12px 20px,
-            #173b49 20px 25px
-        );
-
-    border-color:
-        #9fb7bd;
-}
-
-
-.building-cbd .building-side {
-    background:
-        #163d4d;
-
-    border-color:
-        #7698a0;
-}
-
-
-.building-cbd .building-roof {
-    background:
-        #5c7880;
-
-    border-color:
-        #b2c4c7;
-
-    height: 18%;
-}
-
-
 .building-cbd {
-    filter:
-        drop-shadow(
-            10px 16px 5px
-            rgba(0, 0, 0, 0.4)
+
+    width:
+        165px;
+
+    height:
+        250px;
+
+}
+
+
+.building-cbd
+.ffs-building-body {
+
+    background:
+        #315b70;
+
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(
+                255,
+                255,
+                255,
+                .07
+            )
+            1px,
+            transparent 1px
         );
+
+    background-size:
+        22px 22px;
+
+}
+
+
+.building-cbd
+.ffs-building-roof {
+
+    background:
+        #263b4b;
+
+}
+
+
+.building-cbd
+.ffs-building-side {
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            .38
+        );
+
 }
 
 
@@ -690,85 +871,122 @@ button {
    WINDOWS
    ============================================================ */
 
-.building-window {
-    position: absolute;
+.ffs-window {
 
-    width: 10px;
-    height: 7px;
+    position:
+        absolute;
+
+    width:
+        14px;
+
+    height:
+        9px;
 
     background:
-        #d9c987;
+        #a9d1d8;
 
     border:
-        1px solid
-        rgba(30, 40, 45, 0.8);
+        1px solid rgba(
+            0,
+            0,
+            0,
+            .3
+        );
 
-    z-index: 4;
-}
+    box-shadow:
+        inset 0 1px 0
+        rgba(
+            255,
+            255,
+            255,
+            .2
+        );
 
-
-.window-glass {
-    background:
-        #b9e0e5;
 }
 
 
 /* ============================================================
-   DOORS
+   DOOR
    ============================================================ */
 
-.building-door {
-    position: absolute;
+.ffs-building-door {
 
-    bottom: 0;
-    left: 50%;
+    position:
+        absolute;
 
-    width: 13px;
-    height: 22px;
+    width:
+        18px;
+
+    height:
+        30px;
+
+    left:
+        50%;
+
+    bottom:
+        0;
 
     transform:
         translateX(-50%);
 
     background:
-        #382d28;
+        #343239;
 
     border:
-        2px solid
-        #d2b477;
+        1px solid #1d1e23;
+
 }
 
 
 /* ============================================================
-   BUILDING LABELS
+   BUILDING LABEL
    ============================================================ */
 
-.building-label {
-    position: absolute;
+.ffs-building-label {
 
-    left: 50%;
-    top: -20px;
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        -34px;
 
     transform:
         translateX(-50%);
 
     padding:
-        3px 6px;
+        4px 7px;
 
-    white-space: nowrap;
+    white-space:
+        nowrap;
+
+    font-size:
+        10px;
 
     background:
-        rgba(16, 21, 24, 0.88);
-
-    color:
-        #e8dfc3;
+        rgba(
+            8,
+            10,
+            14,
+            .78
+        );
 
     border:
-        1px solid
-        #706858;
+        1px solid rgba(
+            255,
+            255,
+            255,
+            .12
+        );
 
-    font-size: 9px;
+    border-radius:
+        4px;
 
-    letter-spacing: 0.5px;
+    color:
+        #eef3f7;
+
 }
 
 
@@ -776,66 +994,106 @@ button {
    TREES
    ============================================================ */
 
-.ffs-tree-layer {
-    z-index: 70;
-}
-
-
 .ffs-tree {
-    position: absolute;
 
-    width: 28px;
-    height: 40px;
+    position:
+        absolute;
+
+    width:
+        34px;
+
+    height:
+        50px;
 
     transform:
         translate(-50%, -75%);
+
+    z-index:
+        30;
+
 }
 
 
 .ffs-tree::before {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    left: 12px;
-    bottom: 0;
+    position:
+        absolute;
 
-    width: 6px;
-    height: 18px;
+    left:
+        50%;
+
+    bottom:
+        0;
+
+    width:
+        8px;
+
+    height:
+        23px;
+
+    transform:
+        translateX(-50%);
 
     background:
-        #604838;
+        #594536;
+
 }
 
 
 .ffs-tree::after {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    left: 0;
-    top: 0;
+    position:
+        absolute;
 
-    width: 28px;
-    height: 28px;
+    left:
+        50%;
 
-    border-radius: 50%;
+    top:
+        0;
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:
+        50%;
 
     background:
-        #3f633f;
+        #315d3b;
 
     box-shadow:
-        8px 5px 0
-        #557746,
-        -7px 7px 0
-        #496d42;
+        8px 8px 0 #3c7045,
+        -7px 9px 0 #294e34;
+
 }
 
 
 .tree-large {
+
     transform:
-        translate(-50%, -75%)
-        scale(1.25);
+        translate(-50%, -80%)
+        scale(1.15);
+
+}
+
+
+.tree-small {
+
+    transform:
+        translate(-50%, -70%)
+        scale(.8);
+
 }
 
 
@@ -843,73 +1101,91 @@ button {
    PROPS
    ============================================================ */
 
-.ffs-prop-layer {
-    z-index: 160;
-}
-
-
 .ffs-prop {
-    position: absolute;
+
+    position:
+        absolute;
+
+    z-index:
+        40;
 
     transform:
-        translate(-50%, -100%);
+        translate(-50%, -50%);
+
 }
 
 
 .prop-lamp {
-    width: 5px;
-    height: 35px;
+
+    width:
+        7px;
+
+    height:
+        35px;
 
     background:
-        #303336;
+        #33373c;
+
 }
 
 
 .prop-lamp::before {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    top: -5px;
-    left: -5px;
+    position:
+        absolute;
 
-    width: 15px;
-    height: 10px;
+    left:
+        -4px;
 
-    border-radius: 50%;
+    top:
+        -4px;
+
+    width:
+        15px;
+
+    height:
+        10px;
+
+    border-radius:
+        50%;
 
     background:
-        #e4d48a;
+        #e7d58a;
 
-    box-shadow:
-        0 0 10px
-        rgba(238, 216, 126, 0.45);
 }
 
 
 .prop-bench {
-    width: 30px;
-    height: 8px;
+
+    width:
+        32px;
+
+    height:
+        8px;
 
     background:
-        #79563a;
+        #79553d;
 
-    border:
-        2px solid
-        #493629;
 }
 
 
 .prop-bin {
-    width: 11px;
-    height: 13px;
+
+    width:
+        12px;
+
+    height:
+        15px;
 
     background:
-        #555c5b;
+        #555b5c;
 
-    border:
-        2px solid
-        #343838;
+    border-radius:
+        2px;
+
 }
 
 
@@ -917,94 +1193,122 @@ button {
    VEHICLES
    ============================================================ */
 
-.ffs-vehicle-layer {
-    z-index: 150;
-}
-
-
 .ffs-vehicle {
-    position: absolute;
 
-    width: 42px;
-    height: 19px;
+    position:
+        absolute;
+
+    z-index:
+        45;
+
+    width:
+        42px;
+
+    height:
+        20px;
 
     transform:
         translate(-50%, -50%)
         skewX(-12deg);
 
-    border:
-        2px solid
-        #202426;
-
     border-radius:
-        5px 7px 4px 4px;
+        5px;
+
+    background:
+        #c7cbd0;
+
+    border:
+        1px solid #22262b;
 
     box-shadow:
-        5px 6px 0
-        rgba(0, 0, 0, 0.22);
+        0 4px 5px
+        rgba(
+            0,
+            0,
+            0,
+            .35
+        );
+
 }
 
 
 .ffs-vehicle::before {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    left: 8px;
-    top: -8px;
+    position:
+        absolute;
 
-    width: 23px;
-    height: 9px;
+    left:
+        8px;
+
+    top:
+        -6px;
+
+    width:
+        23px;
+
+    height:
+        9px;
 
     background:
-        #4e6870;
+        #6c8995;
 
     border:
-        2px solid
-        #202426;
+        1px solid #263238;
 
     border-radius:
-        6px 7px 0 0;
+        4px 4px 1px 1px;
+
 }
 
 
 .ffs-vehicle::after {
-    content: "";
 
-    position: absolute;
+    content:
+        "";
 
-    left: 5px;
-    bottom: -6px;
+    position:
+        absolute;
 
-    width: 7px;
-    height: 7px;
+    left:
+        6px;
 
-    border-radius: 50%;
+    bottom:
+        -4px;
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
 
     background:
-        #15191b;
+        #181a1d;
 
     box-shadow:
-        27px 0 0
-        #15191b;
-}
+        24px 0 0 #181a1d;
 
-
-.vehicle-sedan {
-    background:
-        #a9473f;
 }
 
 
 .vehicle-wagon {
-    background:
-        #4d6874;
+
+    width:
+        47px;
+
 }
 
 
-.vehicle-van {
+.vehicle-sedan {
+
     background:
-        #c5b58b;
+        #b9bec4;
+
 }
 
 
@@ -1012,39 +1316,53 @@ button {
    SIGNS
    ============================================================ */
 
-.ffs-sign-layer {
-    z-index: 190;
-}
-
-
 .ffs-sign {
-    position: absolute;
 
-    padding:
-        4px 7px;
+    position:
+        absolute;
+
+    z-index:
+        55;
 
     transform:
-        translate(-50%, -50%);
+        translate(-50%, -100%);
+
+    padding:
+        5px 8px;
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        .5px;
 
     background:
-        #18252b;
-
-    color:
-        #f0d96e;
+        #222833;
 
     border:
-        1px solid
-        #e0c963;
+        1px solid #77818e;
+
+    color:
+        #f2f4f5;
+
+    border-radius:
+        3px;
+
+    white-space:
+        nowrap;
 
     box-shadow:
-        3px 3px 0
-        rgba(0, 0, 0, 0.25);
+        0 3px 5px
+        rgba(
+            0,
+            0,
+            0,
+            .3
+        );
 
-    font-size: 9px;
-
-    font-weight: 700;
-
-    white-space: nowrap;
 }
 
 
@@ -1052,103 +1370,56 @@ button {
    DISTRICT LABELS
    ============================================================ */
 
-.ffs-district-layer {
-    z-index: 30;
-}
-
-
 .ffs-district-label {
-    position: absolute;
+
+    position:
+        absolute;
+
+    z-index:
+        70;
 
     transform:
         translate(-50%, -50%);
 
     padding:
-        5px 9px;
-
-    background:
-        rgba(30, 37, 34, 0.55);
-
-    border:
-        1px solid
-        rgba(210, 210, 185, 0.4);
-
-    color:
-        rgba(235, 232, 204, 0.78);
-
-    font-size: 8px;
-
-    letter-spacing: 1.2px;
-}
-
-
-/* ============================================================
-   ENVIRONMENT
-   ============================================================ */
-
-.ffs-environment-layer {
-    z-index: 500;
-
-    pointer-events: none;
-}
-
-
-.ffs-1996-atmosphere {
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        radial-gradient(
-            ellipse at center,
-            transparent 35%,
-            rgba(8, 13, 15, 0.12) 100%
-        );
-
-    pointer-events: none;
-}
-
-
-.ffs-1996-atmosphere::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    opacity: 0.07;
-
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent 0 3px,
-            #d7d2b5 4px
-        );
-}
-
-
-.ffs-era-label {
-    position: absolute;
-
-    right: 22px;
-    bottom: 18px;
-
-    padding:
         6px 10px;
 
-    background:
-        rgba(15, 20, 22, 0.82);
+    font-size:
+        10px;
 
-    border:
-        1px solid
-        #6e746e;
+    font-weight:
+        700;
+
+    letter-spacing:
+        1px;
 
     color:
-        #d9d5bb;
+        rgba(
+            235,
+            242,
+            247,
+            .72
+        );
 
-    font-size: 10px;
+    background:
+        rgba(
+            12,
+            16,
+            20,
+            .48
+        );
 
-    letter-spacing: 1px;
+    border:
+        1px solid rgba(
+            255,
+            255,
+            255,
+            .08
+        );
+
+    border-radius:
+        5px;
+
 }
 
 
@@ -1157,50 +1428,173 @@ button {
    ============================================================ */
 
 .ffs-city-title {
-    position: absolute;
 
-    left: 50%;
-    top: 20px;
+    position:
+        absolute;
+
+    z-index:
+        100;
+
+    top:
+        4px;
+
+    left:
+        50%;
 
     transform:
         translateX(-50%);
 
-    z-index: 700;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
 
     padding:
-        8px 15px;
+        8px 14px;
 
     background:
-        rgba(13, 18, 20, 0.9);
+        rgba(
+            10,
+            14,
+            19,
+            .86
+        );
 
     border:
-        1px solid
-        #67716e;
+        1px solid #394554;
 
-    color:
-        #eee5c6;
+    border-radius:
+        7px;
 
-    font-size: 15px;
+    box-shadow:
+        0 5px 15px
+        rgba(
+            0,
+            0,
+            0,
+            .3
+        );
 
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-    text-align: center;
 }
 
 
-.ffs-city-subtitle {
-    margin-top: 4px;
+.ffs-city-title strong {
 
-    font-size: 8px;
+    font-size:
+        13px;
 
-    font-weight: 400;
+}
 
-    letter-spacing: 1.5px;
 
-    color:
-        #9ba79c;
+.ffs-city-title span {
+
+    font-size:
+        12px;
+
+    opacity:
+        .7;
+
+}
+
+
+.ffs-city-title small {
+
+    font-size:
+        9px;
+
+    opacity:
+        .55;
+
+}
+
+
+/* ============================================================
+   ENVIRONMENT
+   ============================================================ */
+
+.ffs-environment {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+}
+
+
+.ffs-environment[data-weather="clear"] {
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(
+                255,
+                255,
+                255,
+                .025
+            ),
+            transparent 35%
+        );
+
+}
+
+
+.ffs-environment[data-lighting="day"] {
+
+    opacity:
+        1;
+
+}
+
+
+/* ============================================================
+   RETRO / DITHERING ATMOSPHERE
+   ============================================================ */
+
+.ffs-map-renderer::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    opacity:
+        .055;
+
+    background-image:
+        radial-gradient(
+            rgba(
+                255,
+                255,
+                255,
+                .45
+            )
+            .6px,
+            transparent
+            .7px
+        );
+
+    background-size:
+        4px 4px;
+
+    mix-blend-mode:
+        overlay;
+
 }
 
 
@@ -1209,22 +1603,28 @@ button {
    ============================================================ */
 
 .ffs-footer {
-    display: flex;
 
-    justify-content: center;
+    display:
+        flex;
 
-    gap: 30px;
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    margin-top:
+        16px;
 
     padding:
-        20px;
+        14px 18px;
 
-    color:
-        #77838b;
+    font-size:
+        11px;
 
-    font-size: 11px;
+    opacity:
+        .55;
 
-    border-top:
-        1px solid #303a41;
 }
 
 
@@ -1236,51 +1636,86 @@ button {
     max-width: 700px
 ) {
 
-    .ffs-header {
-        align-items: flex-start;
+    #ffs-app {
 
-        gap: 12px;
+        padding:
+            10px;
+
     }
 
 
-    .ffs-title {
-        font-size: 17px;
+    .ffs-header {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+    }
+
+
+    .ffs-language {
+
+        width:
+            100%;
+
+    }
+
+
+    .ffs-language button {
+
+        flex:
+            1;
+
     }
 
 
     .ffs-time-panel {
-        gap: 6px;
 
-        padding:
-            12px 8px;
+        grid-template-columns:
+            1fr;
+
     }
 
 
-    .ffs-time-card {
-        min-width: 120px;
+    .ffs-time-arrow {
+
+        display:
+            none;
+
     }
 
 
-    .ffs-world-intro h1 {
-        font-size: 23px;
+    .ffs-time-value {
+
+        font-size:
+            15px;
+
     }
 
 
     #ffs-map-container {
-        min-height: 620px;
+
+        min-height:
+            540px;
+
     }
 
 
     .ffs-map-renderer {
-        min-height: 620px;
+
+        min-width:
+            900px;
+
     }
 
 
     .ffs-footer {
-        flex-direction: column;
 
-        align-items: center;
+        flex-direction:
+            column;
 
-        gap: 6px;
     }
-}
+
+   }

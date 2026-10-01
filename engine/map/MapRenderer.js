@@ -1069,10 +1069,7 @@ export default class MapRenderer {
         const ix = Math.round(x);
         const iy = Math.round(y);
 
-        // --------------------------------------------------------
         // elevation[][]
-        // --------------------------------------------------------
-
         if (
             Array.isArray(terrain.elevation) &&
             Array.isArray(terrain.elevation[iy]) &&
@@ -1083,10 +1080,7 @@ export default class MapRenderer {
             return Number(terrain.elevation[iy][ix]);
         }
 
-        // --------------------------------------------------------
         // heights[][]
-        // --------------------------------------------------------
-
         if (
             Array.isArray(terrain.heights) &&
             Array.isArray(terrain.heights[iy]) &&
@@ -1097,10 +1091,7 @@ export default class MapRenderer {
             return Number(terrain.heights[iy][ix]);
         }
 
-        // --------------------------------------------------------
         // tiles[]
-        // --------------------------------------------------------
-
         if (Array.isArray(terrain.tiles)) {
             const tile = terrain.tiles.find(
                 (item) =>
@@ -1119,10 +1110,7 @@ export default class MapRenderer {
             }
         }
 
-        // --------------------------------------------------------
         // VISUAL FALLBACK
-        // --------------------------------------------------------
-
         const distance =
             Math.abs(ix - Math.floor(this.mapWidth / 2)) +
             Math.abs(iy - Math.floor(this.mapHeight / 2));
@@ -1911,10 +1899,6 @@ export default class MapRenderer {
                 )
             );
 
-        // --------------------------------------------------------
-        // SHADOW
-        // --------------------------------------------------------
-
         const shadow =
             document.createElement("div");
 
@@ -1924,10 +1908,6 @@ export default class MapRenderer {
         element.appendChild(
             shadow
         );
-
-        // --------------------------------------------------------
-        // FOOTPRINT
-        // --------------------------------------------------------
 
         const footprint =
             document.createElement("div");
@@ -1939,10 +1919,6 @@ export default class MapRenderer {
             footprint
         );
 
-        // --------------------------------------------------------
-        // SIDE
-        // --------------------------------------------------------
-
         const side =
             document.createElement("div");
 
@@ -1952,10 +1928,6 @@ export default class MapRenderer {
         element.appendChild(
             side
         );
-
-        // --------------------------------------------------------
-        // BODY
-        // --------------------------------------------------------
 
         const body =
             document.createElement("div");
@@ -1967,10 +1939,6 @@ export default class MapRenderer {
             body
         );
 
-        // --------------------------------------------------------
-        // ROOF
-        // --------------------------------------------------------
-
         const roof =
             document.createElement("div");
 
@@ -1981,10 +1949,6 @@ export default class MapRenderer {
             roof
         );
 
-        // --------------------------------------------------------
-        // WINDOWS
-        // --------------------------------------------------------
-
         if (type !== "park") {
             this.createWindows(
                 element,
@@ -1993,10 +1957,6 @@ export default class MapRenderer {
                 visualHeight
             );
         }
-
-        // --------------------------------------------------------
-        // DOOR
-        // --------------------------------------------------------
 
         if (
             type === "residential" ||
@@ -2012,10 +1972,6 @@ export default class MapRenderer {
                 door
             );
         }
-
-        // --------------------------------------------------------
-        // LABEL
-        // --------------------------------------------------------
 
         const label =
             document.createElement("div");
@@ -3237,4 +3193,4 @@ export default class MapRenderer {
             }
         );
     }
-                }
+        }

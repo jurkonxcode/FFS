@@ -1,138 +1,163 @@
 // ============================================================
-// FFS - MAP RENDERER
+// FFS - FOUNDER FANTASY SIMULATOR
+// MAP RENDERER
 // Visual Proof v0.1
-// Living City Foundation
 // ============================================================
-
 
 export class MapRenderer {
 
     constructor(containerId) {
 
         this.container =
-            document.getElementById(
-                containerId
-            );
+            document.getElementById(containerId);
 
         if (!this.container) {
 
             throw new Error(
-                `[MapRenderer] Container #${containerId} tidak ditemukan.`
+                `[FFS] Map container "${containerId}" tidak ditemukan.`
             );
         }
 
-        this.version =
-            "0.4";
-
-        this.tileWidth =
-            72;
-
-        this.tileHeight =
-            36;
-
-        this.mapWidth =
-            16;
-
-        this.mapHeight =
-            12;
-
-        this.buildingHeightUnit =
-            18;
+        this.tileWidth = 72;
+        this.tileHeight = 36;
+        this.buildingDepth = 52;
     }
 
 
     // ========================================================
-    // RENDER
+    // MAIN RENDER
     // ========================================================
 
-    render(mapData) {
+    render(mapData = {}) {
 
-        this.clear();
+        this.container.innerHTML = "";
 
-        if (!mapData) {
+        this.container.className =
+            "ffs-map-renderer";
 
-            this.renderEmpty(
-                "No map data available."
-            );
+        const terrain =
+            mapData.terrain || {
+                width: 16,
+                height: 12
+            };
 
-            return;
-        }
+        const roads =
+            mapData.roads || [];
 
+        const buildings =
+            mapData.buildings || {};
 
-        this.mapWidth =
-            mapData.terrain?.width ?? 16;
-
-        this.mapHeight =
-            mapData.terrain?.height ?? 12;
-
-
-        this.createRoot();
+        const environment =
+            mapData.environment || {};
 
 
-        // WORLD LAYERS
+        const mapWidth =
+            terrain.width * this.tileWidth;
 
-        this.renderTerrain();
+        const mapHeight =
+            terrain.height * this.tileHeight;
+
+
+        const world =
+            document.createElement("div");
+
+        world.className =
+            "ffs-map-world";
+
+        world.style.width =
+            `${mapWidth + 500}px`;
+
+        world.style.height =
+            `${mapHeight + 420}px`;
+
+
+        this.container.appendChild(world);
+
+
+        this.renderTerrain(
+            world,
+            terrain
+        );
+
 
         this.renderRoads(
-            mapData.roads ?? {}
+            world,
+            roads
         );
 
-        this.renderEnvironment(
-            mapData.environment ?? {}
-        );
 
         this.renderBuildings(
-            mapData.buildings ?? {}
+            world,
+            buildings
         );
+
 
         this.renderTrees(
-            mapData
+            world,
+            terrain
         );
+
 
         this.renderProps(
-    mapData
-);
-
-this.renderVehicles(
-    mapData
-);
-
-this.renderSigns(
-    mapData
-);
-
-this.renderDistrictLabels(
-    mapData
-);
-
-this.renderCityLabel();
-
-
-    // ========================================================
-    // ROOT
-    // ========================================================
-
-    createRoot() {
-
-        this.root =
-            document.createElement(
-                "div"
-            );
-
-        this.root.className =
-            "ffs-map-v04";
-
-
-        this.root.style.width =
-            `${this.getMapPixelWidth()}px`;
-
-        this.root.style.height =
-            `${this.getMapPixelHeight()}px`;
-
-
-        this.container.appendChild(
-            this.root
+            world,
+            roads,
+            terrain
         );
+
+
+        this.renderVehicles(
+            world,
+            roads
+        );
+
+
+        this.renderSigns(
+            world,
+            buildings
+        );
+
+
+        this.renderDistrictLabels(
+            world
+        );
+
+
+        this.renderEnvironment(
+            world,
+            environment
+        );
+
+
+        this.renderCityTitle(
+            world
+        );
+    }
+
+
+    // ========================================================
+    // ISOMETRIC POSITION
+    // ========================================================
+
+    gridToScreen(x, y) {
+
+        const centerX =
+            250;
+
+        const topY =
+            80;
+
+        return {
+
+            x:
+                centerX +
+                (x - y) *
+                (this.tileWidth / 2),
+
+            y:
+                topY +
+                (x + y) *
+                (this.tileHeight / 2)
+        };
     }
 
 
@@ -140,48 +165,51 @@ this.renderCityLabel();
     // TERRAIN
     // ========================================================
 
-    renderTerrain() {
+    renderTerrain(
+        world,
+        terrain
+    ) {
 
         const layer =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         layer.className =
-            "map-terrain-layer-v04";
+            "ffs-map-layer ffs-terrain-layer";
 
-
-        this.root.appendChild(
-            layer
-        );
+        world.appendChild(layer);
 
 
         for (
             let y = 0;
-            y < this.mapHeight;
+            y < terrain.height;
             y++
         ) {
 
             for (
                 let x = 0;
-                x < this.mapWidth;
+                x < terrain.width;
                 x++
             ) {
 
+                const position =
+                    this.gridToScreen(x, y);
+
+
                 const tile =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
                 tile.className =
-                    "map-tile-v04";
+                    "ffs-terrain-tile";
 
 
-                const position =
-                    this.gridToScreen(
-                        x,
-                        y
+                if (
+                    (x + y) % 5 === 0
+                ) {
+
+                    tile.classList.add(
+                        "terrain-variation"
                     );
+                }
 
 
                 tile.style.left =
@@ -190,24 +218,8 @@ this.renderCityLabel();
                 tile.style.top =
                     `${position.y}px`;
 
-                tile.style.width =
-                    `${this.tileWidth}px`;
 
-                tile.style.height =
-                    `${this.tileHeight}px`;
-
-
-                const variation =
-                    (x * 7 + y * 13) % 4;
-
-
-                tile.dataset.variation =
-                    variation;
-
-
-                layer.appendChild(
-                    tile
-                );
+                layer.appendChild(tile);
             }
         }
     }
@@ -217,212 +229,109 @@ this.renderCityLabel();
     // ROADS
     // ========================================================
 
-    renderRoads(roads) {
+    renderRoads(
+        world,
+        roads
+    ) {
 
         const layer =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         layer.className =
-            "map-roads-layer-v04";
+            "ffs-map-layer ffs-road-layer";
+
+        world.appendChild(layer);
 
 
-        this.root.appendChild(
-            layer
-        );
+        roads.forEach(
+            (road, index) => {
+
+                const map =
+                    road.map || {};
+
+                const x =
+                    map.x ?? 1;
+
+                const y =
+                    map.y ?? 6;
+
+                const width =
+                    map.width ?? 8;
+
+                const direction =
+                    map.direction ||
+                    "horizontal";
 
 
-        Object.values(roads)
-            .forEach(
-                road => {
-
-                    if (!road.map) {
-                        return;
-                    }
-
-                    this.renderRoad(
-                        layer,
-                        road
+                const position =
+                    this.gridToScreen(
+                        x,
+                        y
                     );
-                }
-            );
-    }
 
 
-    renderRoad(layer, road) {
+                const roadElement =
+                    document.createElement("div");
 
-        const map =
-            road.map;
-
-
-        const width =
-            map.width ?? 1;
-
-        const x =
-            map.x ?? 0;
-
-        const y =
-            map.y ?? 0;
+                roadElement.className =
+                    "ffs-road";
 
 
-        const direction =
-            map.direction ??
-            "horizontal";
+                roadElement.classList.add(
+                    direction === "vertical"
+                        ? "road-vertical"
+                        : "road-horizontal"
+                );
 
 
-        for (
-            let i = 0;
-            i < width;
-            i++
-        ) {
+                roadElement.style.left =
+                    `${position.x}px`;
 
-            let tileX =
-                x;
-
-            let tileY =
-                y;
+                roadElement.style.top =
+                    `${position.y}px`;
 
 
-            if (
-                direction ===
-                "horizontal"
-            ) {
+                roadElement.style.width =
+                    `${Math.max(
+                        180,
+                        width * 58
+                    )}px`;
 
-                tileX += i;
 
-            } else {
+                roadElement.style.zIndex =
+                    20 + index;
 
-                tileY += i;
+
+                layer.appendChild(
+                    roadElement
+                );
+
+
+                const sidewalk =
+                    document.createElement("div");
+
+                sidewalk.className =
+                    "ffs-sidewalk";
+
+
+                sidewalk.style.left =
+                    `${position.x - 8}px`;
+
+                sidewalk.style.top =
+                    `${position.y - 8}px`;
+
+
+                sidewalk.style.width =
+                    `${Math.max(
+                        200,
+                        width * 58 + 16
+                    )}px`;
+
+
+                layer.appendChild(
+                    sidewalk
+                );
             }
-
-
-            const position =
-                this.gridToScreen(
-                    tileX,
-                    tileY
-                );
-
-
-            const road =
-                document.createElement(
-                    "div"
-                );
-
-            road.className =
-                "map-road-v04";
-
-
-            road.style.left =
-                `${position.x}px`;
-
-            road.style.top =
-                `${position.y}px`;
-
-            road.style.width =
-                `${this.tileWidth}px`;
-
-            road.style.height =
-                `${this.tileHeight}px`;
-
-
-            layer.appendChild(
-                road
-            );
-
-
-            this.renderRoadMarking(
-                layer,
-                position,
-                direction
-            );
-
-
-            this.renderSidewalk(
-                layer,
-                position
-            );
-        }
-    }
-
-
-    // ========================================================
-    // ROAD MARKING
-    // ========================================================
-
-    renderRoadMarking(
-        layer,
-        position,
-        direction
-    ) {
-
-        const marking =
-            document.createElement(
-                "div"
-            );
-
-
-        marking.className =
-            "road-marking-v04";
-
-
-        marking.style.left =
-            `${position.x}px`;
-
-        marking.style.top =
-            `${position.y}px`;
-
-        marking.style.width =
-            `${this.tileWidth}px`;
-
-        marking.style.height =
-            `${this.tileHeight}px`;
-
-
-        marking.dataset.direction =
-            direction;
-
-
-        layer.appendChild(
-            marking
-        );
-    }
-
-
-    // ========================================================
-    // SIDEWALK
-    // ========================================================
-
-    renderSidewalk(
-        layer,
-        position
-    ) {
-
-        const sidewalk =
-            document.createElement(
-                "div"
-            );
-
-
-        sidewalk.className =
-            "map-sidewalk-v04";
-
-
-        sidewalk.style.left =
-            `${position.x}px`;
-
-        sidewalk.style.top =
-            `${position.y}px`;
-
-        sidewalk.style.width =
-            `${this.tileWidth}px`;
-
-        sidewalk.style.height =
-            `${this.tileHeight}px`;
-
-
-        layer.appendChild(
-            sidewalk
         );
     }
 
@@ -431,353 +340,332 @@ this.renderCityLabel();
     // BUILDINGS
     // ========================================================
 
-    renderBuildings(buildings) {
+    renderBuildings(
+        world,
+        buildings
+    ) {
 
         const layer =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         layer.className =
-            "map-buildings-layer-v04";
+            "ffs-map-layer ffs-building-layer";
+
+        world.appendChild(layer);
 
 
-        this.root.appendChild(
-            layer
-        );
+        const buildingList =
+            Array.isArray(buildings)
+                ? buildings
+                : Object.values(buildings);
 
 
-        const ordered =
-            Object.values(buildings)
-                .filter(
-                    building =>
-                        building.map
-                )
-                .sort(
-                    (a, b) =>
-                        (
-                            (a.map.x + a.map.y)
-                        ) -
-                        (
-                            (b.map.x + b.map.y)
-                        )
-                );
+        buildingList
+            .sort(
+                (a, b) => {
 
+                    const ay =
+                        (a.map?.x || 0) +
+                        (a.map?.y || 0);
 
-        ordered.forEach(
-            building => {
+                    const by =
+                        (b.map?.x || 0) +
+                        (b.map?.y || 0);
 
-                this.renderBuilding(
-                    layer,
-                    building
-                );
-            }
-        );
+                    return ay - by;
+                }
+            )
+            .forEach(
+                building => {
+
+                    this.createBuilding(
+                        layer,
+                        building
+                    );
+                }
+            );
     }
 
 
-    renderBuilding(
+    createBuilding(
         layer,
         building
     ) {
 
         const map =
-            building.map;
+            building.map || {};
+
+        const x =
+            map.x ?? 3;
+
+        const y =
+            map.y ?? 3;
+
+        const width =
+            map.width ?? 2;
+
+        const height =
+            map.height ?? 2;
 
 
         const position =
             this.gridToScreen(
-                map.x ?? 0,
-                map.y ?? 0
+                x,
+                y
             );
 
 
-        const visual =
-            this.getBuildingVisual(
+        const type =
+            this.getBuildingType(
                 building
             );
 
 
-        const width =
-            (map.width ?? 1) *
-            this.tileWidth;
+        const element =
+            document.createElement("div");
+
+        element.className =
+            "ffs-building";
+
+        element.classList.add(
+            `building-${type}`
+        );
 
 
-        const depth =
-            (map.height ?? 1) *
-            this.tileHeight;
-
-
-        const height =
-            visual.height *
-            this.buildingHeightUnit;
-
-
-        const wrapper =
-            document.createElement(
-                "div"
-            );
-
-
-        wrapper.className =
-            `map-building-v04 ${visual.className}`;
-
-
-        wrapper.style.left =
+        element.style.left =
             `${position.x}px`;
 
-        wrapper.style.top =
+        element.style.top =
             `${position.y}px`;
 
-        wrapper.style.width =
-            `${width}px`;
 
-        wrapper.style.height =
-            `${depth + height}px`;
-
-
-        // SHADOW
-
-        const shadow =
-            document.createElement(
-                "div"
+        const buildingWidth =
+            Math.max(
+                82,
+                width * 42
             );
 
+
+        const buildingHeight =
+            Math.max(
+                64,
+                height * 38
+            );
+
+
+        const floors =
+            type === "cbd"
+                ? 7
+                : type === "commercial"
+                    ? 3
+                    : 2;
+
+
+        const totalHeight =
+            buildingHeight +
+            floors * 13;
+
+
+        element.style.width =
+            `${buildingWidth}px`;
+
+        element.style.height =
+            `${totalHeight}px`;
+
+
+        element.style.zIndex =
+            100 +
+            Math.floor(
+                (x + y) * 3
+            );
+
+
+        // ----------------------------------------------------
+        // Shadow
+        // ----------------------------------------------------
+
+        const shadow =
+            document.createElement("div");
+
         shadow.className =
-            "building-shadow-v04";
+            "building-shadow";
 
-
-        shadow.style.width =
-            `${width * 0.95}px`;
-
-        shadow.style.height =
-            `${depth * 0.65}px`;
-
-        shadow.style.left =
-            `${width * 0.12}px`;
-
-        shadow.style.top =
-            `${height + depth * 0.35}px`;
-
-
-        wrapper.appendChild(
+        element.appendChild(
             shadow
         );
 
 
-        // FRONT
+        // ----------------------------------------------------
+        // Main body
+        // ----------------------------------------------------
 
         const body =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         body.className =
-            "building-body-v04";
+            "building-body";
 
-
-        body.style.height =
-            `${height}px`;
-
-        body.style.bottom =
-            `${depth}px`;
-
-        body.style.background =
-            visual.front;
-
-
-        wrapper.appendChild(
+        element.appendChild(
             body
         );
 
 
-        // SIDE
+        // ----------------------------------------------------
+        // Side
+        // ----------------------------------------------------
 
         const side =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         side.className =
-            "building-side-v04";
+            "building-side";
 
-
-        side.style.height =
-            `${height}px`;
-
-        side.style.bottom =
-            `${depth}px`;
-
-        side.style.background =
-            visual.side;
-
-
-        wrapper.appendChild(
+        element.appendChild(
             side
         );
 
 
-        // ROOF
+        // ----------------------------------------------------
+        // Roof
+        // ----------------------------------------------------
 
         const roof =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         roof.className =
-            "building-roof-v04";
+            "building-roof";
 
-
-        roof.style.width =
-            `${width}px`;
-
-        roof.style.height =
-            `${depth}px`;
-
-        roof.style.bottom =
-            `${height + depth}px`;
-
-        roof.style.background =
-            visual.roof;
-
-
-        wrapper.appendChild(
+        element.appendChild(
             roof
         );
 
 
-        // WINDOWS
+        // ----------------------------------------------------
+        // Windows
+        // ----------------------------------------------------
 
-        if (visual.windows) {
+        if (
+            type !== "park"
+        ) {
 
-            this.renderWindows(
-                wrapper,
-                width,
-                height,
-                visual
+            this.createWindows(
+                body,
+                type,
+                floors
             );
         }
 
 
+        // ----------------------------------------------------
+        // Door
+        // ----------------------------------------------------
+
+        if (
+            type !== "cbd"
+        ) {
+
+            const door =
+                document.createElement("div");
+
+            door.className =
+                "building-door";
+
+            body.appendChild(
+                door
+            );
+        }
+
+
+        // ----------------------------------------------------
+        // Label
+        // ----------------------------------------------------
+
+        const label =
+            document.createElement("div");
+
+        label.className =
+            "building-label";
+
+        label.textContent =
+            building.name ||
+            building.id ||
+            "BUILDING";
+
+        element.appendChild(
+            label
+        );
+
+
         layer.appendChild(
-            wrapper
+            element
         );
     }
 
 
     // ========================================================
-    // BUILDING VISUAL
+    // BUILDING TYPE
     // ========================================================
 
-    getBuildingVisual(building) {
+    getBuildingType(
+        building
+    ) {
 
-        const type =
+        const id =
             String(
-                building.type ?? ""
+                building.id ||
+                ""
             ).toLowerCase();
 
 
+        const name =
+            String(
+                building.name ||
+                ""
+            ).toLowerCase();
+
+
+        const combined =
+            `${id} ${name}`;
+
+
         if (
-            type === "office" ||
-            type === "cbd"
+            combined.includes("cbd") ||
+            combined.includes("tower") ||
+            combined.includes("office")
         ) {
 
-            return {
-
-                className:
-                    "building-cbd-v04",
-
-                height:
-                    6.5,
-
-                front:
-                    "#5e9db5",
-
-                side:
-                    "#294f62",
-
-                roof:
-                    "#424a4e",
-
-                windows:
-                    true
-            };
+            return "cbd";
         }
 
 
         if (
-            type === "shop" ||
-            type === "commercial"
+            combined.includes("shop") ||
+            combined.includes("store") ||
+            combined.includes("mall") ||
+            combined.includes("commercial")
         ) {
 
-            return {
-
-                className:
-                    "building-commercial-v04",
-
-                height:
-                    2.2,
-
-                front:
-                    "#b8bab8",
-
-                side:
-                    "#727679",
-
-                roof:
-                    "#45494c",
-
-                windows:
-                    true
-            };
+            return "commercial";
         }
 
 
-        if (type === "park") {
+        if (
+            combined.includes("park")
+        ) {
 
-            return {
-
-                className:
-                    "building-park-v04",
-
-                height:
-                    0.15,
-
-                front:
-                    "#71945c",
-
-                side:
-                    "#4f7045",
-
-                roof:
-                    "#71945c",
-
-                windows:
-                    false
-            };
+            return "park";
         }
 
 
-        return {
+        if (
+            combined.includes("concrete")
+        ) {
 
-            className:
-                "building-residential-v04",
+            return "concrete";
+        }
 
-            height:
-                1.8,
 
-            front:
-                "#b96e52",
-
-            side:
-                "#754538",
-
-            roof:
-                "#41464a",
-
-            windows:
-                true
-        };
+        return "residential";
     }
 
 
@@ -785,45 +673,22 @@ this.renderCityLabel();
     // WINDOWS
     // ========================================================
 
-    renderWindows(
-        wrapper,
-        width,
-        height,
-        visual
+    createWindows(
+        body,
+        type,
+        floors
     ) {
 
-        const windows =
-            document.createElement(
-                "div"
-            );
-
-
-        windows.className =
-            "building-windows-v04";
-
-
-        const rows =
-            Math.max(
-                2,
-                Math.floor(
-                    height / 26
-                )
-            );
-
-
         const columns =
-            Math.max(
-                2,
-                Math.floor(
-                    width / 26
-                )
-            );
+            type === "cbd"
+                ? 4
+                : 3;
 
 
         for (
-            let row = 0;
-            row < rows;
-            row++
+            let floor = 0;
+            floor < floors;
+            floor++
         ) {
 
             for (
@@ -833,43 +698,34 @@ this.renderCityLabel();
             ) {
 
                 const window =
-                    document.createElement(
-                        "span"
-                    );
-
+                    document.createElement("span");
 
                 window.className =
-                    "building-window-v04";
-
-
-                window.style.left =
-                    `${10 + column * 25}px`;
-
-                window.style.bottom =
-                    `${8 + row * 25}px`;
+                    "building-window";
 
 
                 if (
-                    visual.className
-                        .includes("cbd")
+                    type === "cbd"
                 ) {
 
                     window.classList.add(
-                        "glass-window-v04"
+                        "window-glass"
                     );
                 }
 
 
-                windows.appendChild(
+                window.style.left =
+                    `${12 + column * 21}px`;
+
+                window.style.top =
+                    `${10 + floor * 14}px`;
+
+
+                body.appendChild(
                     window
                 );
             }
         }
-
-
-        wrapper.appendChild(
-            windows
-        );
     }
 
 
@@ -877,98 +733,83 @@ this.renderCityLabel();
     // TREES
     // ========================================================
 
-    renderTrees(mapData) {
+    renderTrees(
+        world,
+        terrain
+    ) {
 
         const layer =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         layer.className =
-            "map-trees-layer-v04";
+            "ffs-map-layer ffs-tree-layer";
 
-
-        this.root.appendChild(
+        world.appendChild(
             layer
         );
 
 
-        // Central park cluster
-
-        const parkTrees = [
-
+        const trees = [
+            [5, 2],
             [6, 2],
             [7, 2],
-            [8, 2],
-            [6, 3],
-            [8, 3],
-            [7, 4],
-
-            // residential greenery
-
-            [2, 3],
-            [5, 4],
-            [12, 3],
+            [5, 3],
+            [7, 3],
+            [2, 4],
             [13, 4],
             [2, 9],
-            [5, 10],
-            [12, 9],
-            [13, 10]
+            [13, 9],
+            [4, 10],
+            [10, 10]
         ];
 
 
-        parkTrees.forEach(
+        trees.forEach(
             ([x, y], index) => {
 
-                this.renderTree(
-                    layer,
-                    x,
-                    y,
-                    index % 3
+                if (
+                    x >= terrain.width ||
+                    y >= terrain.height
+                ) {
+                    return;
+                }
+
+
+                const position =
+                    this.gridToScreen(
+                        x,
+                        y
+                    );
+
+
+                const tree =
+                    document.createElement("div");
+
+                tree.className =
+                    "ffs-tree";
+
+
+                tree.style.left =
+                    `${position.x}px`;
+
+                tree.style.top =
+                    `${position.y}px`;
+
+
+                if (
+                    index % 3 === 0
+                ) {
+
+                    tree.classList.add(
+                        "tree-large"
+                    );
+                }
+
+
+                layer.appendChild(
+                    tree
                 );
             }
-        );
-    }
-
-
-    renderTree(
-        layer,
-        x,
-        y,
-        variation
-    ) {
-
-        const position =
-            this.gridToScreen(
-                x,
-                y
-            );
-
-
-        const tree =
-            document.createElement(
-                "div"
-            );
-
-
-        tree.className =
-            "map-tree-v04";
-
-
-        tree.dataset.variant =
-            variation;
-
-
-        tree.style.left =
-            `${position.x}px`;
-
-        tree.style.top =
-            `${position.y - 22}px`;
-
-
-        layer.appendChild(
-            tree
         );
     }
 
@@ -977,86 +818,121 @@ this.renderCityLabel();
     // PROPS
     // ========================================================
 
-    renderProps() {
+    renderProps(
+        world,
+        roads,
+        terrain
+    ) {
 
         const layer =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         layer.className =
-            "map-props-layer-v04";
+            "ffs-map-layer ffs-prop-layer";
 
-
-        this.root.appendChild(
+        world.appendChild(
             layer
         );
 
 
         const props = [
-
-            {
-                type: "lamp",
-                x: 5,
-                y: 6
-            },
-
-            {
-                type: "lamp",
-                x: 9,
-                y: 6
-            },
-
-            {
-                type: "lamp",
-                x: 13,
-                y: 6
-            },
-
-            {
-                type: "bench",
-                x: 7,
-                y: 3
-            },
-
-            {
-                type: "bin",
-                x: 6,
-                y: 5
-            }
+            ["lamp", 4, 5],
+            ["lamp", 12, 5],
+            ["lamp", 5, 7],
+            ["lamp", 12, 7],
+            ["bench", 6, 2],
+            ["bench", 7, 2],
+            ["bin", 5, 3],
+            ["bin", 7, 3]
         ];
 
 
         props.forEach(
-            prop => {
+            ([type, x, y]) => {
 
                 const position =
                     this.gridToScreen(
-                        prop.x,
-                        prop.y
+                        x,
+                        y
                     );
 
 
-                const element =
-                    document.createElement(
-                        "div"
-                    );
+                const prop =
+                    document.createElement("div");
+
+                prop.className =
+                    `ffs-prop prop-${type}`;
 
 
-                element.className =
-                    `map-prop-v04 prop-${prop.type}-v04`;
-
-
-                element.style.left =
+                prop.style.left =
                     `${position.x}px`;
 
-                element.style.top =
+                prop.style.top =
                     `${position.y}px`;
 
 
                 layer.appendChild(
-                    element
+                    prop
+                );
+            }
+        );
+    }
+
+
+    // ========================================================
+    // VEHICLES
+    // ========================================================
+
+    renderVehicles(
+        world,
+        roads
+    ) {
+
+        const layer =
+            document.createElement("div");
+
+        layer.className =
+            "ffs-map-layer ffs-vehicle-layer";
+
+        world.appendChild(
+            layer
+        );
+
+
+        const vehicles = [
+            ["sedan", 4, 6],
+            ["wagon", 7, 6],
+            ["sedan", 10, 6],
+            ["van", 13, 6]
+        ];
+
+
+        vehicles.forEach(
+            ([type, x, y]) => {
+
+                const position =
+                    this.gridToScreen(
+                        x,
+                        y
+                    );
+
+
+                const vehicle =
+                    document.createElement("div");
+
+                vehicle.className =
+                    `ffs-vehicle vehicle-${type}`;
+
+
+                vehicle.style.left =
+                    `${position.x}px`;
+
+                vehicle.style.top =
+                    `${position.y - 10}px`;
+
+
+                layer.appendChild(
+                    vehicle
                 );
             }
         );
@@ -1067,64 +943,72 @@ this.renderCityLabel();
     // SIGNS
     // ========================================================
 
-    renderSigns(mapData) {
+    renderSigns(
+        world,
+        buildings
+    ) {
 
         const layer =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         layer.className =
-            "map-signs-layer-v04";
+            "ffs-map-layer ffs-sign-layer";
 
-
-        this.root.appendChild(
+        world.appendChild(
             layer
         );
 
 
-        Object.values(
-            mapData.buildings ?? {}
-        )
-        .filter(
-            building =>
-                building.type === "shop"
-        )
-        .forEach(
+        const buildingList =
+            Array.isArray(buildings)
+                ? buildings
+                : Object.values(buildings);
+
+
+        buildingList.forEach(
             building => {
 
+                const type =
+                    this.getBuildingType(
+                        building
+                    );
+
+
+                if (
+                    type !== "commercial"
+                ) {
+
+                    return;
+                }
+
+
                 const map =
-                    building.map;
+                    building.map || {};
 
 
                 const position =
                     this.gridToScreen(
-                        map.x,
-                        map.y
+                        map.x ?? 4,
+                        map.y ?? 6
                     );
 
 
                 const sign =
-                    document.createElement(
-                        "div"
-                    );
-
+                    document.createElement("div");
 
                 sign.className =
-                    "map-billboard-v04";
-
+                    "ffs-sign";
 
                 sign.textContent =
-                    building.name
-                    .toUpperCase();
+                    building.name ||
+                    "SHOP";
 
 
                 sign.style.left =
-                    `${position.x}px`;
+                    `${position.x + 18}px`;
 
                 sign.style.top =
-                    `${position.y - 45}px`;
+                    `${position.y - 18}px`;
 
 
                 layer.appendChild(
@@ -1136,346 +1020,152 @@ this.renderCityLabel();
 
 
     // ========================================================
-    // ENVIRONMENT
+    // DISTRICT LABELS
     // ========================================================
 
-    renderEnvironment(environment) {
+    renderDistrictLabels(
+        world
+    ) {
 
         const layer =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         layer.className =
-            "map-environment-layer-v04";
+            "ffs-map-layer ffs-district-layer";
 
-
-        this.root.appendChild(
+        world.appendChild(
             layer
         );
 
 
-        if (
-            environment.lighting ===
-            "day"
-        ) {
-
-            layer.classList.add(
-                "environment-day-v04"
-            );
-        }
+        const districts = [
+            ["RESIDENTIAL", 3, 1],
+            ["CENTRAL PARK", 6, 1],
+            ["COMMERCIAL", 4, 5],
+            ["CBD", 8, 3]
+        ];
 
 
-        if (
-            environment.weather ===
-            "clear"
-        ) {
+        districts.forEach(
+            ([name, x, y]) => {
 
-            layer.classList.add(
-                "environment-clear-v04"
-            );
-        }
-    }
-// ========================================================
-// VEHICLES
-// ========================================================
-
-renderVehicles() {
-
-    const layer =
-        document.createElement(
-            "div"
-        );
-
-    layer.className =
-        "map-vehicles-layer-v04";
-
-    this.root.appendChild(
-        layer
-    );
+                const position =
+                    this.gridToScreen(
+                        x,
+                        y
+                    );
 
 
-    const vehicles = [
+                const label =
+                    document.createElement("div");
 
-        {
-            x: 4,
-            y: 6,
-            type: "sedan"
-        },
+                label.className =
+                    "ffs-district-label";
 
-        {
-            x: 7,
-            y: 6,
-            type: "sedan"
-        },
-
-        {
-            x: 11,
-            y: 6,
-            type: "wagon"
-        },
-
-        {
-            x: 14,
-            y: 6,
-            type: "sedan"
-        }
-    ];
+                label.textContent =
+                    name;
 
 
-    vehicles.forEach(
-        vehicle => {
+                label.style.left =
+                    `${position.x}px`;
 
-            const position =
-                this.gridToScreen(
-                    vehicle.x,
-                    vehicle.y
+                label.style.top =
+                    `${position.y}px`;
+
+
+                layer.appendChild(
+                    label
                 );
-
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-
-            element.className =
-                `map-vehicle-v04 vehicle-${vehicle.type}-v04`;
-
-
-            element.style.left =
-                `${position.x}px`;
-
-            element.style.top =
-                `${position.y - 8}px`;
-
-
-            layer.appendChild(
-                element
-            );
-        }
-    );
-}
-
-
-// ========================================================
-// DISTRICT LABELS
-// ========================================================
-
-renderDistrictLabels() {
-
-    const layer =
-        document.createElement(
-            "div"
-        );
-
-    layer.className =
-        "map-district-layer-v04";
-
-
-    this.root.appendChild(
-        layer
-    );
-
-
-    const districts = [
-
-        {
-            name: "RESIDENTIAL",
-            x: 3,
-            y: 2
-        },
-
-        {
-            name: "CENTRAL PARK",
-            x: 6,
-            y: 1
-        },
-
-        {
-            name: "COMMERCIAL",
-            x: 4,
-            y: 5
-        },
-
-        {
-            name: "CBD",
-            x: 8,
-            y: 3
-        }
-    ];
-
-
-    districts.forEach(
-        district => {
-
-            const position =
-                this.gridToScreen(
-                    district.x,
-                    district.y
-                );
-
-
-            const label =
-                document.createElement(
-                    "div"
-                );
-
-
-            label.className =
-                "map-district-label-v04";
-
-
-            label.textContent =
-                district.name;
-
-
-            label.style.left =
-                `${position.x}px`;
-
-            label.style.top =
-                `${position.y}px`;
-
-
-            layer.appendChild(
-                label
-            );
-        }
-    );
-}
-
-    // ========================================================
-    // CITY LABEL
-    // ========================================================
-
-    renderCityLabel() {
-
-        const label =
-            document.createElement(
-                "div"
-            );
-
-
-        label.className =
-            "map-city-label-v04";
-
-
-        label.innerHTML =
-            `
-            <strong>FFS CITY</strong>
-            <span>1996 • LIVING WORLD</span>
-            `;
-
-
-        this.root.appendChild(
-            label
+            }
         );
     }
 
 
     // ========================================================
-    // GRID
+    // ENVIRONMENT
     // ========================================================
 
-    gridToScreen(
-        x,
-        y
+    renderEnvironment(
+        world,
+        environment
     ) {
 
-        const centerX =
-            this.getMapPixelWidth()
-            / 2;
+        const layer =
+            document.createElement("div");
+
+        layer.className =
+            "ffs-map-layer ffs-environment-layer";
+
+        world.appendChild(
+            layer
+        );
 
 
-        return {
+        const atmosphere =
+            document.createElement("div");
 
-            x:
-                centerX +
-                (
-                    x - y
-                ) *
-                (
-                    this.tileWidth / 2
-                ),
-
-            y:
-                100 +
-                (
-                    x + y
-                ) *
-                (
-                    this.tileHeight / 2
-                )
-        };
-    }
+        atmosphere.className =
+            "ffs-1996-atmosphere";
 
 
-    // ========================================================
-    // DIMENSIONS
-    // ========================================================
-
-    getMapPixelWidth() {
-
-        return (
-            (
-                this.mapWidth +
-                this.mapHeight
-            ) *
-            (
-                this.tileWidth / 2
-            )
-        ) + 160;
-    }
+        layer.appendChild(
+            atmosphere
+        );
 
 
-    getMapPixelHeight() {
+        const eraLabel =
+            document.createElement("div");
 
-        return (
-            (
-                this.mapWidth +
-                this.mapHeight
-            ) *
-            (
-                this.tileHeight / 2
-            )
-        ) + 220;
-    }
+        eraLabel.className =
+            "ffs-era-label";
+
+        eraLabel.textContent =
+            `FFS WORLD • ${
+                environment.era || 1996
+            }`;
 
 
-    // ========================================================
-    // EMPTY
-    // ========================================================
-
-    renderEmpty(message) {
-
-        const empty =
-            document.createElement(
-                "div"
-            );
-
-
-        empty.className =
-            "ffs-map-empty";
-
-
-        empty.textContent =
-            message;
-
-
-        this.container.appendChild(
-            empty
+        layer.appendChild(
+            eraLabel
         );
     }
 
 
     // ========================================================
-    // CLEAR
+    // CITY TITLE
     // ========================================================
 
-    clear() {
+    renderCityTitle(
+        world
+    ) {
 
-        this.container.innerHTML =
-            "";
+        const title =
+            document.createElement("div");
+
+        title.className =
+            "ffs-city-title";
+
+        title.textContent =
+            "FFS CITY";
+
+
+        const subtitle =
+            document.createElement("div");
+
+        subtitle.className =
+            "ffs-city-subtitle";
+
+        subtitle.textContent =
+            "LIVING WORLD • 1996";
+
+
+        title.appendChild(
+            subtitle
+        );
+
+
+        world.appendChild(
+            title
+        );
     }
-
+    }

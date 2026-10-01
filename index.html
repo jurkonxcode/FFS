@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Founder Fantasy Simulator - A living world simulation built by Human and AI."
     >
 
     <title>Founder Fantasy Simulator</title>
@@ -14,38 +21,139 @@
 
 <body>
 
-    <header class="top-bar">
+    <div id="app">
 
-        <div class="brand">
-            <strong>FFS</strong>
-            <span>Founder Fantasy Simulator</span>
-        </div>
+        <!-- FFS Header -->
+        <header id="top-bar">
 
-        <div class="time-panel">
+            <div id="brand">
 
-            <div class="time-box">
-                <small>REAL WORLD</small>
-                <strong id="real-time">29 August 2026</strong>
+                <div id="brand-name">
+                    FFS
+                </div>
+
+                <div id="brand-title">
+                    Founder Fantasy Simulator
+                </div>
+
             </div>
 
-            <div class="time-box">
-                <small>FFS WORLD</small>
-                <strong id="ffs-time">29 August 1996</strong>
+
+            <!-- Language Selection -->
+            <div id="language-selector">
+
+                <button
+                    id="language-id"
+                    type="button"
+                >
+                    🇮🇩 Indonesia
+                </button>
+
+                <button
+                    id="language-en"
+                    type="button"
+                >
+                    🇬🇧 English
+                </button>
+
             </div>
 
-        </div>
+        </header>
 
-    </header>
 
-    <main id="game-world">
+        <!-- Time Information -->
+        <section id="time-panel">
 
-        <div id="loading">
-            Initializing FFS World...
-        </div>
+            <div class="time-box">
 
-    </main>
+                <div
+                    class="time-label"
+                    id="real-world-label"
+                >
+                    DUNIA NYATA
+                </div>
 
+                <div
+                    class="time-value"
+                    id="real-world-time"
+                >
+                    29 August 2026
+                </div>
+
+            </div>
+
+
+            <div class="time-divider">
+                →
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="time-label"
+                    id="ffs-world-label"
+                >
+                    DUNIA FFS
+                </div>
+
+                <div
+                    class="time-value"
+                    id="ffs-world-time"
+                >
+                    29 August 1996
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Game World -->
+        <main id="game-world">
+
+            <div id="world-placeholder">
+
+                <div id="world-title">
+                    FFS WORLD
+                </div>
+
+                <div id="loading-message">
+                    Menyiapkan Dunia FFS...
+                </div>
+
+                <div id="world-description">
+                    World Engine akan dibangun pada tahap berikutnya.
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer id="footer">
+
+            <span>
+                Jurkon Studio
+            </span>
+
+            <span>
+                Founder Fantasy Simulator
+            </span>
+
+        </footer>
+
+    </div>
+
+
+    <!-- Language dictionaries -->
+    <script src="i18n/id.js"></script>
+    <script src="i18n/en.js"></script>
+
+    <!-- Main application -->
     <script src="main.js"></script>
 
 </body>
+
 </html>

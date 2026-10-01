@@ -2728,7 +2728,73 @@ body {
             0.75
         );
 }
+/* ============================================================
+   DISTRICT LABELS
+   ============================================================ */
 
+.map-district-layer-v04 {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: 15;
+}
+
+
+.map-district-label-v04 {
+    position: absolute;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    padding:
+        3px 6px;
+
+    background:
+        rgba(
+            245,
+            242,
+            225,
+            0.62
+        );
+
+    border:
+        1px solid
+        rgba(
+            60,
+            65,
+            55,
+            0.18
+        );
+
+    color:
+        rgba(
+            45,
+            50,
+            43,
+            0.72
+        );
+
+    font-size:
+        7px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+    white-space:
+        nowrap;
+}
 
 /* VARIANTS */
 

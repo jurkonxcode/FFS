@@ -1,3 +1,6 @@
+import REAL_WORLD_1996 from "./baseline/1996.js";
+
+
 const REAL_WORLD_DATA = {
     timeline: {
         startYear: 1996,
@@ -18,7 +21,12 @@ const REAL_WORLD_DATA = {
 
     events: {},
 
-    sources: {}
+    sources: {},
+
+    baselines: {
+        1996: REAL_WORLD_1996
+    }
 };
+
 
 export default REAL_WORLD_DATA;

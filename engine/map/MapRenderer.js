@@ -1,7 +1,7 @@
 // ============================================================
-// FFS - MAP RENDERER v0.5
-// Visual Proof v0.1
-// City Atmosphere & Detail Pass
+// FFS - MAP RENDERER v0.6
+// Visual Proof v0.2
+// Spatial Alignment Pass
 // ============================================================
 
 export class MapRenderer {
@@ -19,14 +19,20 @@ export class MapRenderer {
 
         }
 
-        // Isometric geometry
+        // ====================================================
+        // ISOMETRIC GEOMETRY
+        // ====================================================
+
         this.tileWidth = 72;
         this.tileHeight = 36;
 
-        // Visual depth
+        // Visual vertical depth of buildings
         this.buildingDepth = 52;
 
-        // Rendering layers
+        // ====================================================
+        // RENDERING LAYERS
+        // ====================================================
+
         this.layers = {};
 
     }
@@ -67,54 +73,34 @@ export class MapRenderer {
         this.layers = {
 
             terrain:
-                this.createLayer(
-                    "terrain"
-                ),
+                this.createLayer("terrain"),
 
             roads:
-                this.createLayer(
-                    "roads"
-                ),
+                this.createLayer("roads"),
 
             sidewalks:
-                this.createLayer(
-                    "sidewalks"
-                ),
+                this.createLayer("sidewalks"),
 
             buildings:
-                this.createLayer(
-                    "buildings"
-                ),
+                this.createLayer("buildings"),
 
             trees:
-                this.createLayer(
-                    "trees"
-                ),
+                this.createLayer("trees"),
 
             props:
-                this.createLayer(
-                    "props"
-                ),
+                this.createLayer("props"),
 
             vehicles:
-                this.createLayer(
-                    "vehicles"
-                ),
+                this.createLayer("vehicles"),
 
             signs:
-                this.createLayer(
-                    "signs"
-                ),
+                this.createLayer("signs"),
 
             labels:
-                this.createLayer(
-                    "labels"
-                ),
+                this.createLayer("labels"),
 
             environment:
-                this.createLayer(
-                    "environment"
-                )
+                this.createLayer("environment")
 
         };
 
@@ -122,8 +108,7 @@ export class MapRenderer {
         Object.values(
             this.layers
         ).forEach(
-            layer =>
-                world.appendChild(layer)
+            layer => world.appendChild(layer)
         );
 
 
@@ -134,49 +119,29 @@ export class MapRenderer {
         );
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // WORLD LAYERS
-        // ----------------------------------------------------
+        // ====================================================
 
-        this.renderTerrain(
-            mapData
-        );
+        this.renderTerrain(mapData);
 
-        this.renderRoads(
-            mapData
-        );
+        this.renderRoads(mapData);
 
-        this.renderBuildings(
-            mapData
-        );
+        this.renderBuildings(mapData);
 
-        this.renderTrees(
-            mapData
-        );
+        this.renderTrees(mapData);
 
-        this.renderProps(
-            mapData
-        );
+        this.renderProps(mapData);
 
-        this.renderVehicles(
-            mapData
-        );
+        this.renderVehicles(mapData);
 
-        this.renderSigns(
-            mapData
-        );
+        this.renderSigns(mapData);
 
-        this.renderDistrictLabels(
-            mapData
-        );
+        this.renderDistrictLabels(mapData);
 
-        this.renderEnvironment(
-            mapData
-        );
+        this.renderEnvironment(mapData);
 
-        this.renderCityTitle(
-            mapData
-        );
+        this.renderCityTitle(mapData);
 
     }
 
@@ -202,10 +167,7 @@ export class MapRenderer {
     // GRID → SCREEN
     // ========================================================
 
-    gridToScreen(
-        x,
-        y
-    ) {
+    gridToScreen(x, y) {
 
         return {
 
@@ -218,6 +180,25 @@ export class MapRenderer {
                 (this.tileHeight / 2)
 
         };
+
+    }
+
+
+    // ========================================================
+    // FOOTPRINT CENTER → SCREEN
+    // ========================================================
+
+    footprintToScreen(
+        x,
+        y,
+        width = 1,
+        height = 1
+    ) {
+
+        return this.gridToScreen(
+            x + width / 2,
+            y + height / 2
+        );
 
     }
 
@@ -259,9 +240,8 @@ export class MapRenderer {
 
 
                 const tile =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
+
 
                 tile.className =
                     "ffs-terrain-tile";
@@ -288,9 +268,7 @@ export class MapRenderer {
 
                 this.layers
                     .terrain
-                    .appendChild(
-                        tile
-                    );
+                    .appendChild(tile);
 
             }
 
@@ -354,14 +332,13 @@ export class MapRenderer {
                         );
 
 
-                    // ------------------------------
+                    // =================================================
                     // SIDEWALK
-                    // ------------------------------
+                    // =================================================
 
                     const sidewalk =
-                        document.createElement(
-                            "div"
-                        );
+                        document.createElement("div");
+
 
                     sidewalk.className =
                         "ffs-sidewalk";
@@ -375,12 +352,17 @@ export class MapRenderer {
 
 
                     if (
-                        direction ===
-                        "vertical"
+                        direction === "vertical"
                     ) {
 
                         sidewalk.classList.add(
-                            "road-vertical"
+                            "road-direction-y"
+                        );
+
+                    } else {
+
+                        sidewalk.classList.add(
+                            "road-direction-x"
                         );
 
                     }
@@ -393,14 +375,13 @@ export class MapRenderer {
                         );
 
 
-                    // ------------------------------
+                    // =================================================
                     // ROAD
-                    // ------------------------------
+                    // =================================================
 
                     const roadElement =
-                        document.createElement(
-                            "div"
-                        );
+                        document.createElement("div");
+
 
                     roadElement.className =
                         "ffs-road";
@@ -414,28 +395,49 @@ export class MapRenderer {
 
 
                     if (
-                        direction ===
-                        "vertical"
+                        direction === "vertical"
                     ) {
 
                         roadElement.classList.add(
-                            "road-vertical"
+                            "road-direction-y"
+                        );
+
+                    } else {
+
+                        roadElement.classList.add(
+                            "road-direction-x"
                         );
 
                     }
 
 
-                    // ------------------------------
+                    // =================================================
                     // ROAD MARKING
-                    // ------------------------------
+                    // =================================================
 
                     const marking =
-                        document.createElement(
-                            "div"
-                        );
+                        document.createElement("div");
+
 
                     marking.className =
                         "ffs-road-marking";
+
+
+                    if (
+                        direction === "vertical"
+                    ) {
+
+                        marking.classList.add(
+                            "marking-direction-y"
+                        );
+
+                    } else {
+
+                        marking.classList.add(
+                            "marking-direction-x"
+                        );
+
+                    }
 
 
                     roadElement.appendChild(
@@ -471,15 +473,47 @@ export class MapRenderer {
             [...buildings].sort(
                 (a, b) => {
 
-                    const ay =
-                        (a.map?.x ?? 0) +
-                        (a.map?.y ?? 0);
+                    const aX =
+                        a.map?.x ?? 0;
 
-                    const by =
-                        (b.map?.x ?? 0) +
-                        (b.map?.y ?? 0);
+                    const aY =
+                        a.map?.y ?? 0;
 
-                    return ay - by;
+                    const aW =
+                        a.map?.width ?? 1;
+
+                    const aH =
+                        a.map?.height ?? 1;
+
+
+                    const bX =
+                        b.map?.x ?? 0;
+
+                    const bY =
+                        b.map?.y ?? 0;
+
+                    const bW =
+                        b.map?.width ?? 1;
+
+                    const bH =
+                        b.map?.height ?? 1;
+
+
+                    const aDepth =
+                        aX +
+                        aY +
+                        aW +
+                        aH;
+
+
+                    const bDepth =
+                        bX +
+                        bY +
+                        bW +
+                        bH;
+
+
+                    return aDepth - bDepth;
 
                 }
             );
@@ -521,10 +555,18 @@ export class MapRenderer {
             map.height ?? 2;
 
 
+        // ====================================================
+        // IMPORTANT:
+        // Position building using the CENTER of its
+        // spatial footprint rather than its top-left corner.
+        // ====================================================
+
         const position =
-            this.gridToScreen(
+            this.footprintToScreen(
                 x,
-                y
+                y,
+                width,
+                height
             );
 
 
@@ -535,9 +577,7 @@ export class MapRenderer {
 
 
         const element =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         element.className =
@@ -551,21 +591,59 @@ export class MapRenderer {
             `${position.top}px`;
 
 
+        // ====================================================
+        // VISUAL FOOTPRINT
+        // ====================================================
+
+        const footprintWidth =
+            width *
+            this.tileWidth;
+
+        const footprintHeight =
+            height *
+            this.tileHeight;
+
+
+        const visualHeight =
+            this.getBuildingVisualHeight(
+                type,
+                footprintHeight
+            );
+
+
+        element.style.setProperty(
+            "--footprint-width",
+            `${footprintWidth}px`
+        );
+
+
+        element.style.setProperty(
+            "--footprint-height",
+            `${footprintHeight}px`
+        );
+
+
+        element.style.setProperty(
+            "--building-depth",
+            `${visualHeight}px`
+        );
+
+
         element.style.width =
-            `${width * this.tileWidth}px`;
+            `${footprintWidth}px`;
+
 
         element.style.height =
-            `${height * this.tileHeight + this.buildingDepth}px`;
+            `${visualHeight}px`;
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // SHADOW
-        // ----------------------------------------------------
+        // ====================================================
 
         const shadow =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
+
 
         shadow.className =
             "ffs-building-shadow";
@@ -576,14 +654,30 @@ export class MapRenderer {
         );
 
 
-        // ----------------------------------------------------
+        // ====================================================
+        // ISO FOOTPRINT
+        // ====================================================
+
+        const footprint =
+            document.createElement("div");
+
+
+        footprint.className =
+            "ffs-building-footprint";
+
+
+        element.appendChild(
+            footprint
+        );
+
+
+        // ====================================================
         // SIDE
-        // ----------------------------------------------------
+        // ====================================================
 
         const side =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
+
 
         side.className =
             "ffs-building-side";
@@ -594,14 +688,13 @@ export class MapRenderer {
         );
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // BODY
-        // ----------------------------------------------------
+        // ====================================================
 
         const body =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
+
 
         body.className =
             "ffs-building-body";
@@ -612,14 +705,13 @@ export class MapRenderer {
         );
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // ROOF
-        // ----------------------------------------------------
+        // ====================================================
 
         const roof =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
+
 
         roof.className =
             "ffs-building-roof";
@@ -630,9 +722,9 @@ export class MapRenderer {
         );
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // WINDOWS
-        // ----------------------------------------------------
+        // ====================================================
 
         if (
             type !== "park"
@@ -647,9 +739,9 @@ export class MapRenderer {
         }
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // DOOR
-        // ----------------------------------------------------
+        // ====================================================
 
         if (
             type === "residential" ||
@@ -657,9 +749,8 @@ export class MapRenderer {
         ) {
 
             const door =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
+
 
             door.className =
                 "ffs-building-door";
@@ -672,14 +763,13 @@ export class MapRenderer {
         }
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // LABEL
-        // ----------------------------------------------------
+        // ====================================================
 
         const label =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
+
 
         label.className =
             "ffs-building-label";
@@ -700,6 +790,56 @@ export class MapRenderer {
             .appendChild(
                 element
             );
+
+    }
+
+
+    // ========================================================
+    // BUILDING VISUAL HEIGHT
+    // ========================================================
+
+    getBuildingVisualHeight(
+        type,
+        footprintHeight
+    ) {
+
+        if (
+            type === "cbd"
+        ) {
+
+            return 250;
+
+        }
+
+
+        if (
+            type === "commercial"
+        ) {
+
+            return 150;
+
+        }
+
+
+        if (
+            type === "concrete"
+        ) {
+
+            return 145;
+
+        }
+
+
+        if (
+            type === "park"
+        ) {
+
+            return footprintHeight + 12;
+
+        }
+
+
+        return 135;
 
     }
 
@@ -807,9 +947,8 @@ export class MapRenderer {
             ) {
 
                 const window =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
+
 
                 window.className =
                     "ffs-window";
@@ -867,9 +1006,7 @@ export class MapRenderer {
 
 
                 const tree =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 tree.className =
@@ -954,9 +1091,7 @@ export class MapRenderer {
 
 
                 const element =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 element.className =
@@ -1028,9 +1163,7 @@ export class MapRenderer {
 
 
                 const element =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 element.className =
@@ -1102,9 +1235,7 @@ export class MapRenderer {
 
 
                 const element =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 element.className =
@@ -1180,9 +1311,7 @@ export class MapRenderer {
 
 
                 const label =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 label.className =
@@ -1223,9 +1352,7 @@ export class MapRenderer {
 
 
         const element =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         element.className =
@@ -1268,9 +1395,7 @@ export class MapRenderer {
     renderCityTitle(mapData) {
 
         const title =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         title.className =
@@ -1293,4 +1418,4 @@ export class MapRenderer {
 
     }
 
-}
+    }

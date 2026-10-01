@@ -1,5 +1,6 @@
 // ============================================================
-// FFS - WORLD ENGINE v0.2
+// FFS - WORLD ENGINE v0.3
+// World foundation for Map v0.2
 // ============================================================
 
 
@@ -69,7 +70,7 @@ export class WorldEngine {
 
 
         // ----------------------------------------------------
-        // CITIES / LOCATIONS
+        // CITIES
         // ----------------------------------------------------
 
         this.state.locations =
@@ -90,6 +91,9 @@ export class WorldEngine {
         // ROADS
         // ----------------------------------------------------
 
+        this.state.roads = {};
+
+
         for (
             const roadId
             in infrastructure.roads
@@ -103,62 +107,209 @@ export class WorldEngine {
 
                 ...road,
 
-                location_type: "road"
+                location_type:
+                    "road",
+
+                map: {
+
+                    x: 6,
+
+                    y: 5,
+
+                    width: 10,
+
+                    direction:
+                        "horizontal"
+                }
             };
         }
 
 
         // ----------------------------------------------------
-        // INITIAL BUILDINGS
+        // TERRAIN
+        // ----------------------------------------------------
+
+        this.state.terrain = {
+
+            width: 12,
+
+            height: 9,
+
+            type: "grass",
+
+            mapType: "isometric"
+        };
+
+
+        // ----------------------------------------------------
+        // BUILDINGS
         // ----------------------------------------------------
 
         this.state.buildings = {
 
+
+            // ------------------------------------------------
+            // HOUSE 001
+            // ------------------------------------------------
+
             building_001: {
 
-                id: "building_001",
+                id:
+                    "building_001",
 
-                cityId: "city_001",
+                cityId:
+                    "city_001",
 
-                type: "house",
+                type:
+                    "house",
 
-                category: "residential",
+                category:
+                    "residential",
 
-                name: "Prototype House",
+                name:
+                    "Prototype House",
 
-                status: "active"
+                status:
+                    "active",
+
+                map: {
+
+                    x: 3,
+
+                    y: 3
+                }
             },
 
+
+            // ------------------------------------------------
+            // HOUSE 002
+            // ------------------------------------------------
 
             building_002: {
 
-                id: "building_002",
+                id:
+                    "building_002",
 
-                cityId: "city_001",
+                cityId:
+                    "city_001",
 
-                type: "shop",
+                type:
+                    "house",
 
-                category: "commercial",
+                category:
+                    "residential",
 
-                name: "Prototype Shop",
+                name:
+                    "Prototype House 2",
 
-                status: "active"
+                status:
+                    "active",
+
+                map: {
+
+                    x: 8,
+
+                    y: 3
+                }
             },
 
 
+            // ------------------------------------------------
+            // SHOP 001
+            // ------------------------------------------------
+
             building_003: {
 
-                id: "building_003",
+                id:
+                    "building_003",
 
-                cityId: "city_001",
+                cityId:
+                    "city_001",
 
-                type: "park",
+                type:
+                    "shop",
 
-                category: "public",
+                category:
+                    "commercial",
 
-                name: "Prototype Park",
+                name:
+                    "Prototype Shop",
 
-                status: "active"
+                status:
+                    "active",
+
+                map: {
+
+                    x: 3,
+
+                    y: 6
+                }
+            },
+
+
+            // ------------------------------------------------
+            // SHOP 002
+            // ------------------------------------------------
+
+            building_004: {
+
+                id:
+                    "building_004",
+
+                cityId:
+                    "city_001",
+
+                type:
+                    "shop",
+
+                category:
+                    "commercial",
+
+                name:
+                    "Prototype Shop 2",
+
+                status:
+                    "active",
+
+                map: {
+
+                    x: 8,
+
+                    y: 6
+                }
+            },
+
+
+            // ------------------------------------------------
+            // PARK
+            // ------------------------------------------------
+
+            building_005: {
+
+                id:
+                    "building_005",
+
+                cityId:
+                    "city_001",
+
+                type:
+                    "park",
+
+                category:
+                    "public",
+
+                name:
+                    "Prototype Park",
+
+                status:
+                    "active",
+
+                map: {
+
+                    x: 6,
+
+                    y: 2
+                }
             }
         };
 
@@ -169,8 +320,10 @@ export class WorldEngine {
 
         // NPC belum dibuat.
         //
-        // World harus terbentuk
-        // sebelum NPC hidup di dalamnya.
+        // Tetapi koordinat dunia sekarang sudah tersedia.
+        //
+        // NPC nantinya akan menggunakan struktur map
+        // yang sama untuk menentukan posisi dan pergerakan.
 
         this.state.npcs = {};
 
@@ -179,16 +332,31 @@ export class WorldEngine {
         // PLAYER
         // ----------------------------------------------------
 
-        // Player belum dibuat.
-        //
-        // Player akan diperkenalkan
-        // setelah World + NPC berjalan.
-
         this.state.players = {};
 
         this.state.characters = {};
 
         this.state.families = {};
+
+
+        // ----------------------------------------------------
+        // ECONOMY
+        // ----------------------------------------------------
+
+        this.state.companies = {};
+
+        this.state.assets = {};
+
+        this.state.transactions = {};
+
+
+        // ----------------------------------------------------
+        // HISTORY
+        // ----------------------------------------------------
+
+        this.state.events = {};
+
+        this.state.history = {};
 
 
         // ----------------------------------------------------

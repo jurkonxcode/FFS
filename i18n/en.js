@@ -32,8 +32,11 @@ const EN = {
         loading: "Initializing FFS World...",
 
         worldDescription:
-            "The World Engine will be built in the next stage."
+            "The World Engine is preparing the world."
 
     }
 
 };
+
+
+export default EN;

@@ -1,3 +1,9 @@
+import ID from "./i18n/id.js";
+import EN from "./i18n/en.js";
+
+import REAL_WORLD_DATA
+    from "./data/real_world/index.js";
+
 import { WorldEngine }
     from "./engine/world/WorldEngine.js";
 
@@ -422,7 +428,9 @@ function initializeWorldEngine() {
 
 
     WORLD_ENGINE =
-        new WorldEngine();
+        new WorldEngine(
+            REAL_WORLD_DATA
+        );
 
 
     WORLD_STATE =
@@ -514,7 +522,7 @@ function logWorldInformation() {
 
 
     console.log(
-        "[FFS] WORLD ENGINE v0.2"
+        "[FFS] WORLD ENGINE"
     );
 
 
@@ -554,6 +562,16 @@ function logWorldInformation() {
 
 
     // --------------------------------------------------------
+    // TERRAIN
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] Terrain:",
+        WORLD_STATE?.terrain
+    );
+
+
+    // --------------------------------------------------------
     // ROADS
     // --------------------------------------------------------
 
@@ -570,6 +588,16 @@ function logWorldInformation() {
     console.log(
         "[FFS] Buildings:",
         WORLD_STATE?.buildings
+    );
+
+
+    // --------------------------------------------------------
+    // ENVIRONMENT
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] Environment:",
+        WORLD_STATE?.environment
     );
 
 
@@ -601,11 +629,17 @@ function logWorldInformation() {
     // WORLD SUMMARY
     // --------------------------------------------------------
 
-    console.log(
-        "[FFS] World Summary:",
-        WORLD_ENGINE
-            .getWorldSummary()
-    );
+    if (
+        typeof WORLD_ENGINE.getWorldSummary ===
+        "function"
+    ) {
+
+        console.log(
+            "[FFS] World Summary:",
+            WORLD_ENGINE
+                .getWorldSummary()
+        );
+    }
 
 
     console.log(

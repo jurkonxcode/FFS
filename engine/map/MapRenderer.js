@@ -1,22 +1,33 @@
 // ============================================================
-// FFS - MAP RENDERER v0.8
-// TRUE ISOMETRIC PROJECTION
-// Based on Visual Proof v0.7
+// FFS - MAP RENDERER v0.9-A
+// 3D WORLD FOUNDATION
+// TERRAIN + Z / ELEVATION PROOF
+//
+// Based on:
+// - Visual Proof v0.7
+// - True Isometric Projection v0.8
 //
 // Preserved:
 // - Centered Map
 // - Zoom System
 // - Existing Rendering Layers
 // - Existing Visual Objects
+// - Existing Visual Style
 //
 // Added:
-// - True Isometric Projection Core
-// - World → Screen Projection
-// - Screen → World Projection
-// - Z / Elevation Support
-// - Depth Calculation
-// - Projection-based Map Bounds
+// - Terrain Z / Elevation
+// - Visible Terrain Height
+// - World → Screen Projection with Z
+// - Screen → World Projection with Z
+// - Elevation-aware projection bounds
+// - Improved depth calculation
+// - Terrain elevation data support
+//
+// IMPORTANT:
+// This is a controlled visual proof.
+// It is NOT yet the final 3D terrain system.
 // ============================================================
+
 
 export class MapRenderer {
 
@@ -33,11 +44,13 @@ export class MapRenderer {
 
         }
 
+
         // ====================================================
         // TRUE ISOMETRIC GEOMETRY
         // ====================================================
 
         this.tileWidth = 72;
+
         this.tileHeight = 36;
 
         this.halfTileWidth =
@@ -46,9 +59,19 @@ export class MapRenderer {
         this.halfTileHeight =
             this.tileHeight / 2;
 
-        // World elevation.
-        // One world Z unit equals this many screen pixels.
-        this.heightUnit = 1;
+
+        // ====================================================
+        // WORLD ELEVATION
+        //
+        // v0.9-A:
+        // 1 world Z unit = 12 screen pixels.
+        //
+        // This is intentionally visible so that the first
+        // terrain elevation can be visually verified.
+        // ====================================================
+
+        this.heightUnit = 12;
+
 
         this.buildingDepth = 52;
 
@@ -60,7 +83,9 @@ export class MapRenderer {
         this.zoom = 1;
 
         this.minZoom = 0.5;
+
         this.maxZoom = 1.5;
+
         this.zoomStep = 0.1;
 
 
@@ -76,8 +101,11 @@ export class MapRenderer {
         // ====================================================
 
         this.mapData = null;
+
         this.renderer = null;
+
         this.world = null;
+
         this.content = null;
 
 
@@ -86,19 +114,20 @@ export class MapRenderer {
         // ====================================================
 
         this.mapWidth = 12;
+
         this.mapHeight = 9;
 
 
         // ====================================================
         // PROJECTION ORIGIN
-        //
-        // The projection itself is independent from the
-        // viewport. The content offset handles centering.
         // ====================================================
 
         this.projectionOrigin = {
+
             x: 0,
+
             y: 0
+
         };
 
 
@@ -107,8 +136,11 @@ export class MapRenderer {
         // ====================================================
 
         this.contentOffset = {
+
             x: 0,
+
             y: 0
+
         };
 
     }
@@ -128,7 +160,9 @@ export class MapRenderer {
 
         }
 
-        this.mapData = mapData;
+
+        this.mapData =
+            mapData;
 
 
         const terrain =
@@ -137,6 +171,7 @@ export class MapRenderer {
 
         this.mapWidth =
             terrain.width ?? 12;
+
 
         this.mapHeight =
             terrain.height ?? 9;
@@ -311,14 +346,16 @@ export class MapRenderer {
     // ========================================================
     // TRUE ISOMETRIC PROJECTION CORE
     //
-    // World:
-    //      X → diagonal right/down
-    //      Y → diagonal left/down
-    //      Z → vertical up
+    // X → diagonal right/down
+    // Y → diagonal left/down
+    // Z → vertical up
     //
     // Screen:
-    //      X = (X - Y) * halfTileWidth
-    //      Y = (X + Y) * halfTileHeight - Z
+    //
+    // X = (X - Y) * halfTileWidth
+    //
+    // Y = (X + Y) * halfTileHeight
+    //     - Z * heightUnit
     // ========================================================
 
     worldToScreen(
@@ -333,6 +370,7 @@ export class MapRenderer {
                 (x - y) *
                 this.halfTileWidth
             );
+
 
         const screenY =
             this.projectionOrigin.y +
@@ -349,9 +387,11 @@ export class MapRenderer {
         return {
 
             left: screenX,
+
             top: screenY,
 
             x: screenX,
+
             y: screenY
 
         };
@@ -361,9 +401,6 @@ export class MapRenderer {
 
     // ========================================================
     // GRID → SCREEN
-    //
-    // Backward-compatible alias.
-    // Existing v0.7 code can continue using this method.
     // ========================================================
 
     gridToScreen(
@@ -383,15 +420,6 @@ export class MapRenderer {
 
     // ========================================================
     // SCREEN → WORLD
-    //
-    // Converts screen coordinates back into world X/Y.
-    //
-    // This will later support:
-    // - Tile selection
-    // - NPC selection
-    // - Building placement
-    // - Mouse interaction
-    // - Touch interaction
     // ========================================================
 
     screenToWorld(
@@ -403,6 +431,7 @@ export class MapRenderer {
         const localX =
             screenX -
             this.projectionOrigin.x;
+
 
         const localY =
             screenY -
@@ -434,7 +463,9 @@ export class MapRenderer {
         return {
 
             x: worldX,
+
             y: worldY,
+
             z
 
         };
@@ -466,10 +497,9 @@ export class MapRenderer {
     // ========================================================
     // DEPTH
     //
-    // Used for future object ordering.
-    //
-    // Larger X/Y values are physically deeper in the
-    // isometric world.
+    // X/Y determine physical depth.
+    // Z is included so elevated objects can participate
+    // in future depth ordering.
     // ========================================================
 
     getDepth(
@@ -489,24 +519,30 @@ export class MapRenderer {
 
     // ========================================================
     // OBJECT DEPTH
+    //
+    // IMPORTANT:
+    // map.height is footprint size.
+    // It must NOT automatically become Z.
     // ========================================================
 
     getObjectDepth(object) {
 
         const map =
-            object?.map ?? object ?? {};
+            object?.map ??
+            object ??
+            {};
 
 
         const x =
             map.x ?? 0;
 
+
         const y =
             map.y ?? 0;
 
+
         const z =
-            map.z ??
-            map.height ??
-            0;
+            map.z ?? 0;
 
 
         return this.getDepth(
@@ -519,10 +555,234 @@ export class MapRenderer {
 
 
     // ========================================================
+    // TERRAIN ELEVATION
+    //
+    // Priority:
+    //
+    // 1. terrain.elevation[y][x]
+    // 2. terrain.heights[y][x]
+    // 3. terrain.tiles[y][x].z
+    // 4. terrain.tiles[y][x].height
+    // 5. deterministic visual proof terrain
+    //
+    // The fallback is intentionally simple.
+    // It allows v0.9-A to show elevation even before the
+    // complete terrain data system exists.
+    // ========================================================
+
+    getTerrainElevation(
+        x,
+        y,
+        terrain = {}
+    ) {
+
+        // ====================================================
+        // ARRAY: elevation
+        // ====================================================
+
+        if (
+            Array.isArray(
+                terrain.elevation
+            ) &&
+            Array.isArray(
+                terrain.elevation[y]
+            )
+        ) {
+
+            const value =
+                Number(
+                    terrain.elevation[y][x]
+                );
+
+
+            if (
+                Number.isFinite(value)
+            ) {
+
+                return value;
+
+            }
+
+        }
+
+
+        // ====================================================
+        // ARRAY: heights
+        // ====================================================
+
+        if (
+            Array.isArray(
+                terrain.heights
+            ) &&
+            Array.isArray(
+                terrain.heights[y]
+            )
+        ) {
+
+            const value =
+                Number(
+                    terrain.heights[y][x]
+                );
+
+
+            if (
+                Number.isFinite(value)
+            ) {
+
+                return value;
+
+            }
+
+        }
+
+
+        // ====================================================
+        // TILE DATA
+        // ====================================================
+
+        if (
+            Array.isArray(
+                terrain.tiles
+            )
+        ) {
+
+            const tile =
+                terrain.tiles.find(
+                    item =>
+                        item?.x === x &&
+                        item?.y === y
+                );
+
+
+            if (tile) {
+
+                const z =
+                    Number(
+                        tile.z ??
+                        tile.height ??
+                        0
+                    );
+
+
+                if (
+                    Number.isFinite(z)
+                ) {
+
+                    return z;
+
+                }
+
+            }
+
+        }
+
+
+        // ====================================================
+        // v0.9-A VISUAL PROOF
+        //
+        // Creates a gentle elevation pattern around the
+        // center of the prototype map.
+        //
+        // This is temporary and will later be replaced by
+        // the real World/Terrain Engine.
+        // ====================================================
+
+        const centerX =
+            (this.mapWidth - 1) / 2;
+
+
+        const centerY =
+            (this.mapHeight - 1) / 2;
+
+
+        const distance =
+            Math.abs(x - centerX) +
+            Math.abs(y - centerY);
+
+
+        if (
+            distance <= 1
+        ) {
+
+            return 2;
+
+        }
+
+
+        if (
+            distance <= 3
+        ) {
+
+            return 1;
+
+        }
+
+
+        return 0;
+
+    }
+
+
+    // ========================================================
+    // MAX TERRAIN ELEVATION
+    // ========================================================
+
+    getMaxTerrainElevation() {
+
+        const terrain =
+            this.mapData?.terrain ?? {};
+
+
+        let maxElevation = 0;
+
+
+        for (
+            let y = 0;
+            y < this.mapHeight;
+            y++
+        ) {
+
+            for (
+                let x = 0;
+                x < this.mapWidth;
+                x++
+            ) {
+
+                const elevation =
+                    this.getTerrainElevation(
+                        x,
+                        y,
+                        terrain
+                    );
+
+
+                maxElevation =
+                    Math.max(
+                        maxElevation,
+                        elevation
+                    );
+
+            }
+
+        }
+
+
+        return maxElevation;
+
+    }
+
+
+    // ========================================================
     // MAP PROJECTION BOUNDS
+    //
+    // Now includes terrain elevation.
     // ========================================================
 
     getMapProjectionBounds() {
+
+        const terrain =
+            this.mapData?.terrain ?? {};
+
 
         const corners = [
 
@@ -553,13 +813,53 @@ export class MapRenderer {
         ];
 
 
+        const maxElevation =
+            this.getMaxTerrainElevation();
+
+
+        const elevatedCorners = [
+
+            this.worldToScreen(
+                0,
+                0,
+                maxElevation
+            ),
+
+            this.worldToScreen(
+                this.mapWidth,
+                0,
+                maxElevation
+            ),
+
+            this.worldToScreen(
+                0,
+                this.mapHeight,
+                maxElevation
+            ),
+
+            this.worldToScreen(
+                this.mapWidth,
+                this.mapHeight,
+                maxElevation
+            )
+
+        ];
+
+
+        const allPoints = [
+            ...corners,
+            ...elevatedCorners
+        ];
+
+
         const xs =
-            corners.map(
+            allPoints.map(
                 point => point.left
             );
 
+
         const ys =
-            corners.map(
+            allPoints.map(
                 point => point.top
             );
 
@@ -771,7 +1071,9 @@ export class MapRenderer {
     applyZoom() {
 
         if (!this.world) {
+
             return;
+
         }
 
 
@@ -817,13 +1119,10 @@ export class MapRenderer {
 
         // ====================================================
         // PADDING
-        //
-        // Extra room is intentional.
-        // It prevents buildings, trees and labels from
-        // touching the viewport edge.
         // ====================================================
 
         const paddingX = 180;
+
         const paddingY = 180;
 
 
@@ -846,6 +1145,7 @@ export class MapRenderer {
         this.world.style.width =
             `${contentWidth}px`;
 
+
         this.world.style.height =
             `${contentHeight}px`;
 
@@ -853,24 +1153,33 @@ export class MapRenderer {
         this.content.style.width =
             `${contentWidth}px`;
 
+
         this.content.style.height =
             `${contentHeight}px`;
 
 
         // ====================================================
         // CENTER OF PROJECTED MAP
+        //
+        // Center is based on the terrain's approximate
+        // visual elevation.
         // ====================================================
+
+        const centerElevation =
+            this.getMaxTerrainElevation() / 2;
+
 
         const projectedCenter =
             this.worldToScreen(
                 this.mapWidth / 2,
                 this.mapHeight / 2,
-                0
+                centerElevation
             );
 
 
         const contentCenterX =
             contentWidth / 2;
+
 
         const contentCenterY =
             contentHeight / 2;
@@ -889,6 +1198,7 @@ export class MapRenderer {
         this.contentOffset = {
 
             x: offsetX,
+
             y: offsetY
 
         };
@@ -913,6 +1223,7 @@ export class MapRenderer {
         const width =
             terrain.width ?? 12;
 
+
         const height =
             terrain.height ?? 9;
 
@@ -929,11 +1240,23 @@ export class MapRenderer {
                 x++
             ) {
 
+                // ============================================
+                // TERRAIN Z
+                // ============================================
+
+                const elevation =
+                    this.getTerrainElevation(
+                        x,
+                        y,
+                        terrain
+                    );
+
+
                 const position =
                     this.worldToScreen(
                         x,
                         y,
-                        0
+                        elevation
                     );
 
 
@@ -944,6 +1267,10 @@ export class MapRenderer {
                 tile.className =
                     "ffs-terrain-tile";
 
+
+                // ============================================
+                // TERRAIN VARIATION
+                // ============================================
 
                 const variation =
                     (
@@ -957,30 +1284,97 @@ export class MapRenderer {
                 );
 
 
+                // ============================================
+                // POSITION
+                // ============================================
+
                 tile.style.left =
                     `${position.left}px`;
+
 
                 tile.style.top =
                     `${position.top}px`;
 
 
+                // ============================================
+                // Z VISUAL INFORMATION
+                //
+                // Inline custom properties allow future CSS
+                // terrain styling without changing the
+                // renderer API.
+                // ============================================
+
+                tile.style.setProperty(
+                    "--terrain-z",
+                    elevation
+                );
+
+
+                tile.style.setProperty(
+                    "--terrain-height",
+                    `${elevation * this.heightUnit}px`
+                );
+
+
+                // ============================================
+                // DATA
+                // ============================================
+
                 tile.dataset.worldX =
                     x;
 
+
                 tile.dataset.worldY =
                     y;
+
+
+                tile.dataset.worldZ =
+                    elevation;
+
 
                 tile.dataset.depth =
                     this.getDepth(
                         x,
                         y,
-                        0
+                        elevation
                     );
+
+
+                tile.dataset.elevation =
+                    elevation;
+
+
+                // ============================================
+                // ELEVATION CLASS
+                // ============================================
+
+                if (
+                    elevation > 0
+                ) {
+
+                    tile.classList.add(
+                        "terrain-elevated"
+                    );
+
+                }
+
+
+                if (
+                    elevation >= 2
+                ) {
+
+                    tile.classList.add(
+                        "terrain-high"
+                    );
+
+                }
 
 
                 this.layers
                     .terrain
-                    .appendChild(tile);
+                    .appendChild(
+                        tile
+                    );
 
             }
 
@@ -1009,15 +1403,22 @@ export class MapRenderer {
                 const x =
                     map.x ?? 0;
 
+
                 const y =
                     map.y ?? 0;
+
 
                 const width =
                     map.width ?? 1;
 
+
                 const direction =
                     map.direction ??
                     "horizontal";
+
+
+                const z =
+                    map.z ?? 0;
 
 
                 for (
@@ -1031,6 +1432,7 @@ export class MapRenderer {
                             ? x + i
                             : x;
 
+
                     const tileY =
                         direction === "horizontal"
                             ? y
@@ -1041,13 +1443,13 @@ export class MapRenderer {
                         this.worldToScreen(
                             tileX,
                             tileY,
-                            0
+                            z
                         );
 
 
-                    // =================================================
+                    // ========================================
                     // SIDEWALK
-                    // =================================================
+                    // ========================================
 
                     const sidewalk =
                         document.createElement("div");
@@ -1060,6 +1462,7 @@ export class MapRenderer {
                     sidewalk.style.left =
                         `${position.left}px`;
 
+
                     sidewalk.style.top =
                         `${position.top}px`;
 
@@ -1071,6 +1474,18 @@ export class MapRenderer {
                     );
 
 
+                    sidewalk.dataset.worldX =
+                        tileX;
+
+
+                    sidewalk.dataset.worldY =
+                        tileY;
+
+
+                    sidewalk.dataset.worldZ =
+                        z;
+
+
                     this.layers
                         .sidewalks
                         .appendChild(
@@ -1078,9 +1493,9 @@ export class MapRenderer {
                         );
 
 
-                    // =================================================
+                    // ========================================
                     // ROAD
-                    // =================================================
+                    // ========================================
 
                     const roadElement =
                         document.createElement("div");
@@ -1093,6 +1508,7 @@ export class MapRenderer {
                     roadElement.style.left =
                         `${position.left}px`;
 
+
                     roadElement.style.top =
                         `${position.top}px`;
 
@@ -1104,9 +1520,9 @@ export class MapRenderer {
                     );
 
 
-                    // =================================================
+                    // ========================================
                     // ROAD MARKING
-                    // =================================================
+                    // ========================================
 
                     const marking =
                         document.createElement("div");
@@ -1191,14 +1607,18 @@ export class MapRenderer {
         const x =
             map.x ?? 0;
 
+
         const y =
             map.y ?? 0;
+
 
         const width =
             map.width ?? 2;
 
+
         const height =
             map.height ?? 2;
+
 
         const z =
             map.z ?? 0;
@@ -1231,6 +1651,7 @@ export class MapRenderer {
         element.style.left =
             `${position.left}px`;
 
+
         element.style.top =
             `${position.top}px`;
 
@@ -1238,6 +1659,7 @@ export class MapRenderer {
         const footprintWidth =
             width *
             this.tileWidth;
+
 
         const footprintHeight =
             height *
@@ -1272,6 +1694,7 @@ export class MapRenderer {
         element.style.width =
             `${footprintWidth}px`;
 
+
         element.style.height =
             `${visualHeight}px`;
 
@@ -1279,11 +1702,14 @@ export class MapRenderer {
         element.dataset.worldX =
             x;
 
+
         element.dataset.worldY =
             y;
 
+
         element.dataset.worldZ =
             z;
+
 
         element.dataset.depth =
             this.getDepth(
@@ -1300,8 +1726,10 @@ export class MapRenderer {
         const shadow =
             document.createElement("div");
 
+
         shadow.className =
             "ffs-building-shadow";
+
 
         element.appendChild(
             shadow
@@ -1315,8 +1743,10 @@ export class MapRenderer {
         const footprint =
             document.createElement("div");
 
+
         footprint.className =
             "ffs-building-footprint";
+
 
         element.appendChild(
             footprint
@@ -1330,8 +1760,10 @@ export class MapRenderer {
         const side =
             document.createElement("div");
 
+
         side.className =
             "ffs-building-side";
+
 
         element.appendChild(
             side
@@ -1345,8 +1777,10 @@ export class MapRenderer {
         const body =
             document.createElement("div");
 
+
         body.className =
             "ffs-building-body";
+
 
         element.appendChild(
             body
@@ -1360,8 +1794,10 @@ export class MapRenderer {
         const roof =
             document.createElement("div");
 
+
         roof.className =
             "ffs-building-roof";
+
 
         element.appendChild(
             roof
@@ -1397,8 +1833,10 @@ export class MapRenderer {
             const door =
                 document.createElement("div");
 
+
             door.className =
                 "ffs-building-door";
+
 
             body.appendChild(
                 door
@@ -1414,12 +1852,15 @@ export class MapRenderer {
         const label =
             document.createElement("div");
 
+
         label.className =
             "ffs-building-label";
+
 
         label.textContent =
             building.name ??
             "Building";
+
 
         element.appendChild(
             label
@@ -1598,6 +2039,7 @@ export class MapRenderer {
                 window.style.left =
                     `${18 + column * 24}px`;
 
+
                 window.style.top =
                     `${14 + row * 18}px`;
 
@@ -1622,15 +2064,25 @@ export class MapRenderer {
         const positions = [
 
             [1, 1],
+
             [2, 8],
+
             [5, 2],
+
             [7, 1],
+
             [9, 2],
+
             [13, 2],
+
             [14, 5],
+
             [2, 10],
+
             [5, 10],
+
             [9, 10],
+
             [13, 10]
 
         ];
@@ -1665,6 +2117,7 @@ export class MapRenderer {
                 tree.style.left =
                     `${position.left}px`;
 
+
                 tree.style.top =
                     `${position.top}px`;
 
@@ -1672,8 +2125,14 @@ export class MapRenderer {
                 tree.dataset.worldX =
                     x;
 
+
                 tree.dataset.worldY =
                     y;
+
+
+                tree.dataset.worldZ =
+                    0;
+
 
                 tree.dataset.depth =
                     this.getDepth(
@@ -1758,6 +2217,7 @@ export class MapRenderer {
                 element.style.left =
                     `${position.left}px`;
 
+
                 element.style.top =
                     `${position.top}px`;
 
@@ -1765,8 +2225,14 @@ export class MapRenderer {
                 element.dataset.worldX =
                     prop.x;
 
+
                 element.dataset.worldY =
                     prop.y;
+
+
+                element.dataset.worldZ =
+                    0;
+
 
                 element.dataset.depth =
                     this.getDepth(
@@ -1845,6 +2311,7 @@ export class MapRenderer {
                 element.style.left =
                     `${position.left}px`;
 
+
                 element.style.top =
                     `${position.top}px`;
 
@@ -1852,8 +2319,14 @@ export class MapRenderer {
                 element.dataset.worldX =
                     vehicle.x;
 
+
                 element.dataset.worldY =
                     vehicle.y;
+
+
+                element.dataset.worldZ =
+                    0;
+
 
                 element.dataset.depth =
                     this.getDepth(
@@ -1936,6 +2409,7 @@ export class MapRenderer {
                 element.style.left =
                     `${position.left}px`;
 
+
                 element.style.top =
                     `${position.top}px`;
 
@@ -1943,8 +2417,14 @@ export class MapRenderer {
                 element.dataset.worldX =
                     sign.x;
 
+
                 element.dataset.worldY =
                     sign.y;
+
+
+                element.dataset.worldZ =
+                    0;
+
 
                 element.dataset.depth =
                     this.getDepth(
@@ -2027,6 +2507,7 @@ export class MapRenderer {
                 label.style.left =
                     `${position.left}px`;
 
+
                 label.style.top =
                     `${position.top}px`;
 
@@ -2034,8 +2515,13 @@ export class MapRenderer {
                 label.dataset.worldX =
                     district.x;
 
+
                 label.dataset.worldY =
                     district.y;
+
+
+                label.dataset.worldZ =
+                    0;
 
 
                 this.layers
@@ -2127,4 +2613,4 @@ export class MapRenderer {
 
     }
 
-                        }
+            }

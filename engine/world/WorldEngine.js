@@ -1,41 +1,24 @@
 // ============================================================
-// FFS - WORLD ENGINE v0.3
-// World foundation for Map v0.2
+// FFS - WORLD ENGINE
+// Living City Foundation
 // ============================================================
 
+import { WorldState } from "./WorldState.js";
+import { WorldInitializer } from "./WorldInitializer.js";
 
-import REAL_WORLD_DATA
-    from "../../data/real_world/index.js";
-
-
-import { WorldState }
-    from "./WorldState.js";
-
-
-import { WorldInitializer }
-    from "./WorldInitializer.js";
-
-
-// ============================================================
-// WORLD ENGINE
-// ============================================================
 
 export class WorldEngine {
 
+    constructor(realWorldData) {
 
-    constructor() {
-
-        this.realWorldData =
-            REAL_WORLD_DATA;
-
+        this.realWorldData = realWorldData;
 
         this.state =
             new WorldState();
 
-
         this.initializer =
             new WorldInitializer(
-                this.realWorldData
+                realWorldData
             );
     }
 
@@ -46,408 +29,414 @@ export class WorldEngine {
 
     initialize() {
 
-        console.log(
-            "[WorldEngine] Initializing FFS World..."
-        );
-
-
-        // ----------------------------------------------------
-        // WORLD
-        // ----------------------------------------------------
-
-        this.state.world =
+        const world =
             this.initializer
                 .createInitialWorld();
 
-
-        // ----------------------------------------------------
-        // REGIONS
-        // ----------------------------------------------------
-
-        this.state.regions =
+        const regions =
             this.initializer
                 .createInitialRegions();
 
-
-        // ----------------------------------------------------
-        // CITIES
-        // ----------------------------------------------------
-
-        this.state.locations =
+        const locations =
             this.initializer
                 .createInitialLocations();
-
-
-        // ----------------------------------------------------
-        // INFRASTRUCTURE
-        // ----------------------------------------------------
 
         const infrastructure =
             this.initializer
                 .createInitialInfrastructure();
 
 
-        // ----------------------------------------------------
-        // ROADS
-        // ----------------------------------------------------
+        this.state.world =
+            world;
 
-        this.state.roads = {};
+        this.state.regions =
+            regions;
 
+        this.state.locations =
+            locations;
 
-        for (
-            const roadId
-            in infrastructure.roads
-        ) {
+        this.state.roads =
+            this.buildRoadData(
+                infrastructure.roads
+            );
 
-            const road =
-                infrastructure.roads[roadId];
+        this.state.buildings =
+            this.buildBuildingData();
 
+        this.state.terrain =
+            this.buildTerrainData();
 
-            this.state.roads[roadId] = {
-
-                ...road,
-
-                location_type:
-                    "road",
-
-                map: {
-
-                    x: 6,
-
-                    y: 5,
-
-                    width: 10,
-
-                    direction:
-                        "horizontal"
-                }
-            };
-        }
-
-
-        // ----------------------------------------------------
-        // TERRAIN
-        // ----------------------------------------------------
-
-        this.state.terrain = {
-
-            width: 12,
-
-            height: 9,
-
-            type: "grass",
-
-            mapType: "isometric"
-        };
-
-
-        // ----------------------------------------------------
-        // BUILDINGS
-        // ----------------------------------------------------
-
-        this.state.buildings = {
-
-
-            // ------------------------------------------------
-            // HOUSE 001
-            // ------------------------------------------------
-
-            building_001: {
-
-                id:
-                    "building_001",
-
-                cityId:
-                    "city_001",
-
-                type:
-                    "house",
-
-                category:
-                    "residential",
-
-                name:
-                    "Prototype House",
-
-                status:
-                    "active",
-
-                map: {
-
-                    x: 3,
-
-                    y: 3
-                }
-            },
-
-
-            // ------------------------------------------------
-            // HOUSE 002
-            // ------------------------------------------------
-
-            building_002: {
-
-                id:
-                    "building_002",
-
-                cityId:
-                    "city_001",
-
-                type:
-                    "house",
-
-                category:
-                    "residential",
-
-                name:
-                    "Prototype House 2",
-
-                status:
-                    "active",
-
-                map: {
-
-                    x: 8,
-
-                    y: 3
-                }
-            },
-
-
-            // ------------------------------------------------
-            // SHOP 001
-            // ------------------------------------------------
-
-            building_003: {
-
-                id:
-                    "building_003",
-
-                cityId:
-                    "city_001",
-
-                type:
-                    "shop",
-
-                category:
-                    "commercial",
-
-                name:
-                    "Prototype Shop",
-
-                status:
-                    "active",
-
-                map: {
-
-                    x: 3,
-
-                    y: 6
-                }
-            },
-
-
-            // ------------------------------------------------
-            // SHOP 002
-            // ------------------------------------------------
-
-            building_004: {
-
-                id:
-                    "building_004",
-
-                cityId:
-                    "city_001",
-
-                type:
-                    "shop",
-
-                category:
-                    "commercial",
-
-                name:
-                    "Prototype Shop 2",
-
-                status:
-                    "active",
-
-                map: {
-
-                    x: 8,
-
-                    y: 6
-                }
-            },
-
-
-            // ------------------------------------------------
-            // PARK
-            // ------------------------------------------------
-
-            building_005: {
-
-                id:
-                    "building_005",
-
-                cityId:
-                    "city_001",
-
-                type:
-                    "park",
-
-                category:
-                    "public",
-
-                name:
-                    "Prototype Park",
-
-                status:
-                    "active",
-
-                map: {
-
-                    x: 6,
-
-                    y: 2
-                }
-            }
-        };
-
-
-        // ----------------------------------------------------
-        // NPC
-        // ----------------------------------------------------
-
-        // NPC belum dibuat.
-        //
-        // Tetapi koordinat dunia sekarang sudah tersedia.
-        //
-        // NPC nantinya akan menggunakan struktur map
-        // yang sama untuk menentukan posisi dan pergerakan.
-
-        this.state.npcs = {};
-
-
-        // ----------------------------------------------------
-        // PLAYER
-        // ----------------------------------------------------
-
-        this.state.players = {};
-
-        this.state.characters = {};
-
-        this.state.families = {};
-
-
-        // ----------------------------------------------------
-        // ECONOMY
-        // ----------------------------------------------------
-
-        this.state.companies = {};
-
-        this.state.assets = {};
-
-        this.state.transactions = {};
-
-
-        // ----------------------------------------------------
-        // HISTORY
-        // ----------------------------------------------------
-
-        this.state.events = {};
-
-        this.state.history = {};
-
-
-        // ----------------------------------------------------
-        // TIME
-        // ----------------------------------------------------
-
-        this.state.time = {
-
-            year:
-                this.state.world.current_year,
-
-            referenceYear:
-                this.state.world
-                    .real_world_reference_year
-        };
-
-
-        // ----------------------------------------------------
-        // DEBUG
-        // ----------------------------------------------------
-
-        console.log(
-            "[WorldEngine] FFS World initialized:",
-            this.state
-        );
-
+        this.state.environment =
+            this.buildEnvironmentData();
 
         return this.state;
     }
 
 
     // ========================================================
-    // GET WORLD STATE
+    // TERRAIN
+    // ========================================================
+
+    buildTerrainData() {
+
+        return {
+
+            width: 16,
+
+            height: 12,
+
+            type: "grass",
+
+            mapType: "isometric",
+
+            era: 1996
+        };
+    }
+
+
+    // ========================================================
+    // ROADS
+    // ========================================================
+
+    buildRoadData(roads) {
+
+        return {
+
+            ...roads,
+
+            road_001: {
+
+                id: "road_001",
+
+                cityId: "city_001",
+
+                type: "road",
+
+                name: "Main Road",
+
+                map: {
+
+                    x: 1,
+
+                    y: 6,
+
+                    width: 14,
+
+                    direction: "horizontal"
+                }
+            },
+
+
+            road_002: {
+
+                id: "road_002",
+
+                cityId: "city_001",
+
+                type: "road",
+
+                name: "Central Avenue",
+
+                map: {
+
+                    x: 8,
+
+                    y: 1,
+
+                    width: 10,
+
+                    direction: "vertical"
+                }
+            }
+        };
+    }
+
+
+    // ========================================================
+    // BUILDINGS
+    // ========================================================
+
+    buildBuildingData() {
+
+        return {
+
+
+            // =================================================
+            // RESIDENTIAL DISTRICT
+            // =================================================
+
+            house_001: {
+
+                id: "house_001",
+
+                name: "Red Brick House",
+
+                type: "house",
+
+                district: "residential",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 3,
+
+                    y: 3,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            house_002: {
+
+                id: "house_002",
+
+                name: "Concrete Residence",
+
+                type: "house",
+
+                district: "residential",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 11,
+
+                    y: 3,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            house_003: {
+
+                id: "house_003",
+
+                name: "Suburban House",
+
+                type: "house",
+
+                district: "residential",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 3,
+
+                    y: 9,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            house_004: {
+
+                id: "house_004",
+
+                name: "Family Residence",
+
+                type: "house",
+
+                district: "residential",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 11,
+
+                    y: 9,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            // =================================================
+            // COMMERCIAL DISTRICT
+            // =================================================
+
+            shop_001: {
+
+                id: "shop_001",
+
+                name: "Downtown Shop",
+
+                type: "shop",
+
+                district: "commercial",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 4,
+
+                    y: 6,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            shop_002: {
+
+                id: "shop_002",
+
+                name: "Corner Store",
+
+                type: "shop",
+
+                district: "commercial",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 10,
+
+                    y: 6,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            // =================================================
+            // CBD
+            // =================================================
+
+            cbd_001: {
+
+                id: "cbd_001",
+
+                name: "FFS Tower",
+
+                type: "office",
+
+                district: "cbd",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 8,
+
+                    y: 4,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            cbd_002: {
+
+                id: "cbd_002",
+
+                name: "Central Glass Tower",
+
+                type: "office",
+
+                district: "cbd",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 8,
+
+                    y: 8,
+
+                    width: 2,
+
+                    height: 2
+                }
+            },
+
+
+            // =================================================
+            // PUBLIC SPACE
+            // =================================================
+
+            park_001: {
+
+                id: "park_001",
+
+                name: "Central Park",
+
+                type: "park",
+
+                district: "public",
+
+                cityId: "city_001",
+
+                map: {
+
+                    x: 6,
+
+                    y: 2,
+
+                    width: 3,
+
+                    height: 3
+                }
+            }
+        };
+    }
+
+
+    // ========================================================
+    // ENVIRONMENT
+    // ========================================================
+
+    buildEnvironmentData() {
+
+        return {
+
+            era: 1996,
+
+            season: "temperate",
+
+            weather: "clear",
+
+            lighting: "day",
+
+            trees: true,
+
+            streetLights: true,
+
+            roadMarkings: true,
+
+            ambientProps: true
+        };
+    }
+
+
+    // ========================================================
+    // GET STATE
     // ========================================================
 
     getState() {
 
         return this.state;
-    }
-
-
-    // ========================================================
-    // GET REAL WORLD DATA
-    // ========================================================
-
-    getRealWorldData() {
-
-        return this.realWorldData;
-    }
-
-
-    // ========================================================
-    // WORLD SUMMARY
-    // ========================================================
-
-    getWorldSummary() {
-
-        return {
-
-            world:
-                this.state.world,
-
-            regions:
-                Object.keys(
-                    this.state.regions
-                ).length,
-
-            locations:
-                Object.keys(
-                    this.state.locations
-                ).length,
-
-            roads:
-                Object.keys(
-                    this.state.roads
-                ).length,
-
-            buildings:
-                Object.keys(
-                    this.state.buildings
-                ).length,
-
-            npcs:
-                Object.keys(
-                    this.state.npcs
-                ).length,
-
-            players:
-                Object.keys(
-                    this.state.players
-                ).length
-        };
     }
 }

@@ -1,3 +1,8 @@
+const FFS_CONFIG = {
+    realWorldStart: "2026-08-29T00:00:00Z",
+    ffsWorldStart: "1996-08-29T00:00:00Z",
+    ffsTimeMultiplier: 24
+};
 /* =========================================================
    FOUNDER FANTASY SIMULATOR
    MAIN APPLICATION

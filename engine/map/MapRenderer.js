@@ -1177,7 +1177,173 @@ this.renderCityLabel();
             );
         }
     }
+// ========================================================
+// VEHICLES
+// ========================================================
 
+renderVehicles() {
+
+    const layer =
+        document.createElement(
+            "div"
+        );
+
+    layer.className =
+        "map-vehicles-layer-v04";
+
+    this.root.appendChild(
+        layer
+    );
+
+
+    const vehicles = [
+
+        {
+            x: 4,
+            y: 6,
+            type: "sedan"
+        },
+
+        {
+            x: 7,
+            y: 6,
+            type: "sedan"
+        },
+
+        {
+            x: 11,
+            y: 6,
+            type: "wagon"
+        },
+
+        {
+            x: 14,
+            y: 6,
+            type: "sedan"
+        }
+    ];
+
+
+    vehicles.forEach(
+        vehicle => {
+
+            const position =
+                this.gridToScreen(
+                    vehicle.x,
+                    vehicle.y
+                );
+
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                `map-vehicle-v04 vehicle-${vehicle.type}-v04`;
+
+
+            element.style.left =
+                `${position.x}px`;
+
+            element.style.top =
+                `${position.y - 8}px`;
+
+
+            layer.appendChild(
+                element
+            );
+        }
+    );
+}
+
+
+// ========================================================
+// DISTRICT LABELS
+// ========================================================
+
+renderDistrictLabels() {
+
+    const layer =
+        document.createElement(
+            "div"
+        );
+
+    layer.className =
+        "map-district-layer-v04";
+
+
+    this.root.appendChild(
+        layer
+    );
+
+
+    const districts = [
+
+        {
+            name: "RESIDENTIAL",
+            x: 3,
+            y: 2
+        },
+
+        {
+            name: "CENTRAL PARK",
+            x: 6,
+            y: 1
+        },
+
+        {
+            name: "COMMERCIAL",
+            x: 4,
+            y: 5
+        },
+
+        {
+            name: "CBD",
+            x: 8,
+            y: 3
+        }
+    ];
+
+
+    districts.forEach(
+        district => {
+
+            const position =
+                this.gridToScreen(
+                    district.x,
+                    district.y
+                );
+
+
+            const label =
+                document.createElement(
+                    "div"
+                );
+
+
+            label.className =
+                "map-district-label-v04";
+
+
+            label.textContent =
+                district.name;
+
+
+            label.style.left =
+                `${position.x}px`;
+
+            label.style.top =
+                `${position.y}px`;
+
+
+            layer.appendChild(
+                label
+            );
+        }
+    );
+}
 
     // ========================================================
     // CITY LABEL
@@ -1312,7 +1478,4 @@ this.renderCityLabel();
         this.container.innerHTML =
             "";
     }
-                    }
-// ========================================================
-// CITY LABEL
-// ========================================================
+

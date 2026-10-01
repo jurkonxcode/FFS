@@ -26,7 +26,6 @@ const FFS_CONFIG = {
     ffsWorldStart:
         "1996-08-29T00:00:00Z",
 
-
     // Prototype:
     //
     // 1 real-world hour
@@ -44,7 +43,6 @@ const FFS_CONFIG = {
 const FFS_LANGUAGE = {
 
     current: "id",
-
 
     dictionaries: {
 
@@ -113,16 +111,13 @@ const FFS_TIME = {
             FFS_CONFIG.realWorldStart
         ),
 
-
     ffsWorldStart:
         new Date(
             FFS_CONFIG.ffsWorldStart
         ),
 
-
     currentRealWorldTime:
         null,
-
 
     currentFFSWorldTime:
         null

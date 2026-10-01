@@ -296,7 +296,9 @@ function initializeWorldEngine() {
 // ============================================================
 
 function logWorldInformation() {
+
     if (!WORLD_ENGINE) {
+
         console.warn(
             "[FFS] World Engine has not been initialized."
         );
@@ -310,12 +312,104 @@ function logWorldInformation() {
 
 
     console.log(
-        "[FFS] World Information:",
-        {
-            world,
-            realWorldData:
-                WORLD_ENGINE.getRealWorldData()
-        }
+        "========================================"
+    );
+
+    console.log(
+        "[FFS] WORLD ENGINE v0.2"
+    );
+
+    console.log(
+        "========================================"
+    );
+
+
+    // --------------------------------------------------------
+    // WORLD
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] World:",
+        world
+    );
+
+
+    // --------------------------------------------------------
+    // REGIONS
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] Regions:",
+        WORLD_STATE?.regions
+    );
+
+
+    // --------------------------------------------------------
+    // CITIES / LOCATIONS
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] Cities / Locations:",
+        WORLD_STATE?.locations
+    );
+
+
+    // --------------------------------------------------------
+    // ROADS
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] Roads:",
+        WORLD_STATE?.roads
+    );
+
+
+    // --------------------------------------------------------
+    // BUILDINGS
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] Buildings:",
+        WORLD_STATE?.buildings
+    );
+
+
+    // --------------------------------------------------------
+    // NPC
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] NPC Count:",
+        Object.keys(
+            WORLD_STATE?.npcs ?? {}
+        ).length
+    );
+
+
+    // --------------------------------------------------------
+    // PLAYER
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] Player Count:",
+        Object.keys(
+            WORLD_STATE?.players ?? {}
+        ).length
+    );
+
+
+    // --------------------------------------------------------
+    // WORLD SUMMARY
+    // --------------------------------------------------------
+
+    console.log(
+        "[FFS] World Summary:",
+        WORLD_ENGINE.getWorldSummary()
+    );
+
+
+    console.log(
+        "========================================"
     );
 }
 

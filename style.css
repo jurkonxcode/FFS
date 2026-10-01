@@ -1,7 +1,7 @@
 /* ============================================================
-   FFS - STYLE v0.6
-   Visual Proof v0.2
-   Spatial Alignment Pass
+   FFS - STYLE v0.7
+   Visual Proof v0.3
+   Centered Isometric Map + Zoom System
    ============================================================ */
 
 
@@ -279,7 +279,7 @@ body {
 
 
 /* ============================================================
-   MAP CONTAINER
+   MAP SECTION
    ============================================================ */
 
 .ffs-world-section {
@@ -302,6 +302,10 @@ body {
 }
 
 
+/* ============================================================
+   MAP VIEWPORT
+   ============================================================ */
+
 #ffs-map-container {
 
     width:
@@ -310,17 +314,23 @@ body {
     min-height:
         620px;
 
+    position:
+        relative;
+
     overflow:
         auto;
 
-    position:
-        relative;
+    overscroll-behavior:
+        contain;
+
+    -webkit-overflow-scrolling:
+        touch;
 
 }
 
 
 /* ============================================================
-   MAP RENDERER
+   MAP RENDERER / VIEWPORT
    ============================================================ */
 
 .ffs-map-renderer {
@@ -328,11 +338,14 @@ body {
     position:
         relative;
 
-    min-width:
-        900px;
+    width:
+        100%;
 
-    min-height:
+    min-width:
         700px;
+
+    height:
+        620px;
 
     overflow:
         hidden;
@@ -356,7 +369,16 @@ body {
         50%;
 
     top:
-        60px;
+        50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    transform-origin:
+        center center;
 
     width:
         1000px;
@@ -364,8 +386,29 @@ body {
     height:
         700px;
 
-    transform:
-        translateX(-50%);
+    pointer-events:
+        none;
+
+}
+
+
+/* ============================================================
+   MAP CONTENT
+   ============================================================ */
+
+.ffs-map-content {
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        0;
+
+    transform-origin:
+        center center;
 
 }
 
@@ -384,6 +427,133 @@ body {
 
     pointer-events:
         none;
+
+}
+
+
+/* ============================================================
+   MAP CONTROLS
+   ============================================================ */
+
+.ffs-map-controls {
+
+    position:
+        absolute;
+
+    z-index:
+        500;
+
+    top:
+        14px;
+
+    right:
+        14px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        4px;
+
+    padding:
+        5px;
+
+    background:
+        rgba(
+            10,
+            14,
+            19,
+            .88
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .12
+        );
+
+    border-radius:
+        9px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(
+            0,
+            0,
+            0,
+            .35
+        );
+
+}
+
+
+.ffs-map-control,
+.ffs-map-zoom-value {
+
+    min-width:
+        34px;
+
+    height:
+        32px;
+
+    border:
+        0;
+
+    border-radius:
+        6px;
+
+    background:
+        #202735;
+
+    color:
+        #edf2f6;
+
+    font-size:
+        16px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+}
+
+
+.ffs-map-zoom-value {
+
+    min-width:
+        54px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+}
+
+
+.ffs-map-control:hover,
+.ffs-map-zoom-value:hover {
+
+    background:
+        #303a4a;
+
+}
+
+
+.ffs-map-control:active,
+.ffs-map-zoom-value:active {
+
+    transform:
+        scale(.96);
 
 }
 
@@ -607,11 +777,6 @@ body {
 
     position:
         absolute;
-
-    /*
-       The building anchor is now the CENTER of its
-       spatial footprint.
-    */
 
     transform:
         translate(
@@ -1854,18 +2019,41 @@ body {
     .ffs-map-renderer {
 
         min-width:
-            900px;
+            700px;
+
+        height:
+            540px;
 
     }
 
 
-    .ffs-map-world {
+    .ffs-map-controls {
 
-        width:
-            1000px;
+        top:
+            10px;
+
+        right:
+            10px;
+
+    }
+
+
+    .ffs-map-control,
+    .ffs-map-zoom-value {
+
+        min-width:
+            32px;
 
         height:
-            700px;
+            30px;
+
+    }
+
+
+    .ffs-map-zoom-value {
+
+        min-width:
+            50px;
 
     }
 
@@ -1877,4 +2065,4 @@ body {
 
     }
 
-}
+   }

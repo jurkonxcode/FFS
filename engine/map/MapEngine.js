@@ -1,11 +1,9 @@
 // ============================================================
-// FFS - MAP ENGINE v0.2
+// FFS - MAP ENGINE v0.3
 // Converts WorldState into a spatial visual map model.
 // ============================================================
 
-
 export class MapEngine {
-
 
     constructor(worldState) {
 
@@ -30,11 +28,9 @@ export class MapEngine {
             );
         }
 
-
         console.log(
-            "[MapEngine] Initializing Map Engine v0.2..."
+            "[MapEngine] Initializing Map Engine v0.3..."
         );
-
 
         this.map = {
 
@@ -45,12 +41,11 @@ export class MapEngine {
                 "isometric",
 
             version:
-                "0.2",
+                "0.3",
 
             worldId:
                 this.worldState.world?.world_id
                 ?? null,
-
 
             terrain: {
 
@@ -73,7 +68,6 @@ export class MapEngine {
                     ?? "grass"
             },
 
-
             regions: [],
 
             cities: [],
@@ -82,7 +76,11 @@ export class MapEngine {
 
             buildings: [],
 
-            objects: []
+            objects: [],
+
+            environment:
+                this.worldState.environment
+                ?? {}
         };
 
 
@@ -280,13 +278,21 @@ export class MapEngine {
                                 building.status
                                 ?? "active",
 
+                            district:
+                                building.district
+                                ?? "generic",
+
                             map:
                                 building.map
                                 ?? {
 
                                     x: 0,
 
-                                    y: 0
+                                    y: 0,
+
+                                    width: 1,
+
+                                    height: 1
                                 }
                         };
                     }
@@ -312,17 +318,45 @@ export class MapEngine {
     // GET MAP SUMMARY
     // ========================================================
 
-    return {
+    getMapSummary() {
 
-    terrain:
-        this.state.terrain,
+        return {
 
-    roads:
-        this.state.roads,
+            mapId:
+                this.map?.id
+                ?? null,
 
-    buildings:
-        this.state.buildings,
+            type:
+                this.map?.type
+                ?? null,
 
-    environment:
-        this.state.environment
-};
+            version:
+                this.map?.version
+                ?? null,
+
+            terrain:
+                this.map?.terrain
+                ?? null,
+
+            regionCount:
+                this.map?.regions?.length
+                ?? 0,
+
+            cityCount:
+                this.map?.cities?.length
+                ?? 0,
+
+            roadCount:
+                this.map?.roads?.length
+                ?? 0,
+
+            buildingCount:
+                this.map?.buildings?.length
+                ?? 0,
+
+            environment:
+                this.map?.environment
+                ?? {}
+        };
+    }
+}

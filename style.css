@@ -1,3 +1,9 @@
+/* ============================================================
+   FFS - FOUNDER FANTASY SIMULATOR
+   VISUAL PROOF v0.1
+   ============================================================ */
+
+
 * {
     box-sizing: border-box;
 }
@@ -7,1045 +13,241 @@ html,
 body {
     margin: 0;
     padding: 0;
+    min-height: 100%;
+}
 
-    width: 100%;
-    height: 100%;
 
-    overflow: hidden;
+body {
+    background:
+        linear-gradient(
+            180deg,
+            #10151a 0%,
+            #1b2228 100%
+        );
+
+    color: #e8edf0;
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
-
-    background: #111;
-    color: #ffffff;
 }
 
 
-body {
-    min-width: 320px;
+button {
+    font: inherit;
 }
 
 
-#app {
+/* ============================================================
+   APP
+   ============================================================ */
+
+#ffs-app {
     width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
+    min-height: 100vh;
 }
 
 
-/* =========================
-   TOP BAR
-   ========================= */
-
-#top-bar {
-
-    width: 100%;
-
-    min-height: 64px;
-
+.ffs-header {
     display: flex;
-
     justify-content: space-between;
     align-items: center;
 
-    padding: 10px 16px;
+    padding: 18px 22px;
 
-    background: rgba(0, 0, 0, 0.88);
+    background: #171d22;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-    z-index: 100;
+    border-bottom:
+        1px solid #38434b;
 }
 
 
-#brand {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 2px;
+.ffs-title {
+    font-size: 21px;
+    font-weight: 700;
 }
 
 
-#brand-name {
+.ffs-studio {
+    margin-top: 4px;
 
-    font-size: 24px;
+    font-size: 12px;
 
-    font-weight: 800;
+    color: #9aa8b1;
 
     letter-spacing: 1px;
 }
 
 
-#brand-title {
-
-    font-size: 11px;
-
-    opacity: 0.65;
-}
-
-
-/* =========================
-   LANGUAGE
-   ========================= */
-
-#language-selector {
-
+.ffs-language {
     display: flex;
-
     gap: 6px;
 }
 
 
-#language-selector button {
+.ffs-language button {
+    padding: 7px 10px;
 
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border:
+        1px solid #46525a;
 
-    background: rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
 
-    color: #ffffff;
+    background: #222a30;
 
-    padding: 7px 9px;
-
-    border-radius: 6px;
-
-    font-size: 11px;
+    color: #dfe7eb;
 
     cursor: pointer;
 }
 
 
-#language-selector button:hover {
+/* ============================================================
+   TIME
+   ============================================================ */
 
-    background: rgba(255, 255, 255, 0.14);
-}
-
-
-#language-selector button.active {
-
-    background: rgba(255, 255, 255, 0.18);
-
-    border-color: rgba(255, 255, 255, 0.35);
-}
-
-
-/* =========================
-   TIME PANEL
-   ========================= */
-
-#time-panel {
-
-    width: 100%;
-
+.ffs-time-panel {
     display: flex;
-
+    align-items: center;
     justify-content: center;
 
-    align-items: center;
+    gap: 14px;
 
-    gap: 20px;
+    padding: 18px;
+}
+
+
+.ffs-time-card {
+    min-width: 155px;
 
     padding: 12px;
 
-    background: rgba(0, 0, 0, 0.72);
-
-    z-index: 90;
-}
-
-
-.time-box {
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 3px;
-}
-
-
-.time-label {
-
-    font-size: 9px;
-
-    opacity: 0.55;
-
-    letter-spacing: 1px;
-}
-
-
-.time-value {
-
-    font-size: 13px;
-
-    font-weight: 700;
-}
-
-
-.time-divider {
-
-    font-size: 20px;
-
-    opacity: 0.5;
-}
-
-
-/* =========================
-   GAME WORLD
-   ========================= */
-
-#game-world {
-
-    position: relative;
-
-    flex: 1;
-
-    overflow: hidden;
-
-    background:
-        linear-gradient(
-            135deg,
-            #607d4d,
-            #87a96b
-        );
-}
-
-
-#world-placeholder {
-
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
-    text-align: center;
-
-    width: 90%;
-
-    max-width: 500px;
-}
-
-
-#world-title {
-
-    font-size: 32px;
-
-    font-weight: 800;
-
-    letter-spacing: 3px;
-
-    margin-bottom: 12px;
-}
-
-
-#loading-message {
-
-    font-size: 15px;
-
-    margin-bottom: 8px;
-}
-
-
-#world-description {
-
-    font-size: 12px;
-
-    opacity: 0.65;
-
-    line-height: 1.5;
-}
-
-
-/* =========================
-   FOOTER
-   ========================= */
-
-#footer {
-
-    min-height: 30px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    padding: 0 12px;
-
-    font-size: 9px;
-
-    opacity: 0.45;
-
-    background: rgba(0, 0, 0, 0.85);
-}
-
-
-/* =========================
-   MOBILE
-   ========================= */
-
-@media (max-width: 600px) {
-
-    #top-bar {
-
-        padding: 9px 10px;
-    }
-
-
-    #brand-title {
-
-        display: none;
-    }
-
-
-    #language-selector button {
-
-        padding: 6px 7px;
-
-        font-size: 10px;
-    }
-
-
-    #time-panel {
-
-        gap: 10px;
-
-        padding: 9px 5px;
-    }
-
-
-    .time-value {
-
-        font-size: 11px;
-    }
-
-
-    .time-label {
-
-        font-size: 8px;
-    }
-
-
-    #world-title {
-
-        font-size: 24px;
-    }
-
-}
-/* ============================================================
-   FFS MAP ENGINE v0.1
-   ============================================================ */
-
-
-#ffs-map-container {
-
-    width: 100%;
-
-    min-height: 520px;
-
-    margin-top: 24px;
-
-    overflow: hidden;
-
-    position: relative;
-
-    border-radius: 16px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #dce8d2,
-            #c7d7bc
-        );
-
-    border: 1px solid #b8c8ad;
-}
-
-
-/* ============================================================
-   MAP ROOT
-   ============================================================ */
-
-.ffs-map {
-
-    position: relative;
-
-    width: 100%;
-
-    min-height: 520px;
-
-    overflow: hidden;
-}
-
-
-/* ============================================================
-   CITY
-   ============================================================ */
-
-.map-city {
-
-    position: absolute;
-
-    top: 24px;
-
-    left: 24px;
-
-    padding: 8px 14px;
-
-    border-radius: 8px;
-
-    background: rgba(255, 255, 255, 0.88);
-
-    font-weight: 700;
-
-    font-size: 14px;
-
-    letter-spacing: 0.04em;
-}
-
-
-/* ============================================================
-   GENERIC OBJECT
-   ============================================================ */
-
-.map-object {
-
-    position: absolute;
-
-    text-align: center;
-
-    user-select: none;
-}
-
-
-.object-icon {
-
-    font-size: 58px;
-
-    line-height: 1;
-
-    filter:
-        drop-shadow(
-            0 8px 5px
-            rgba(0, 0, 0, 0.18)
-        );
-}
-
-
-.object-label {
-
-    margin-top: 8px;
-
-    padding: 5px 9px;
-
-    display: inline-block;
-
-    border-radius: 6px;
-
-    background:
-        rgba(255, 255, 255, 0.82);
-
-    font-size: 11px;
-
-    font-weight: 600;
-
-    white-space: nowrap;
-}
-
-
-/* ============================================================
-   PARK
-   ============================================================ */
-
-.map-park {
-
-    top: 90px;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-}
-
-
-/* ============================================================
-   HOUSE
-   ============================================================ */
-
-.map-house {
-
-    top: 260px;
-
-    left: 25%;
-}
-
-
-/* ============================================================
-   SHOP
-   ============================================================ */
-
-.map-shop {
-
-    top: 260px;
-
-    right: 25%;
-}
-
-
-/* ============================================================
-   ROAD
-   ============================================================ */
-
-.map-road {
-
-    position: absolute;
-
-    left: 15%;
-
-    right: 15%;
-
-    top: 390px;
-
-    height: 70px;
-
-    transform:
-        skewX(-18deg);
-
-    background:
-        #6b6b6b;
-
-    border-radius: 8px;
-
-    box-shadow:
-        0 8px 15px
-        rgba(0, 0, 0, 0.15);
-}
-
-
-.road-line {
-
-    position: absolute;
-
-    left: 5%;
-
-    right: 5%;
-
-    top: 50%;
-
-    height: 4px;
-
-    transform:
-        translateY(-50%);
-
-    background:
-        repeating-linear-gradient(
-            to right,
-            #f3d36a 0,
-            #f3d36a 30px,
-            transparent 30px,
-            transparent 55px
-        );
-}
-
-
-.road-label {
-
-    position: absolute;
-
-    left: 50%;
-
-    top: 50%;
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        )
-        skewX(18deg);
-
-    color: white;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    text-shadow:
-        0 1px 3px
-        rgba(0, 0, 0, 0.45);
-}
-
-
-/* ============================================================
-   MOBILE
-   ============================================================ */
-
-@media (max-width: 600px) {
-
-    #ffs-map-container {
-
-        min-height: 440px;
-
-        border-radius: 12px;
-    }
-
-
-    .ffs-map {
-
-        min-height: 440px;
-    }
-
-
-    .object-icon {
-
-        font-size: 46px;
-    }
-
-
-    .map-house {
-
-        left: 15%;
-
-        top: 230px;
-    }
-
-
-    .map-shop {
-
-        right: 15%;
-
-        top: 230px;
-    }
-
-
-    .map-road {
-
-        left: 8%;
-
-        right: 8%;
-
-        top: 345px;
-    }
-}
-/* ============================================================
-   FFS MAP v0.2
-   ISOMETRIC WORLD FOUNDATION
-   ============================================================ */
-
-
-/* ============================================================
-   MAP CONTAINER
-   ============================================================ */
-
-#ffs-map-container {
-
-    min-height: 620px;
-
-    overflow: hidden;
-
-    position: relative;
-
-    background:
-        linear-gradient(
-            180deg,
-            #b9d7e8 0%,
-            #d8ead1 42%,
-            #a9c997 100%
-        );
-
-    border-radius: 18px;
-}
-
-
-/* ============================================================
-   MAP ROOT
-   ============================================================ */
-
-.ffs-map-v02 {
-
-    position: relative;
-
-    width: 900px;
-
-    height: 620px;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-}
-
-
-/* ============================================================
-   TERRAIN
-   ============================================================ */
-
-.map-terrain-layer {
-
-    position: absolute;
-
-    left: 120px;
-
-    top: 70px;
-
-    width: 650px;
-
-    height: 430px;
-
-    transform:
-        rotateX(55deg)
-        rotateZ(45deg);
-
-    transform-origin:
-        center center;
-
-    background:
-        #91b879;
-
-    border-radius: 8px;
-
-    box-shadow:
-        0 20px 30px
-        rgba(0, 0, 0, 0.18);
-}
-
-
-/* ============================================================
-   TERRAIN TILE
-   ============================================================ */
-
-.map-tile {
-
-    position: absolute;
-
-    width: 72px;
-
-    height: 36px;
-
-    box-sizing: border-box;
+    background: #1c242a;
 
     border:
-        1px solid
-        rgba(255, 255, 255, 0.08);
-
-    background:
-        #9bc47f;
-}
-
-
-/* ============================================================
-   ROAD
-   ============================================================ */
-
-.map-road-v02 {
-
-    position: absolute;
-
-    height: 58px;
-
-    background:
-        #686868;
-
-    border-radius: 10px;
-
-    transform:
-        skewX(-25deg);
-
-    box-shadow:
-        0 7px 12px
-        rgba(0, 0, 0, 0.2);
-
-    z-index: 20;
-}
-
-
-.map-road-v02::after {
-
-    content: "";
-
-    position: absolute;
-
-    left: 4%;
-
-    right: 4%;
-
-    top: 50%;
-
-    height: 4px;
-
-    transform:
-        translateY(-50%);
-
-    background:
-        repeating-linear-gradient(
-            to right,
-            #f5d76e 0,
-            #f5d76e 28px,
-            transparent 28px,
-            transparent 52px
-        );
-}
-
-
-/* ============================================================
-   BUILDINGS
-   ============================================================ */
-
-.map-building-v02 {
-
-    position: absolute;
-
-    z-index: 30;
-
-    text-align: center;
-
-    transform:
-        translate(-50%, -75%);
-
-    user-select: none;
-}
-
-
-/* ============================================================
-   BUILDING ICON
-   ============================================================ */
-
-.building-icon {
-
-    font-size: 62px;
-
-    line-height: 1;
-
-    filter:
-        drop-shadow(
-            0 8px 5px
-            rgba(0, 0, 0, 0.24)
-        );
-}
-
-
-/* ============================================================
-   BUILDING LABEL
-   ============================================================ */
-
-.building-label {
-
-    margin-top: 6px;
-
-    display: inline-block;
-
-    padding: 5px 9px;
+        1px solid #39464f;
 
     border-radius: 7px;
 
-    background:
-        rgba(255, 255, 255, 0.88);
+    text-align: center;
+}
 
+
+.ffs-time-label {
     font-size: 10px;
 
-    font-weight: 700;
+    letter-spacing: 1.5px;
 
-    white-space: nowrap;
-
-    box-shadow:
-        0 2px 5px
-        rgba(0, 0, 0, 0.12);
+    color: #8998a2;
 }
 
 
-/* ============================================================
-   HOUSE
-   ============================================================ */
-
-.map-house .building-icon {
-
-    font-size: 64px;
-}
-
-
-/* ============================================================
-   SHOP
-   ============================================================ */
-
-.map-shop .building-icon {
-
-    font-size: 64px;
-}
-
-
-/* ============================================================
-   PARK
-   ============================================================ */
-
-.map-park {
-
-    z-index: 25;
-}
-
-
-.map-park .building-icon {
-
-    font-size: 76px;
-}
-
-
-/* ============================================================
-   CITY LABEL
-   ============================================================ */
-
-.map-city-label-v02 {
-
-    position: absolute;
-
-    top: 24px;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-    padding:
-        10px 18px;
-
-    border-radius: 10px;
-
-    background:
-        rgba(255, 255, 255, 0.9);
+.ffs-time-value {
+    margin-top: 6px;
 
     font-size: 15px;
 
-    font-weight: 800;
+    font-weight: 700;
+}
 
-    letter-spacing:
-        0.04em;
 
-    box-shadow:
-        0 5px 14px
-        rgba(0, 0, 0, 0.12);
+.ffs-time-arrow {
+    font-size: 22px;
 
-    z-index: 100;
+    color: #8d9ba4;
 }
 
 
 /* ============================================================
-   MOBILE
+   INTRO
    ============================================================ */
 
-@media (max-width: 600px) {
+.ffs-world-intro {
+    max-width: 1100px;
 
-    #ffs-map-container {
+    margin:
+        0 auto;
 
-        min-height: 520px;
-
-        border-radius: 14px;
-    }
-
-
-    .ffs-map-v02 {
-
-        width: 760px;
-
-        height: 520px;
-
-        transform:
-            scale(0.78);
-
-        transform-origin:
-            top center;
-    }
-
-
-    .building-icon {
-
-        font-size: 54px;
-    }
-
-
-    .map-park .building-icon {
-
-        font-size: 64px;
-    }
-
-
-    .building-label {
-
-        font-size: 9px;
-    }
+    padding:
+        10px 20px 18px;
 }
-/* ============================================================
-   FFS - VISUAL PROOF v0.1
-   Map Renderer v0.3
-   ============================================================ */
+
+
+.ffs-world-intro h1 {
+    margin: 0 0 6px;
+
+    font-size: 28px;
+}
+
+
+.ffs-world-intro p {
+    margin: 4px 0;
+
+    color: #9eabb3;
+}
 
 
 /* ============================================================
    MAP CONTAINER
    ============================================================ */
 
-#ffs-map-container {
-    position: relative;
+.ffs-world-section {
     width: 100%;
-    min-height: 520px;
+
+    padding:
+        0 12px 30px;
+}
+
+
+#ffs-map-container {
+    width: 100%;
+
+    min-height: 680px;
+
     overflow: auto;
 
-    padding: 30px 20px 50px;
-
-    box-sizing: border-box;
-
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-
     background:
-        linear-gradient(
-            180deg,
-            #d8d6ca 0%,
-            #c8c6bb 100%
-        );
+        #0d1114;
 
-    border-radius: 18px;
+    border:
+        1px solid #39454d;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 15px 45px
+        rgba(0, 0, 0, 0.45);
+
+    position: relative;
 }
 
 
-/* ============================================================
-   ISOMETRIC MAP ROOT
-   ============================================================ */
-
-.ffs-map-v03 {
+.ffs-map-renderer {
     position: relative;
 
-    flex: 0 0 auto;
+    min-width: 100%;
 
-    transform-origin: center top;
+    min-height: 680px;
 
-    overflow: visible;
+    overflow: auto;
+}
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+
+.ffs-map-world {
+    position: relative;
+
+    margin: 0 auto;
 }
 
 
 /* ============================================================
-   MAP LAYERS
+   GENERIC LAYER
    ============================================================ */
 
-.map-terrain-layer-v03,
-.map-roads-layer-v03,
-.map-buildings-layer-v03 {
+.ffs-map-layer {
     position: absolute;
 
     inset: 0;
-
-    width: 100%;
-    height: 100%;
 
     pointer-events: none;
 }
@@ -1055,77 +257,36 @@ body {
    TERRAIN
    ============================================================ */
 
-.map-terrain-layer-v03 {
+.ffs-terrain-layer {
     z-index: 1;
 }
 
-.map-tile-v03 {
+
+.ffs-terrain-tile {
     position: absolute;
 
-    box-sizing: border-box;
+    width: 72px;
+    height: 36px;
 
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
-
-    border: 1px solid rgba(45, 55, 42, 0.18);
-
-    background-color: #7b9b65;
-
-    /* Dithering ringan */
-    background-image:
-        radial-gradient(
-            rgba(255, 255, 255, 0.12) 1px,
-            transparent 1px
-        );
-
-    background-size: 5px 5px;
-}
-
-
-/* ============================================================
-   ROAD
-   ============================================================ */
-
-.map-roads-layer-v03 {
-    z-index: 5;
-}
-
-.map-road-v03 {
-    position: absolute;
-
-    box-sizing: border-box;
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
+    transform:
+        translate(-50%, -50%)
+        rotate(30deg)
+        skewX(-30deg);
 
     background:
-        linear-gradient(
-            135deg,
-            #5d6267,
-            #45494e
-        );
+        #657354;
 
-    border: 1px solid rgba(30, 32, 34, 0.35);
+    border:
+        1px solid
+        rgba(35, 45, 34, 0.6);
 
-    z-index: 1;
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(255, 255, 255, 0.04);
 }
 
 
-/* ============================================================
-   ROAD SURFACE TEXTURE
-   ============================================================ */
-
-.map-road-v03::after {
+.ffs-terrain-tile::after {
     content: "";
 
     position: absolute;
@@ -1134,854 +295,144 @@ body {
 
     opacity: 0.18;
 
-    background-image:
-        radial-gradient(
-            rgba(255, 255, 255, 0.25) 1px,
-            transparent 1px
-        );
-
-    background-size: 6px 6px;
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
-}
-
-
-/* ============================================================
-   SIDEWALK
-   ============================================================ */
-
-.map-sidewalk-v03 {
-    position: absolute;
-
-    box-sizing: border-box;
-
-    transform:
-        translate(
-            0px,
-            -2px
-        )
-        scale(
-            0.88
-        );
-
-    transform-origin: center;
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
-
     background:
-        linear-gradient(
+        repeating-linear-gradient(
             135deg,
-            #bbb8ad,
-            #96938b
+            transparent 0,
+            transparent 4px,
+            #1d271f 5px,
+            transparent 6px
         );
+}
 
-    border: 1px solid rgba(70, 70, 65, 0.2);
 
-    z-index: 2;
+.terrain-variation {
+    background:
+        #71805e;
 }
 
 
 /* ============================================================
-   BUILDINGS LAYER
+   ROADS
    ============================================================ */
 
-.map-buildings-layer-v03 {
+.ffs-road-layer {
     z-index: 20;
 }
 
 
-/* ============================================================
-   BUILDING WRAPPER
-   ============================================================ */
-
-.map-building-v03 {
+.ffs-road {
     position: absolute;
 
-    overflow: visible;
+    height: 48px;
 
     transform:
-        translate(
-            -50%,
-            -50%
-        );
+        translate(-5%, -50%);
 
-    transform-origin: center bottom;
+    background:
+        #30363a;
 
-    pointer-events: auto;
+    border-top:
+        5px solid #777c7e;
+
+    border-bottom:
+        5px solid #777c7e;
+
+    box-shadow:
+        0 5px 0
+        rgba(0, 0, 0, 0.25);
 }
 
 
-/* ============================================================
-   BUILDING SHADOW
-   ============================================================ */
+.road-horizontal {
+    transform:
+        translate(-5%, -50%);
+}
 
-.building-shadow-v03 {
-    position: absolute;
 
-    background:
-        rgba(
-            20,
-            25,
-            30,
-            0.24
-        );
+.road-vertical {
+    width: 48px !important;
 
-    border-radius: 50%;
+    height: 500px;
 
     transform:
-        skewX(-25deg)
-        rotate(-8deg);
-
-    filter: blur(1px);
-
-    z-index: 0;
+        translate(-50%, -5%);
 }
 
 
-/* ============================================================
-   BUILDING FRONT FACE
-   ============================================================ */
-
-.building-body-v03 {
-    position: absolute;
-
-    left: 0;
-
-    width: 68%;
-
-    box-sizing: border-box;
-
-    border-left:
-        2px solid
-        rgba(255, 255, 255, 0.08);
-
-    border-right:
-        1px solid
-        rgba(20, 25, 30, 0.20);
-
-    overflow: hidden;
-
-    z-index: 5;
-
-    clip-path:
-        polygon(
-            0% 12%,
-            100% 0%,
-            100% 88%,
-            0% 100%
-        );
-}
-
-
-/* ============================================================
-   BUILDING SIDE FACE
-   ============================================================ */
-
-.building-side-v03 {
-    position: absolute;
-
-    left: 64%;
-
-    width: 36%;
-
-    box-sizing: border-box;
-
-    border-right:
-        2px solid
-        rgba(15, 20, 25, 0.22);
-
-    overflow: hidden;
-
-    z-index: 4;
-
-    clip-path:
-        polygon(
-            0% 0%,
-            100% 12%,
-            100% 100%,
-            0% 88%
-        );
-
-    filter:
-        brightness(0.78);
-}
-
-
-/* ============================================================
-   ROOF
-   ============================================================ */
-
-.building-roof-v03 {
-    position: absolute;
-
-    left: 0;
-
-    box-sizing: border-box;
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
-
-    border:
-        1px solid
-        rgba(20, 25, 30, 0.30);
-
-    z-index: 8;
-
-    filter:
-        brightness(1.05);
-
-    background-image:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,0.08),
-            transparent 50%
-        );
-}
-
-
-/* ============================================================
-   RESIDENTIAL
-   ============================================================ */
-
-.building-residential-v03
-.building-body-v03 {
-    background-color: #b96e52;
-}
-
-.building-residential-v03 .building-body-v03 {
-    background-image:
-        repeating-linear-gradient(
-            0deg,
-            rgba(80, 35, 25, 0.12) 0px,
-            rgba(80, 35, 25, 0.12) 2px,
-            transparent 2px,
-            transparent 8px
-        );
-}
-
-
-/* ============================================================
-   BRICK TEXTURE
-   ============================================================ */
-
-.building-residential-v03
-.building-side-v03 {
-    background-image:
-        repeating-linear-gradient(
-            0deg,
-            rgba(50, 25, 20, 0.12) 0px,
-            rgba(50, 25, 20, 0.12) 2px,
-            transparent 2px,
-            transparent 8px
-        );
-}
-
-
-/* ============================================================
-   COMMERCIAL
-   ============================================================ */
-
-.building-commercial-v03 .building-body-v03 {
-    background:
-        linear-gradient(
-            180deg,
-            #c4c7c5,
-            #9fa3a5
-        );
-}
-
-.building-commercial-v03 .building-side-v03 {
-    background:
-        linear-gradient(
-            180deg,
-            #85898b,
-            #666b6e
-        );
-}
-
-
-/* ============================================================
-   CBD / GLASS
-   ============================================================ */
-
-.building-cbd-v03 .building-body-v03 {
-    background:
-        linear-gradient(
-            90deg,
-            #6aa8bd 0%,
-            #3d7890 48%,
-            #6baabd 100%
-        );
-
-    background-image:
-        repeating-linear-gradient(
-            90deg,
-            rgba(255,255,255,0.16) 0px,
-            rgba(255,255,255,0.16) 2px,
-            transparent 2px,
-            transparent 22px
-        ),
-        linear-gradient(
-            90deg,
-            #6aa8bd,
-            #3d7890
-        );
-}
-
-
-.building-cbd-v03 .building-side-v03 {
-    background:
-        linear-gradient(
-            90deg,
-            #315f73,
-            #244451
-        );
-}
-
-
-/* ============================================================
-   GLASS REFLECTION
-   ============================================================ */
-
-.building-cbd-v03 .building-body-v03::after {
+.ffs-road::before {
     content: "";
 
     position: absolute;
 
-    top: 0;
-    left: 10%;
+    left: 20px;
+    right: 20px;
 
-    width: 20%;
-    height: 100%;
+    top: 50%;
+
+    height: 3px;
+
+    transform:
+        translateY(-50%);
 
     background:
-        linear-gradient(
+        repeating-linear-gradient(
             90deg,
-            transparent,
-            rgba(255,255,255,0.24),
-            transparent
+            #d9c866 0 24px,
+            transparent 24px 45px
         );
-
-    opacity: 0.8;
 }
 
 
-/* ============================================================
-   WINDOWS
-   ============================================================ */
-
-.building-windows-v03 {
-    position: absolute;
-
-    left: 0;
-    bottom: 0;
-
-    width: 68%;
-    height: 100%;
-
-    overflow: hidden;
-
-    z-index: 12;
-
-    pointer-events: none;
-}
-
-
-.building-window-v03 {
-    position: absolute;
-
-    width: 11px;
-    height: 10px;
-
-    border:
-        1px solid
-        rgba(35, 45, 48, 0.32);
-
-    box-sizing: border-box;
-
-    box-shadow:
-        inset 1px 1px 0
-        rgba(255,255,255,0.25);
-
-    opacity: 0.82;
-}
-
-
-/* ============================================================
-   GLASS BUILDING WINDOWS
-   ============================================================ */
-
-.building-cbd-v03
-.building-window-v03 {
-    background:
-        rgba(
-            220,
-            240,
-            245,
-            0.48
-        ) !important;
-
-    border-color:
-        rgba(210, 235, 240, 0.28);
-
-    opacity: 0.72;
-}
-
-
-/* ============================================================
-   COMMERCIAL WINDOWS
-   ============================================================ */
-
-.building-commercial-v03
-.building-window-v03 {
-    background:
-        rgba(
-            225,
-            220,
-            190,
-            0.62
-        ) !important;
-}
-
-
-/* ============================================================
-   RESIDENTIAL WINDOWS
-   ============================================================ */
-
-.building-residential-v03
-.building-window-v03 {
-    background:
-        rgba(
-            210,
-            220,
-            215,
-            0.60
-        ) !important;
-}
-
-
-/* ============================================================
-   SIGNAGE
-   ============================================================ */
-
-.building-sign-v03 {
-    position: absolute;
-
-    z-index: 20;
-
-    min-width: 34px;
-
-    padding:
-        3px 6px;
-
-    box-sizing: border-box;
-
-    background:
-        #e8d66b;
-
-    color:
-        #34362d;
-
-    border:
-        1px solid
-        rgba(50,50,40,0.35);
-
-    border-radius: 2px;
-
-    font-size: 8px;
-
-    font-weight: 800;
-
-    letter-spacing: 0.5px;
-
-    text-align: center;
-
-    box-shadow:
-        1px 2px 0
-        rgba(20,20,20,0.25);
-}
-
-
-/* ============================================================
-   BUILDING LABEL
-   ============================================================ */
-
-.building-label-v03 {
-    position: absolute;
+.road-vertical::before {
+    top: 20px;
+    bottom: 20px;
 
     left: 50%;
 
-    transform:
-        translateX(-50%);
-
-    white-space: nowrap;
-
-    padding:
-        3px 7px;
+    width: 3px;
+    height: auto;
 
     background:
-        rgba(
-            30,
-            35,
-            38,
-            0.82
-        );
-
-    color:
-        #f3f1e9;
-
-    border-radius: 3px;
-
-    font-size: 9px;
-
-    line-height: 1.2;
-
-    letter-spacing: 0.25px;
-
-    text-align: center;
-
-    box-shadow:
-        0 2px 4px
-        rgba(0,0,0,0.25);
-
-    z-index: 30;
-}
-
-
-/* ============================================================
-   PARK
-   ============================================================ */
-
-.building-park-v03 {
-    z-index: 10;
-}
-
-
-.building-park-v03 .building-body-v03 {
-    background:
-        linear-gradient(
-            135deg,
-            #7d9e64,
-            #5e804f
+        repeating-linear-gradient(
+            180deg,
+            #d9c866 0 24px,
+            transparent 24px 45px
         );
 }
 
 
-.building-park-v03 .building-side-v03 {
-    background:
-        #4e6c43;
-}
-
-
-.building-park-v03 .building-roof-v03 {
-    background:
-        #71945c;
-}
-
-
-/* ============================================================
-   CITY LABEL
-   ============================================================ */
-
-.map-city-label-v03 {
+.ffs-sidewalk {
     position: absolute;
 
-    top: 18px;
-    left: 50%;
+    height: 62px;
 
     transform:
-        translateX(-50%);
-
-    padding:
-        7px 14px;
+        translate(-5%, -50%);
 
     background:
-        rgba(
-            30,
-            35,
-            38,
-            0.88
-        );
+        #aaa59a;
 
-    color:
-        #f3f1e9;
+    opacity: 0.65;
 
-    border-radius: 5px;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    letter-spacing: 1px;
-
-    box-shadow:
-        0 3px 8px
-        rgba(0,0,0,0.25);
-
-    z-index: 100;
+    z-index: 19;
 }
 
 
-/* ============================================================
-   EMPTY MAP
-   ============================================================ */
+.ffs-sidewalk::after {
+    content: "";
 
-.ffs-map-empty {
-    padding: 30px;
-
-    text-align: center;
-
-    color:
-        #555;
-
-    font-size: 14px;
-}
-
-
-/* ============================================================
-   MOBILE
-   ============================================================ */
-
-@media (max-width: 700px) {
-
-    #ffs-map-container {
-        min-height: 440px;
-
-        padding:
-            20px 10px 35px;
-
-        justify-content:
-            flex-start;
-    }
-
-    .ffs-map-v03 {
-        transform:
-            scale(0.82);
-
-        transform-origin:
-            center top;
-    }
-
-    .building-label-v03 {
-        font-size: 8px;
-    }
-
-    .building-sign-v03 {
-        font-size: 7px;
-
-        padding:
-            2px 4px;
-    }
-
-    .map-city-label-v03 {
-        font-size: 10px;
-
-        padding:
-            5px 10px;
-    }
-}
-/* ============================================================
-   FFS VISUAL PROOF v0.1
-   LIVING CITY FOUNDATION
-   ============================================================ */
-
-
-/* ============================================================
-   MAP ROOT
-   ============================================================ */
-
-.ffs-map-v04 {
-    position: relative;
-
-    flex: 0 0 auto;
-
-    overflow: visible;
-
-    transform-origin:
-        center top;
-}
-
-
-/* ============================================================
-   LAYERS
-   ============================================================ */
-
-.map-terrain-layer-v04,
-.map-roads-layer-v04,
-.map-environment-layer-v04,
-.map-trees-layer-v04,
-.map-buildings-layer-v04,
-.map-props-layer-v04,
-.map-signs-layer-v04 {
     position: absolute;
 
-    inset: 0;
+    inset: 5px;
 
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-}
-
-
-/* ============================================================
-   TERRAIN
-   ============================================================ */
-
-.map-terrain-layer-v04 {
-    z-index: 1;
-}
-
-
-.map-tile-v04 {
-    position: absolute;
-
-    box-sizing: border-box;
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 22px,
+            rgba(55, 55, 55, 0.25) 23px,
+            transparent 24px
         );
-
-    background:
-        #7b9b65;
-
-    border:
-        1px solid
-        rgba(50, 65, 45, 0.18);
-}
-
-
-.map-tile-v04[data-variation="0"] {
-    background:
-        #7b9b65;
-}
-
-
-.map-tile-v04[data-variation="1"] {
-    background:
-        #829f6b;
-}
-
-
-.map-tile-v04[data-variation="2"] {
-    background:
-        #73915e;
-}
-
-
-.map-tile-v04[data-variation="3"] {
-    background:
-        #88a66e;
-}
-
-
-/* ============================================================
-   ROAD
-   ============================================================ */
-
-.map-roads-layer-v04 {
-    z-index: 5;
-}
-
-
-.map-road-v04 {
-    position: absolute;
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
-
-    background:
-        #4d5257;
-
-    border:
-        1px solid
-        rgba(25, 28, 30, 0.45);
-
-    box-sizing: border-box;
-}
-
-
-/* ============================================================
-   ROAD MARKING
-   ============================================================ */
-
-.road-marking-v04 {
-    position: absolute;
-
-    clip-path:
-        polygon(
-            50% 40%,
-            55% 43%,
-            55% 57%,
-            50% 60%,
-            45% 57%,
-            45% 43%
-        );
-
-    background:
-        #d7c86a;
-
-    opacity:
-        0.85;
-
-    z-index:
-        4;
-}
-
-
-/* ============================================================
-   SIDEWALK
-   ============================================================ */
-
-.map-sidewalk-v04 {
-    position: absolute;
-
-    transform:
-        scale(0.86);
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
-
-    background:
-        #aaa79d;
-
-    border:
-        1px solid
-        rgba(80, 80, 75, 0.25);
-
-    z-index:
-        6;
 }
 
 
@@ -1989,163 +440,161 @@ body {
    BUILDINGS
    ============================================================ */
 
-.map-buildings-layer-v04 {
-    z-index: 20;
+.ffs-building-layer {
+    z-index: 100;
 }
 
 
-.map-building-v04 {
+.ffs-building {
     position: absolute;
-
-    overflow: visible;
 
     transform:
-        translate(
-            -50%,
-            -50%
-        );
+        translate(-50%, -100%);
 
-    transform-origin:
-        center bottom;
+    filter:
+        drop-shadow(
+            8px 12px 4px
+            rgba(0, 0, 0, 0.30)
+        );
 }
 
 
-/* ============================================================
-   SHADOW
-   ============================================================ */
-
-.building-shadow-v04 {
+.building-shadow {
     position: absolute;
+
+    left: 8px;
+    bottom: -8px;
+
+    width: 100%;
+    height: 22px;
 
     background:
-        rgba(
-            15,
-            20,
-            25,
-            0.25
-        );
-
-    border-radius:
-        50%;
+        rgba(0, 0, 0, 0.32);
 
     transform:
-        skewX(-25deg)
-        rotate(-8deg);
+        skewX(-35deg);
 
     filter:
-        blur(1px);
-
-    z-index:
-        1;
+        blur(3px);
 }
 
 
-/* ============================================================
-   FRONT FACE
-   ============================================================ */
-
-.building-body-v04 {
+.building-body {
     position: absolute;
 
     left: 0;
+    bottom: 0;
 
-    width: 68%;
-
-    overflow: hidden;
-
-    box-sizing: border-box;
-
-    clip-path:
-        polygon(
-            0% 12%,
-            100% 0%,
-            100% 88%,
-            0% 100%
-        );
-
-    z-index:
-        5;
-}
-
-
-/* ============================================================
-   SIDE FACE
-   ============================================================ */
-
-.building-side-v04 {
-    position: absolute;
-
-    left: 64%;
-
-    width: 36%;
+    width: 72%;
+    height: 72%;
 
     overflow: hidden;
 
-    box-sizing: border-box;
-
-    clip-path:
-        polygon(
-            0% 0%,
-            100% 12%,
-            100% 100%,
-            0% 88%
-        );
-
-    filter:
-        brightness(0.72);
-
-    z-index:
-        4;
-}
-
-
-/* ============================================================
-   ROOF
-   ============================================================ */
-
-.building-roof-v04 {
-    position: absolute;
-
-    left: 0;
-
-    clip-path:
-        polygon(
-            50% 0%,
-            100% 50%,
-            50% 100%,
-            0% 50%
-        );
-
-    box-sizing: border-box;
+    background:
+        #a74d3c;
 
     border:
-        1px solid
-        rgba(20, 25, 30, 0.35);
+        2px solid
+        rgba(45, 35, 30, 0.75);
 
-    z-index:
-        8;
+    box-shadow:
+        inset -12px 0 0
+        rgba(0, 0, 0, 0.16);
+}
+
+
+.building-side {
+    position: absolute;
+
+    right: 0;
+    bottom: 0;
+
+    width: 30%;
+    height: 72%;
+
+    background:
+        #70372f;
+
+    border-right:
+        2px solid
+        rgba(35, 30, 28, 0.8);
+
+    border-bottom:
+        2px solid
+        rgba(35, 30, 28, 0.8);
+
+    transform:
+        skewY(-18deg);
+}
+
+
+.building-roof {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 72%;
+    height: 27%;
+
+    background:
+        #b96a52;
+
+    border:
+        2px solid
+        #583c34;
+
+    transform:
+        skewX(-35deg);
+
+    transform-origin:
+        bottom left;
+
+    box-shadow:
+        inset 0 -6px 0
+        rgba(0, 0, 0, 0.15);
 }
 
 
 /* ============================================================
-   RESIDENTIAL BRICK
+   RESIDENTIAL
    ============================================================ */
 
-.building-residential-v04
-.building-body-v04 {
-
-    background-image:
+.building-residential .building-body {
+    background:
         repeating-linear-gradient(
             0deg,
-            rgba(70, 30, 20, 0.13)
-            0px,
-            rgba(70, 30, 20, 0.13)
-            2px,
-            transparent
-            2px,
-            transparent
-            9px
+            #a84f3c 0 9px,
+            #8f4134 9px 11px
         );
+}
+
+
+.building-residential .building-roof {
+    background:
+        #743d35;
+}
+
+
+.building-concrete .building-body {
+    background:
+        repeating-linear-gradient(
+            0deg,
+            #9b9d99 0 12px,
+            #858783 12px 14px
+        );
+}
+
+
+.building-concrete .building-side {
+    background:
+        #676965;
+}
+
+
+.building-concrete .building-roof {
+    background:
+        #777976;
 }
 
 
@@ -2153,45 +602,87 @@ body {
    COMMERCIAL
    ============================================================ */
 
-.building-commercial-v04
-.building-body-v04 {
+.building-commercial .building-body {
+    background:
+        #bd874a;
+}
 
-    background-image:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,0.12),
-            transparent 30%
-        );
+
+.building-commercial .building-side {
+    background:
+        #795632;
+}
+
+
+.building-commercial .building-roof {
+    background:
+        #d2a15e;
+}
+
+
+.building-commercial .building-body::after {
+    content: "";
+
+    position: absolute;
+
+    left: 7px;
+    right: 7px;
+    bottom: 8px;
+
+    height: 25px;
+
+    background:
+        #20282c;
+
+    border:
+        2px solid #e1d4a2;
 }
 
 
 /* ============================================================
-   CBD GLASS
+   CBD / GLASS
    ============================================================ */
 
-.building-cbd-v04
-.building-body-v04 {
-
-    background-image:
+.building-cbd .building-body {
+    background:
         repeating-linear-gradient(
             90deg,
-            rgba(255,255,255,0.16)
-            0px,
-            rgba(255,255,255,0.16)
-            2px,
-            transparent
-            2px,
-            transparent
-            22px
+            #23586b 0 12px,
+            #43839a 12px 20px,
+            #173b49 20px 25px
         );
+
+    border-color:
+        #9fb7bd;
 }
 
 
-.building-cbd-v04
-.building-side-v04 {
+.building-cbd .building-side {
+    background:
+        #163d4d;
 
+    border-color:
+        #7698a0;
+}
+
+
+.building-cbd .building-roof {
+    background:
+        #5c7880;
+
+    border-color:
+        #b2c4c7;
+
+    height: 18%;
+}
+
+
+.building-cbd {
     filter:
-        brightness(0.58);
+        drop-shadow(
+            10px 16px 5px
+            rgba(0, 0, 0, 0.4)
+        );
 }
 
 
@@ -2199,61 +690,85 @@ body {
    WINDOWS
    ============================================================ */
 
-.building-windows-v04 {
-    position: absolute;
-
-    left: 0;
-    bottom: 0;
-
-    width: 68%;
-    height: 100%;
-
-    overflow: hidden;
-
-    z-index: 12;
-}
-
-
-.building-window-v04 {
+.building-window {
     position: absolute;
 
     width: 10px;
-    height: 9px;
+    height: 7px;
 
     background:
-        rgba(
-            225,
-            230,
-            218,
-            0.62
-        );
+        #d9c987;
 
     border:
         1px solid
-        rgba(30, 35, 35, 0.35);
+        rgba(30, 40, 45, 0.8);
 
-    box-shadow:
-        inset 1px 1px 0
-        rgba(255,255,255,0.22);
+    z-index: 4;
 }
 
 
-.glass-window-v04 {
+.window-glass {
     background:
-        rgba(
-            220,
-            242,
-            246,
-            0.48
-        );
+        #b9e0e5;
+}
 
-    border-color:
-        rgba(
-            220,
-            245,
-            250,
-            0.3
-        );
+
+/* ============================================================
+   DOORS
+   ============================================================ */
+
+.building-door {
+    position: absolute;
+
+    bottom: 0;
+    left: 50%;
+
+    width: 13px;
+    height: 22px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        #382d28;
+
+    border:
+        2px solid
+        #d2b477;
+}
+
+
+/* ============================================================
+   BUILDING LABELS
+   ============================================================ */
+
+.building-label {
+    position: absolute;
+
+    left: 50%;
+    top: -20px;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        3px 6px;
+
+    white-space: nowrap;
+
+    background:
+        rgba(16, 21, 24, 0.88);
+
+    color:
+        #e8dfc3;
+
+    border:
+        1px solid
+        #706858;
+
+    font-size: 9px;
+
+    letter-spacing: 0.5px;
 }
 
 
@@ -2261,57 +776,39 @@ body {
    TREES
    ============================================================ */
 
-.map-trees-layer-v04 {
-    z-index: 30;
+.ffs-tree-layer {
+    z-index: 70;
 }
 
 
-.map-tree-v04 {
+.ffs-tree {
     position: absolute;
 
     width: 28px;
-    height: 42px;
+    height: 40px;
 
     transform:
-        translate(
-            -50%,
-            -50%
-        );
+        translate(-50%, -75%);
 }
 
 
-/* trunk */
-
-.map-tree-v04::after {
+.ffs-tree::before {
     content: "";
 
     position: absolute;
 
     left: 12px;
-    top: 20px;
+    bottom: 0;
 
-    width: 7px;
-    height: 22px;
+    width: 6px;
+    height: 18px;
 
     background:
-        #6d4d35;
-
-    clip-path:
-        polygon(
-            35% 0%,
-            75% 0%,
-            100% 100%,
-            0% 100%
-        );
-
-    z-index:
-        1;
+        #604838;
 }
 
 
-/* foliage */
-
-.map-tree-v04::before {
+.ffs-tree::after {
     content: "";
 
     position: absolute;
@@ -2322,37 +819,23 @@ body {
     width: 28px;
     height: 28px;
 
-    border-radius:
-        50%;
+    border-radius: 50%;
 
     background:
-        #477047;
+        #3f633f;
 
     box-shadow:
-        8px -4px 0 #5b8050,
-        14px 4px 0 #3f6740,
-        4px 8px 0 #52794a;
-
-    z-index:
-        3;
+        8px 5px 0
+        #557746,
+        -7px 7px 0
+        #496d42;
 }
 
 
-.map-tree-v04[data-variant="1"]::before {
-    background:
-        #527b4b;
-
+.tree-large {
     transform:
-        scale(0.86);
-}
-
-
-.map-tree-v04[data-variant="2"]::before {
-    background:
-        #3e6840;
-
-    transform:
-        scale(1.12);
+        translate(-50%, -75%)
+        scale(1.25);
 }
 
 
@@ -2360,148 +843,242 @@ body {
    PROPS
    ============================================================ */
 
-.map-props-layer-v04 {
-    z-index: 35;
+.ffs-prop-layer {
+    z-index: 160;
 }
 
 
-.map-prop-v04 {
+.ffs-prop {
     position: absolute;
 
     transform:
-        translate(
-            -50%,
-            -100%
-        );
+        translate(-50%, -100%);
 }
 
 
-/* ============================================================
-   STREET LAMP
-   ============================================================ */
-
-.prop-lamp-v04 {
+.prop-lamp {
     width: 5px;
-    height: 34px;
+    height: 35px;
 
     background:
-        #4d5050;
-
-    border-radius:
-        2px;
+        #303336;
 }
 
 
-.prop-lamp-v04::before {
+.prop-lamp::before {
     content: "";
 
     position: absolute;
 
+    top: -5px;
     left: -5px;
-    top: -2px;
 
     width: 15px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background:
+        #e4d48a;
+
+    box-shadow:
+        0 0 10px
+        rgba(238, 216, 126, 0.45);
+}
+
+
+.prop-bench {
+    width: 30px;
     height: 8px;
 
-    border-radius:
-        50%;
-
     background:
-        #ddd6a0;
-
-    box-shadow:
-        0 0 7px
-        rgba(240,225,145,0.55);
-}
-
-
-/* ============================================================
-   BENCH
-   ============================================================ */
-
-.prop-bench-v04 {
-    width: 22px;
-    height: 7px;
-
-    background:
-        #76533a;
-
-    border-radius:
-        2px;
-
-    box-shadow:
-        2px 5px 0 #513a2b;
-}
-
-
-/* ============================================================
-   BIN
-   ============================================================ */
-
-.prop-bin-v04 {
-    width: 8px;
-    height: 11px;
-
-    background:
-        #555b59;
-
-    border-radius:
-        2px;
-}
-
-
-/* ============================================================
-   BILLBOARDS / SIGNS
-   ============================================================ */
-
-.map-signs-layer-v04 {
-    z-index: 60;
-}
-
-
-.map-billboard-v04 {
-    position: absolute;
-
-    transform:
-        translate(
-            -50%,
-            -100%
-        );
-
-    min-width:
-        70px;
-
-    padding:
-        5px 8px;
-
-    box-sizing:
-        border-box;
-
-    background:
-        #d8c75e;
+        #79563a;
 
     border:
         2px solid
-        #555044;
+        #493629;
+}
 
-    color:
-        #292b28;
 
-    font-size:
-        8px;
+.prop-bin {
+    width: 11px;
+    height: 13px;
 
-    font-weight:
-        800;
+    background:
+        #555c5b;
 
-    text-align:
-        center;
+    border:
+        2px solid
+        #343838;
+}
 
-    letter-spacing:
-        0.4px;
+
+/* ============================================================
+   VEHICLES
+   ============================================================ */
+
+.ffs-vehicle-layer {
+    z-index: 150;
+}
+
+
+.ffs-vehicle {
+    position: absolute;
+
+    width: 42px;
+    height: 19px;
+
+    transform:
+        translate(-50%, -50%)
+        skewX(-12deg);
+
+    border:
+        2px solid
+        #202426;
+
+    border-radius:
+        5px 7px 4px 4px;
 
     box-shadow:
-        3px 4px 0
-        rgba(20,20,20,0.22);
+        5px 6px 0
+        rgba(0, 0, 0, 0.22);
+}
+
+
+.ffs-vehicle::before {
+    content: "";
+
+    position: absolute;
+
+    left: 8px;
+    top: -8px;
+
+    width: 23px;
+    height: 9px;
+
+    background:
+        #4e6870;
+
+    border:
+        2px solid
+        #202426;
+
+    border-radius:
+        6px 7px 0 0;
+}
+
+
+.ffs-vehicle::after {
+    content: "";
+
+    position: absolute;
+
+    left: 5px;
+    bottom: -6px;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background:
+        #15191b;
+
+    box-shadow:
+        27px 0 0
+        #15191b;
+}
+
+
+.vehicle-sedan {
+    background:
+        #a9473f;
+}
+
+
+.vehicle-wagon {
+    background:
+        #4d6874;
+}
+
+
+.vehicle-van {
+    background:
+        #c5b58b;
+}
+
+
+/* ============================================================
+   SIGNS
+   ============================================================ */
+
+.ffs-sign-layer {
+    z-index: 190;
+}
+
+
+.ffs-sign {
+    position: absolute;
+
+    padding:
+        4px 7px;
+
+    transform:
+        translate(-50%, -50%);
+
+    background:
+        #18252b;
+
+    color:
+        #f0d96e;
+
+    border:
+        1px solid
+        #e0c963;
+
+    box-shadow:
+        3px 3px 0
+        rgba(0, 0, 0, 0.25);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   DISTRICT LABELS
+   ============================================================ */
+
+.ffs-district-layer {
+    z-index: 30;
+}
+
+
+.ffs-district-label {
+    position: absolute;
+
+    transform:
+        translate(-50%, -50%);
+
+    padding:
+        5px 9px;
+
+    background:
+        rgba(30, 37, 34, 0.55);
+
+    border:
+        1px solid
+        rgba(210, 210, 185, 0.4);
+
+    color:
+        rgba(235, 232, 204, 0.78);
+
+    font-size: 8px;
+
+    letter-spacing: 1.2px;
 }
 
 
@@ -2509,101 +1086,145 @@ body {
    ENVIRONMENT
    ============================================================ */
 
-.map-environment-layer-v04 {
+.ffs-environment-layer {
+    z-index: 500;
+
+    pointer-events: none;
+}
+
+
+.ffs-1996-atmosphere {
     position: absolute;
 
     inset: 0;
 
-    pointer-events:
-        none;
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 35%,
+            rgba(8, 13, 15, 0.12) 100%
+        );
 
-    z-index:
-        90;
+    pointer-events: none;
 }
 
 
-.environment-day-v04 {
+.ffs-1996-atmosphere::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: 0.07;
+
     background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,0.04),
-            transparent 45%
+        repeating-linear-gradient(
+            0deg,
+            transparent 0 3px,
+            #d7d2b5 4px
         );
+}
+
+
+.ffs-era-label {
+    position: absolute;
+
+    right: 22px;
+    bottom: 18px;
+
+    padding:
+        6px 10px;
+
+    background:
+        rgba(15, 20, 22, 0.82);
+
+    border:
+        1px solid
+        #6e746e;
+
+    color:
+        #d9d5bb;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
 }
 
 
 /* ============================================================
-   CITY LABEL
+   CITY TITLE
    ============================================================ */
 
-.map-city-label-v04 {
+.ffs-city-title {
     position: absolute;
 
-    top: 18px;
     left: 50%;
+    top: 20px;
 
     transform:
         translateX(-50%);
 
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
+    z-index: 700;
 
     padding:
-        8px 16px;
+        8px 15px;
 
     background:
-        rgba(
-            28,
-            33,
-            36,
-            0.9
-        );
+        rgba(13, 18, 20, 0.9);
+
+    border:
+        1px solid
+        #67716e;
 
     color:
-        #f3f1e9;
+        #eee5c6;
 
-    border-radius:
-        5px;
+    font-size: 15px;
 
-    box-shadow:
-        0 4px 10px
-        rgba(0,0,0,0.25);
+    font-weight: 700;
 
-    z-index:
-        100;
+    letter-spacing: 2px;
 
-    white-space:
-        nowrap;
+    text-align: center;
 }
 
 
-.map-city-label-v04 strong {
-    font-size:
-        13px;
+.ffs-city-subtitle {
+    margin-top: 4px;
 
-    letter-spacing:
-        1.5px;
+    font-size: 8px;
+
+    font-weight: 400;
+
+    letter-spacing: 1.5px;
+
+    color:
+        #9ba79c;
 }
 
 
-.map-city-label-v04 span {
-    margin-top:
-        2px;
+/* ============================================================
+   FOOTER
+   ============================================================ */
 
-    font-size:
-        8px;
+.ffs-footer {
+    display: flex;
 
-    opacity:
-        0.7;
+    justify-content: center;
 
-    letter-spacing:
-        0.7px;
+    gap: 30px;
+
+    padding:
+        20px;
+
+    color:
+        #77838b;
+
+    font-size: 11px;
+
+    border-top:
+        1px solid #303a41;
 }
 
 
@@ -2611,249 +1232,55 @@ body {
    MOBILE
    ============================================================ */
 
-@media (max-width: 700px) {
+@media (
+    max-width: 700px
+) {
+
+    .ffs-header {
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+
+    .ffs-title {
+        font-size: 17px;
+    }
+
+
+    .ffs-time-panel {
+        gap: 6px;
+
+        padding:
+            12px 8px;
+    }
+
+
+    .ffs-time-card {
+        min-width: 120px;
+    }
+
+
+    .ffs-world-intro h1 {
+        font-size: 23px;
+    }
+
 
     #ffs-map-container {
-        min-height:
-            520px;
-
-        overflow-x:
-            auto;
-
-        overflow-y:
-            hidden;
-
-        justify-content:
-            flex-start;
+        min-height: 620px;
     }
 
 
-    .ffs-map-v04 {
-        transform:
-            scale(0.78);
-
-        transform-origin:
-            center top;
+    .ffs-map-renderer {
+        min-height: 620px;
     }
 
 
-    .map-city-label-v04 {
-        font-size:
-            9px;
+    .ffs-footer {
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 6px;
     }
-}
-/* ============================================================
-   VEHICLES
-   ============================================================ */
-
-.map-vehicles-layer-v04 {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-
-    z-index: 45;
-}
-
-
-.map-vehicle-v04 {
-    position: absolute;
-
-    width: 25px;
-    height: 12px;
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        );
-
-    border-radius:
-        4px 4px 3px 3px;
-
-    box-shadow:
-        2px 3px 0
-        rgba(20,20,20,0.25);
-}
-
-
-/* BODY */
-
-.map-vehicle-v04::before {
-    content: "";
-
-    position: absolute;
-
-    left: 5px;
-    top: -4px;
-
-    width: 15px;
-    height: 7px;
-
-    background:
-        inherit;
-
-    clip-path:
-        polygon(
-            20% 0%,
-            80% 0%,
-            100% 100%,
-            0% 100%
-        );
-}
-
-
-/* WINDOWS */
-
-.map-vehicle-v04::after {
-    content: "";
-
-    position: absolute;
-
-    left: 8px;
-    top: -2px;
-
-    width: 9px;
-    height: 4px;
-
-    background:
-        rgba(
-            45,
-            65,
-            70,
-            0.75
-        );
-}
-/* ============================================================
-   DISTRICT LABELS
-   ============================================================ */
-
-.map-district-layer-v04 {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-
-    z-index: 15;
-}
-
-
-.map-district-label-v04 {
-    position: absolute;
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        );
-
-    padding:
-        3px 6px;
-
-    background:
-        rgba(
-            245,
-            242,
-            225,
-            0.62
-        );
-
-    border:
-        1px solid
-        rgba(
-            60,
-            65,
-            55,
-            0.18
-        );
-
-    color:
-        rgba(
-            45,
-            50,
-            43,
-            0.72
-        );
-
-    font-size:
-        7px;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        1px;
-
-    white-space:
-        nowrap;
-}
-
-
-/* VARIANTS */
-
-.vehicle-sedan-v04 {
-    background:
-        #7a8082;
-}
-
-
-.vehicle-wagon-v04 {
-    background:
-        #6d756d;
-}
-/* ============================================================
-   1996 ATMOSPHERE
-   ============================================================ */
-
-.ffs-map-v04::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    pointer-events: none;
-
-    z-index: 95;
-
-    background-image:
-        radial-gradient(
-            rgba(255,255,255,0.06) 1px,
-            transparent 1px
-        );
-
-    background-size:
-        4px 4px;
-
-    opacity:
-        0.35;
-}
-
-
-/* ============================================================
-   SOFT ATMOSPHERIC EDGE
-   ============================================================ */
-
-.ffs-map-v04::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    pointer-events: none;
-
-    z-index: 94;
-
-    box-shadow:
-        inset 0 0 35px
-        rgba(30,35,30,0.12);
 }

@@ -1,3 +1,8 @@
+// ============================================================
+// FFS - MAIN
+// Founder Fantasy Simulator
+// ============================================================
+
 import ID from "./i18n/id.js";
 import EN from "./i18n/en.js";
 
@@ -15,13 +20,7 @@ import { MapRenderer }
 
 
 // ============================================================
-// FFS - FOUNDER FANTASY SIMULATOR
-// MAIN APPLICATION
-// ============================================================
-
-
-// ============================================================
-// 1. FFS CONFIGURATION
+// FFS CONFIGURATION
 // ============================================================
 
 const FFS_CONFIG = {
@@ -32,18 +31,13 @@ const FFS_CONFIG = {
     ffsWorldStart:
         "1996-08-29T00:00:00Z",
 
-    // Prototype:
-    //
-    // 1 real-world hour
-    // =
-    // 24 FFS hours
-
     ffsTimeMultiplier: 24
+
 };
 
 
 // ============================================================
-// 2. LANGUAGE SYSTEM
+// LANGUAGE SYSTEM
 // ============================================================
 
 const FFS_LANGUAGE = {
@@ -51,11 +45,10 @@ const FFS_LANGUAGE = {
     current: "id",
 
     dictionaries: {
-
         id: ID,
-
         en: EN
     }
+
 };
 
 
@@ -67,20 +60,15 @@ function t(path) {
                 FFS_LANGUAGE.current
             ];
 
-
     if (!dictionary) {
-
         return path;
     }
-
 
     const parts =
         path.split(".");
 
-
     let value =
         dictionary;
-
 
     for (const part of parts) {
 
@@ -98,16 +86,18 @@ function t(path) {
         } else {
 
             return path;
+
         }
+
     }
 
-
     return value;
+
 }
 
 
 // ============================================================
-// 3. FFS TIME SYSTEM
+// FFS TIME SYSTEM
 // ============================================================
 
 const FFS_TIME = {
@@ -127,8 +117,13 @@ const FFS_TIME = {
 
     currentFFSWorldTime:
         null
+
 };
 
+
+// ============================================================
+// UPDATE FFS TIME
+// ============================================================
 
 function updateFFSTime() {
 
@@ -136,9 +131,17 @@ function updateFFSTime() {
         new Date();
 
 
+    // --------------------------------------------------------
+    // REAL WORLD TIME
+    // --------------------------------------------------------
+
     FFS_TIME.currentRealWorldTime =
         now;
 
+
+    // --------------------------------------------------------
+    // CALCULATE ELAPSED REAL TIME
+    // --------------------------------------------------------
 
     const elapsedRealMilliseconds =
         now.getTime() -
@@ -147,11 +150,19 @@ function updateFFSTime() {
             .getTime();
 
 
+    // --------------------------------------------------------
+    // CONVERT REAL TIME TO FFS TIME
+    // --------------------------------------------------------
+
     const elapsedFFSMilliseconds =
         elapsedRealMilliseconds *
         FFS_CONFIG
             .ffsTimeMultiplier;
 
+
+    // --------------------------------------------------------
+    // CURRENT FFS WORLD TIME
+    // --------------------------------------------------------
 
     FFS_TIME.currentFFSWorldTime =
         new Date(
@@ -162,15 +173,20 @@ function updateFFSTime() {
         );
 
 
+    // --------------------------------------------------------
+    // UPDATE UI
+    // --------------------------------------------------------
+
     updateTimeUI();
+
 }
 
 
 // ============================================================
-// 4. DATE FORMATTER
+// FORMAT DATE + TIME
 // ============================================================
 
-function formatDate(
+function formatDateTime(
     date,
     language = FFS_LANGUAGE.current
 ) {
@@ -181,6 +197,7 @@ function formatDate(
     ) {
 
         return "-";
+
     }
 
 
@@ -198,14 +215,24 @@ function formatDate(
 
             month: "long",
 
-            year: "numeric"
+            year: "numeric",
+
+            hour: "2-digit",
+
+            minute: "2-digit",
+
+            second: "2-digit",
+
+            hour12: false
+
         }
     ).format(date);
+
 }
 
 
 // ============================================================
-// 5. TIME UI
+// UPDATE TIME UI
 // ============================================================
 
 function updateTimeUI() {
@@ -225,26 +252,29 @@ function updateTimeUI() {
     if (realWorldElement) {
 
         realWorldElement.textContent =
-            formatDate(
+            formatDateTime(
                 FFS_TIME
                     .currentRealWorldTime
             );
+
     }
 
 
     if (ffsWorldElement) {
 
         ffsWorldElement.textContent =
-            formatDate(
+            formatDateTime(
                 FFS_TIME
                     .currentFFSWorldTime
             );
+
     }
+
 }
 
 
 // ============================================================
-// 6. LANGUAGE UI
+// LANGUAGE UI
 // ============================================================
 
 function updateLanguageUI() {
@@ -289,6 +319,7 @@ function updateLanguageUI() {
 
         titleElement.textContent =
             t("app.title");
+
     }
 
 
@@ -296,6 +327,7 @@ function updateLanguageUI() {
 
         realWorldLabel.textContent =
             t("time.realWorld");
+
     }
 
 
@@ -303,6 +335,7 @@ function updateLanguageUI() {
 
         ffsWorldLabel.textContent =
             t("time.ffsWorld");
+
     }
 
 
@@ -310,6 +343,7 @@ function updateLanguageUI() {
 
         worldDescription.textContent =
             t("system.worldDescription");
+
     }
 
 
@@ -317,6 +351,7 @@ function updateLanguageUI() {
 
         indonesiaButton.textContent =
             t("language.indonesia");
+
     }
 
 
@@ -324,15 +359,17 @@ function updateLanguageUI() {
 
         englishButton.textContent =
             t("language.english");
+
     }
 
 
     updateTimeUI();
+
 }
 
 
 // ============================================================
-// 7. LANGUAGE SWITCHING
+// CHANGE LANGUAGE
 // ============================================================
 
 function setLanguage(language) {
@@ -347,6 +384,7 @@ function setLanguage(language) {
         );
 
         return;
+
     }
 
 
@@ -360,11 +398,12 @@ function setLanguage(language) {
     console.log(
         `[FFS] Language changed to: ${language}`
     );
+
 }
 
 
 // ============================================================
-// 8. LANGUAGE BUTTON EVENTS
+// LANGUAGE BUTTONS
 // ============================================================
 
 function setupLanguageButtons() {
@@ -387,6 +426,7 @@ function setupLanguageButtons() {
             "click",
             () => setLanguage("id")
         );
+
     }
 
 
@@ -396,29 +436,28 @@ function setupLanguageButtons() {
             "click",
             () => setLanguage("en")
         );
+
     }
+
 }
 
 
 // ============================================================
-// 9. WORLD ENGINE
+// ENGINE REFERENCES
 // ============================================================
 
-let WORLD_ENGINE =
-    null;
+let WORLD_ENGINE = null;
+
+let WORLD_STATE = null;
+
+let MAP_ENGINE = null;
+
+let MAP_RENDERER = null;
 
 
-let WORLD_STATE =
-    null;
-
-
-let MAP_ENGINE =
-    null;
-
-
-let MAP_RENDERER =
-    null;
-
+// ============================================================
+// INITIALIZE WORLD ENGINE
+// ============================================================
 
 function initializeWorldEngine() {
 
@@ -444,11 +483,12 @@ function initializeWorldEngine() {
 
 
     return WORLD_STATE;
+
 }
 
 
 // ============================================================
-// 10. MAP ENGINE
+// INITIALIZE MAP ENGINE
 // ============================================================
 
 function initializeMapEngine() {
@@ -460,6 +500,7 @@ function initializeMapEngine() {
         );
 
         return;
+
     }
 
 
@@ -493,11 +534,12 @@ function initializeMapEngine() {
         "[FFS] Map Summary:",
         MAP_ENGINE.getMapSummary()
     );
+
 }
 
 
 // ============================================================
-// 11. WORLD ENGINE DEBUG INFORMATION
+// WORLD INFORMATION LOG
 // ============================================================
 
 function logWorldInformation() {
@@ -509,6 +551,7 @@ function logWorldInformation() {
         );
 
         return;
+
     }
 
 
@@ -531,19 +574,11 @@ function logWorldInformation() {
     );
 
 
-    // --------------------------------------------------------
-    // WORLD
-    // --------------------------------------------------------
-
     console.log(
         "[FFS] World:",
         world
     );
 
-
-    // --------------------------------------------------------
-    // REGIONS
-    // --------------------------------------------------------
 
     console.log(
         "[FFS] Regions:",
@@ -551,19 +586,11 @@ function logWorldInformation() {
     );
 
 
-    // --------------------------------------------------------
-    // CITIES / LOCATIONS
-    // --------------------------------------------------------
-
     console.log(
         "[FFS] Cities / Locations:",
         WORLD_STATE?.locations
     );
 
-
-    // --------------------------------------------------------
-    // TERRAIN
-    // --------------------------------------------------------
 
     console.log(
         "[FFS] Terrain:",
@@ -571,19 +598,11 @@ function logWorldInformation() {
     );
 
 
-    // --------------------------------------------------------
-    // ROADS
-    // --------------------------------------------------------
-
     console.log(
         "[FFS] Roads:",
         WORLD_STATE?.roads
     );
 
-
-    // --------------------------------------------------------
-    // BUILDINGS
-    // --------------------------------------------------------
 
     console.log(
         "[FFS] Buildings:",
@@ -591,19 +610,11 @@ function logWorldInformation() {
     );
 
 
-    // --------------------------------------------------------
-    // ENVIRONMENT
-    // --------------------------------------------------------
-
     console.log(
         "[FFS] Environment:",
         WORLD_STATE?.environment
     );
 
-
-    // --------------------------------------------------------
-    // NPC
-    // --------------------------------------------------------
 
     console.log(
         "[FFS] NPC Count:",
@@ -613,10 +624,6 @@ function logWorldInformation() {
     );
 
 
-    // --------------------------------------------------------
-    // PLAYER
-    // --------------------------------------------------------
-
     console.log(
         "[FFS] Player Count:",
         Object.keys(
@@ -624,10 +631,6 @@ function logWorldInformation() {
         ).length
     );
 
-
-    // --------------------------------------------------------
-    // WORLD SUMMARY
-    // --------------------------------------------------------
 
     if (
         typeof WORLD_ENGINE.getWorldSummary ===
@@ -639,17 +642,19 @@ function logWorldInformation() {
             WORLD_ENGINE
                 .getWorldSummary()
         );
+
     }
 
 
     console.log(
         "========================================"
     );
+
 }
 
 
 // ============================================================
-// 12. APPLICATION INITIALIZATION
+// INITIALIZE FFS
 // ============================================================
 
 function initializeFFS() {
@@ -705,14 +710,14 @@ function initializeFFS() {
 
 
     // --------------------------------------------------------
-    // DEBUG
+    // DEBUG INFORMATION
     // --------------------------------------------------------
 
     logWorldInformation();
 
 
     // --------------------------------------------------------
-    // TIME UPDATE LOOP
+    // REAL-TIME CLOCK
     // --------------------------------------------------------
 
     setInterval(
@@ -724,11 +729,12 @@ function initializeFFS() {
     console.log(
         "[FFS] Initialization complete."
     );
+
 }
 
 
 // ============================================================
-// 13. START APPLICATION
+// DOM READY
 // ============================================================
 
 document.addEventListener(

@@ -32,8 +32,11 @@ const ID = {
         loading: "Menyiapkan Dunia FFS...",
 
         worldDescription:
-            "World Engine akan dibangun pada tahap berikutnya."
+            "World Engine sedang mempersiapkan dunia."
 
     }
 
 };
+
+
+export default ID;

@@ -1,14 +1,26 @@
+// ============================================================
+// FFS - WORLD ENGINE v0.2
+// ============================================================
+
+
 import REAL_WORLD_DATA
     from "../../data/real_world/index.js";
 
+
 import { WorldState }
     from "./WorldState.js";
+
 
 import { WorldInitializer }
     from "./WorldInitializer.js";
 
 
+// ============================================================
+// WORLD ENGINE
+// ============================================================
+
 export class WorldEngine {
+
 
     constructor() {
 
@@ -78,7 +90,10 @@ export class WorldEngine {
         // ROADS
         // ----------------------------------------------------
 
-        for (const roadId in infrastructure.roads) {
+        for (
+            const roadId
+            in infrastructure.roads
+        ) {
 
             const road =
                 infrastructure.roads[roadId];
@@ -152,9 +167,9 @@ export class WorldEngine {
         // NPC
         // ----------------------------------------------------
 
-        // NPC belum dibuat pada tahap ini.
+        // NPC belum dibuat.
         //
-        // Dunia harus dapat terbentuk
+        // World harus terbentuk
         // sebelum NPC hidup di dalamnya.
 
         this.state.npcs = {};
@@ -164,7 +179,7 @@ export class WorldEngine {
         // PLAYER
         // ----------------------------------------------------
 
-        // Player belum ada.
+        // Player belum dibuat.
         //
         // Player akan diperkenalkan
         // setelah World + NPC berjalan.

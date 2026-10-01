@@ -1,7 +1,21 @@
 // ============================================================
-// FFS - MAP RENDERER v0.7
-// Visual Proof v0.3
-// Centered Isometric Map + Zoom System
+// FFS - MAP RENDERER v0.8
+// TRUE ISOMETRIC PROJECTION
+// Based on Visual Proof v0.7
+//
+// Preserved:
+// - Centered Map
+// - Zoom System
+// - Existing Rendering Layers
+// - Existing Visual Objects
+//
+// Added:
+// - True Isometric Projection Core
+// - World → Screen Projection
+// - Screen → World Projection
+// - Z / Elevation Support
+// - Depth Calculation
+// - Projection-based Map Bounds
 // ============================================================
 
 export class MapRenderer {
@@ -20,13 +34,24 @@ export class MapRenderer {
         }
 
         // ====================================================
-        // ISOMETRIC GEOMETRY
+        // TRUE ISOMETRIC GEOMETRY
         // ====================================================
 
         this.tileWidth = 72;
         this.tileHeight = 36;
 
+        this.halfTileWidth =
+            this.tileWidth / 2;
+
+        this.halfTileHeight =
+            this.tileHeight / 2;
+
+        // World elevation.
+        // One world Z unit equals this many screen pixels.
+        this.heightUnit = 1;
+
         this.buildingDepth = 52;
+
 
         // ====================================================
         // ZOOM
@@ -38,11 +63,13 @@ export class MapRenderer {
         this.maxZoom = 1.5;
         this.zoomStep = 0.1;
 
+
         // ====================================================
         // RENDERING LAYERS
         // ====================================================
 
         this.layers = {};
+
 
         // ====================================================
         // MAP REFERENCES
@@ -53,12 +80,36 @@ export class MapRenderer {
         this.world = null;
         this.content = null;
 
+
         // ====================================================
         // MAP DIMENSIONS
         // ====================================================
 
         this.mapWidth = 12;
         this.mapHeight = 9;
+
+
+        // ====================================================
+        // PROJECTION ORIGIN
+        //
+        // The projection itself is independent from the
+        // viewport. The content offset handles centering.
+        // ====================================================
+
+        this.projectionOrigin = {
+            x: 0,
+            y: 0
+        };
+
+
+        // ====================================================
+        // CONTENT OFFSET
+        // ====================================================
+
+        this.contentOffset = {
+            x: 0,
+            y: 0
+        };
 
     }
 
@@ -79,8 +130,10 @@ export class MapRenderer {
 
         this.mapData = mapData;
 
+
         const terrain =
             mapData.terrain ?? {};
+
 
         this.mapWidth =
             terrain.width ?? 12;
@@ -251,6 +304,289 @@ export class MapRenderer {
             `ffs-map-layer ffs-layer-${name}`;
 
         return layer;
+
+    }
+
+
+    // ========================================================
+    // TRUE ISOMETRIC PROJECTION CORE
+    //
+    // World:
+    //      X → diagonal right/down
+    //      Y → diagonal left/down
+    //      Z → vertical up
+    //
+    // Screen:
+    //      X = (X - Y) * halfTileWidth
+    //      Y = (X + Y) * halfTileHeight - Z
+    // ========================================================
+
+    worldToScreen(
+        x = 0,
+        y = 0,
+        z = 0
+    ) {
+
+        const screenX =
+            this.projectionOrigin.x +
+            (
+                (x - y) *
+                this.halfTileWidth
+            );
+
+        const screenY =
+            this.projectionOrigin.y +
+            (
+                (x + y) *
+                this.halfTileHeight
+            ) -
+            (
+                z *
+                this.heightUnit
+            );
+
+
+        return {
+
+            left: screenX,
+            top: screenY,
+
+            x: screenX,
+            y: screenY
+
+        };
+
+    }
+
+
+    // ========================================================
+    // GRID → SCREEN
+    //
+    // Backward-compatible alias.
+    // Existing v0.7 code can continue using this method.
+    // ========================================================
+
+    gridToScreen(
+        x,
+        y,
+        z = 0
+    ) {
+
+        return this.worldToScreen(
+            x,
+            y,
+            z
+        );
+
+    }
+
+
+    // ========================================================
+    // SCREEN → WORLD
+    //
+    // Converts screen coordinates back into world X/Y.
+    //
+    // This will later support:
+    // - Tile selection
+    // - NPC selection
+    // - Building placement
+    // - Mouse interaction
+    // - Touch interaction
+    // ========================================================
+
+    screenToWorld(
+        screenX,
+        screenY,
+        z = 0
+    ) {
+
+        const localX =
+            screenX -
+            this.projectionOrigin.x;
+
+        const localY =
+            screenY -
+            this.projectionOrigin.y +
+            (
+                z *
+                this.heightUnit
+            );
+
+
+        const worldX =
+            (
+                localX /
+                this.halfTileWidth +
+                localY /
+                this.halfTileHeight
+            ) / 2;
+
+
+        const worldY =
+            (
+                localY /
+                this.halfTileHeight -
+                localX /
+                this.halfTileWidth
+            ) / 2;
+
+
+        return {
+
+            x: worldX,
+            y: worldY,
+            z
+
+        };
+
+    }
+
+
+    // ========================================================
+    // FOOTPRINT CENTER → SCREEN
+    // ========================================================
+
+    footprintToScreen(
+        x,
+        y,
+        width = 1,
+        height = 1,
+        z = 0
+    ) {
+
+        return this.worldToScreen(
+            x + width / 2,
+            y + height / 2,
+            z
+        );
+
+    }
+
+
+    // ========================================================
+    // DEPTH
+    //
+    // Used for future object ordering.
+    //
+    // Larger X/Y values are physically deeper in the
+    // isometric world.
+    // ========================================================
+
+    getDepth(
+        x = 0,
+        y = 0,
+        z = 0
+    ) {
+
+        return (
+            x +
+            y +
+            z
+        );
+
+    }
+
+
+    // ========================================================
+    // OBJECT DEPTH
+    // ========================================================
+
+    getObjectDepth(object) {
+
+        const map =
+            object?.map ?? object ?? {};
+
+
+        const x =
+            map.x ?? 0;
+
+        const y =
+            map.y ?? 0;
+
+        const z =
+            map.z ??
+            map.height ??
+            0;
+
+
+        return this.getDepth(
+            x,
+            y,
+            z
+        );
+
+    }
+
+
+    // ========================================================
+    // MAP PROJECTION BOUNDS
+    // ========================================================
+
+    getMapProjectionBounds() {
+
+        const corners = [
+
+            this.worldToScreen(
+                0,
+                0,
+                0
+            ),
+
+            this.worldToScreen(
+                this.mapWidth,
+                0,
+                0
+            ),
+
+            this.worldToScreen(
+                0,
+                this.mapHeight,
+                0
+            ),
+
+            this.worldToScreen(
+                this.mapWidth,
+                this.mapHeight,
+                0
+            )
+
+        ];
+
+
+        const xs =
+            corners.map(
+                point => point.left
+            );
+
+        const ys =
+            corners.map(
+                point => point.top
+            );
+
+
+        return {
+
+            left:
+                Math.min(...xs),
+
+            right:
+                Math.max(...xs),
+
+            top:
+                Math.min(...ys),
+
+            bottom:
+                Math.max(...ys),
+
+            width:
+                Math.max(...xs) -
+                Math.min(...xs),
+
+            height:
+                Math.max(...ys) -
+                Math.min(...ys)
+
+        };
 
     }
 
@@ -475,61 +811,35 @@ export class MapRenderer {
         }
 
 
-        const terrainWidth =
-            this.mapWidth *
-            this.tileWidth;
-
-
-        const terrainHeight =
-            this.mapHeight *
-            this.tileHeight;
+        const bounds =
+            this.getMapProjectionBounds();
 
 
         // ====================================================
-        // ISO MAP BOUNDS
+        // PADDING
+        //
+        // Extra room is intentional.
+        // It prevents buildings, trees and labels from
+        // touching the viewport edge.
         // ====================================================
 
-        const leftExtent =
-            Math.max(
-                0,
-                this.mapHeight *
-                (this.tileWidth / 2)
-            );
-
-
-        const rightExtent =
-            Math.max(
-                0,
-                this.mapWidth *
-                (this.tileWidth / 2)
-            );
-
-
-        const topExtent =
-            0;
-
-
-        const bottomExtent =
-            (
-                this.mapWidth +
-                this.mapHeight
-            ) *
-            (this.tileHeight / 2);
+        const paddingX = 180;
+        const paddingY = 180;
 
 
         const contentWidth =
             Math.max(
                 1000,
-                terrainWidth +
-                terrainHeight
+                bounds.width +
+                paddingX * 2
             );
 
 
         const contentHeight =
             Math.max(
                 700,
-                bottomExtent +
-                160
+                bounds.height +
+                paddingY * 2
             );
 
 
@@ -548,13 +858,14 @@ export class MapRenderer {
 
 
         // ====================================================
-        // MAP CENTER
+        // CENTER OF PROJECTED MAP
         // ====================================================
 
-        const gridCenter =
-            this.gridToScreen(
+        const projectedCenter =
+            this.worldToScreen(
                 this.mapWidth / 2,
-                this.mapHeight / 2
+                this.mapHeight / 2,
+                0
             );
 
 
@@ -567,63 +878,24 @@ export class MapRenderer {
 
         const offsetX =
             contentCenterX -
-            gridCenter.left;
+            projectedCenter.left;
 
 
         const offsetY =
             contentCenterY -
-            gridCenter.top;
+            projectedCenter.top;
+
+
+        this.contentOffset = {
+
+            x: offsetX,
+            y: offsetY
+
+        };
 
 
         this.content.style.transform =
             `translate(${offsetX}px, ${offsetY}px)`;
-
-
-        // Prevent unused-variable lint issues in
-        // environments that inspect the source.
-        void leftExtent;
-        void rightExtent;
-        void topExtent;
-
-    }
-
-
-    // ========================================================
-    // GRID → SCREEN
-    // ========================================================
-
-    gridToScreen(x, y) {
-
-        return {
-
-            left:
-                (x - y) *
-                (this.tileWidth / 2),
-
-            top:
-                (x + y) *
-                (this.tileHeight / 2)
-
-        };
-
-    }
-
-
-    // ========================================================
-    // FOOTPRINT CENTER → SCREEN
-    // ========================================================
-
-    footprintToScreen(
-        x,
-        y,
-        width = 1,
-        height = 1
-    ) {
-
-        return this.gridToScreen(
-            x + width / 2,
-            y + height / 2
-        );
 
     }
 
@@ -658,9 +930,10 @@ export class MapRenderer {
             ) {
 
                 const position =
-                    this.gridToScreen(
+                    this.worldToScreen(
                         x,
-                        y
+                        y,
+                        0
                     );
 
 
@@ -689,6 +962,20 @@ export class MapRenderer {
 
                 tile.style.top =
                     `${position.top}px`;
+
+
+                tile.dataset.worldX =
+                    x;
+
+                tile.dataset.worldY =
+                    y;
+
+                tile.dataset.depth =
+                    this.getDepth(
+                        x,
+                        y,
+                        0
+                    );
 
 
                 this.layers
@@ -751,9 +1038,10 @@ export class MapRenderer {
 
 
                     const position =
-                        this.gridToScreen(
+                        this.worldToScreen(
                             tileX,
-                            tileY
+                            tileY,
+                            0
                         );
 
 
@@ -868,47 +1156,10 @@ export class MapRenderer {
             [...buildings].sort(
                 (a, b) => {
 
-                    const aX =
-                        a.map?.x ?? 0;
-
-                    const aY =
-                        a.map?.y ?? 0;
-
-                    const aW =
-                        a.map?.width ?? 1;
-
-                    const aH =
-                        a.map?.height ?? 1;
-
-
-                    const bX =
-                        b.map?.x ?? 0;
-
-                    const bY =
-                        b.map?.y ?? 0;
-
-                    const bW =
-                        b.map?.width ?? 1;
-
-                    const bH =
-                        b.map?.height ?? 1;
-
-
-                    const aDepth =
-                        aX +
-                        aY +
-                        aW +
-                        aH;
-
-
-                    const bDepth =
-                        bX +
-                        bY +
-                        bW +
-                        bH;
-
-
-                    return aDepth - bDepth;
+                    return (
+                        this.getObjectDepth(a) -
+                        this.getObjectDepth(b)
+                    );
 
                 }
             );
@@ -949,13 +1200,17 @@ export class MapRenderer {
         const height =
             map.height ?? 2;
 
+        const z =
+            map.z ?? 0;
+
 
         const position =
             this.footprintToScreen(
                 x,
                 y,
                 width,
-                height
+                height,
+                z
             );
 
 
@@ -1019,6 +1274,23 @@ export class MapRenderer {
 
         element.style.height =
             `${visualHeight}px`;
+
+
+        element.dataset.worldX =
+            x;
+
+        element.dataset.worldY =
+            y;
+
+        element.dataset.worldZ =
+            z;
+
+        element.dataset.depth =
+            this.getDepth(
+                x,
+                y,
+                z
+            );
 
 
         // ====================================================
@@ -1368,9 +1640,10 @@ export class MapRenderer {
             ([x, y], index) => {
 
                 const position =
-                    this.gridToScreen(
+                    this.worldToScreen(
                         x,
-                        y
+                        y,
+                        0
                     );
 
 
@@ -1394,6 +1667,20 @@ export class MapRenderer {
 
                 tree.style.top =
                     `${position.top}px`;
+
+
+                tree.dataset.worldX =
+                    x;
+
+                tree.dataset.worldY =
+                    y;
+
+                tree.dataset.depth =
+                    this.getDepth(
+                        x,
+                        y,
+                        0
+                    );
 
 
                 this.layers
@@ -1453,9 +1740,10 @@ export class MapRenderer {
             prop => {
 
                 const position =
-                    this.gridToScreen(
+                    this.worldToScreen(
                         prop.x,
-                        prop.y
+                        prop.y,
+                        0
                     );
 
 
@@ -1472,6 +1760,20 @@ export class MapRenderer {
 
                 element.style.top =
                     `${position.top}px`;
+
+
+                element.dataset.worldX =
+                    prop.x;
+
+                element.dataset.worldY =
+                    prop.y;
+
+                element.dataset.depth =
+                    this.getDepth(
+                        prop.x,
+                        prop.y,
+                        0
+                    );
 
 
                 this.layers
@@ -1525,9 +1827,10 @@ export class MapRenderer {
             vehicle => {
 
                 const position =
-                    this.gridToScreen(
+                    this.worldToScreen(
                         vehicle.x,
-                        vehicle.y
+                        vehicle.y,
+                        0
                     );
 
 
@@ -1544,6 +1847,20 @@ export class MapRenderer {
 
                 element.style.top =
                     `${position.top}px`;
+
+
+                element.dataset.worldX =
+                    vehicle.x;
+
+                element.dataset.worldY =
+                    vehicle.y;
+
+                element.dataset.depth =
+                    this.getDepth(
+                        vehicle.x,
+                        vehicle.y,
+                        0
+                    );
 
 
                 this.layers
@@ -1597,9 +1914,10 @@ export class MapRenderer {
             sign => {
 
                 const position =
-                    this.gridToScreen(
+                    this.worldToScreen(
                         sign.x,
-                        sign.y
+                        sign.y,
+                        0
                     );
 
 
@@ -1620,6 +1938,20 @@ export class MapRenderer {
 
                 element.style.top =
                     `${position.top}px`;
+
+
+                element.dataset.worldX =
+                    sign.x;
+
+                element.dataset.worldY =
+                    sign.y;
+
+                element.dataset.depth =
+                    this.getDepth(
+                        sign.x,
+                        sign.y,
+                        0
+                    );
 
 
                 this.layers
@@ -1673,9 +2005,10 @@ export class MapRenderer {
             district => {
 
                 const position =
-                    this.gridToScreen(
+                    this.worldToScreen(
                         district.x,
-                        district.y
+                        district.y,
+                        0
                     );
 
 
@@ -1696,6 +2029,13 @@ export class MapRenderer {
 
                 label.style.top =
                     `${position.top}px`;
+
+
+                label.dataset.worldX =
+                    district.x;
+
+                label.dataset.worldY =
+                    district.y;
 
 
                 this.layers
@@ -1787,4 +2127,4 @@ export class MapRenderer {
 
     }
 
-            }
+                        }

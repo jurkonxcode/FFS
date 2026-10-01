@@ -1797,3 +1797,848 @@ body {
             5px 10px;
     }
 }
+/* ============================================================
+   FFS VISUAL PROOF v0.1
+   LIVING CITY FOUNDATION
+   ============================================================ */
+
+
+/* ============================================================
+   MAP ROOT
+   ============================================================ */
+
+.ffs-map-v04 {
+    position: relative;
+
+    flex: 0 0 auto;
+
+    overflow: visible;
+
+    transform-origin:
+        center top;
+}
+
+
+/* ============================================================
+   LAYERS
+   ============================================================ */
+
+.map-terrain-layer-v04,
+.map-roads-layer-v04,
+.map-environment-layer-v04,
+.map-trees-layer-v04,
+.map-buildings-layer-v04,
+.map-props-layer-v04,
+.map-signs-layer-v04 {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   TERRAIN
+   ============================================================ */
+
+.map-terrain-layer-v04 {
+    z-index: 1;
+}
+
+
+.map-tile-v04 {
+    position: absolute;
+
+    box-sizing: border-box;
+
+    clip-path:
+        polygon(
+            50% 0%,
+            100% 50%,
+            50% 100%,
+            0% 50%
+        );
+
+    background:
+        #7b9b65;
+
+    border:
+        1px solid
+        rgba(50, 65, 45, 0.18);
+}
+
+
+.map-tile-v04[data-variation="0"] {
+    background:
+        #7b9b65;
+}
+
+
+.map-tile-v04[data-variation="1"] {
+    background:
+        #829f6b;
+}
+
+
+.map-tile-v04[data-variation="2"] {
+    background:
+        #73915e;
+}
+
+
+.map-tile-v04[data-variation="3"] {
+    background:
+        #88a66e;
+}
+
+
+/* ============================================================
+   ROAD
+   ============================================================ */
+
+.map-roads-layer-v04 {
+    z-index: 5;
+}
+
+
+.map-road-v04 {
+    position: absolute;
+
+    clip-path:
+        polygon(
+            50% 0%,
+            100% 50%,
+            50% 100%,
+            0% 50%
+        );
+
+    background:
+        #4d5257;
+
+    border:
+        1px solid
+        rgba(25, 28, 30, 0.45);
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   ROAD MARKING
+   ============================================================ */
+
+.road-marking-v04 {
+    position: absolute;
+
+    clip-path:
+        polygon(
+            50% 40%,
+            55% 43%,
+            55% 57%,
+            50% 60%,
+            45% 57%,
+            45% 43%
+        );
+
+    background:
+        #d7c86a;
+
+    opacity:
+        0.85;
+
+    z-index:
+        4;
+}
+
+
+/* ============================================================
+   SIDEWALK
+   ============================================================ */
+
+.map-sidewalk-v04 {
+    position: absolute;
+
+    transform:
+        scale(0.86);
+
+    clip-path:
+        polygon(
+            50% 0%,
+            100% 50%,
+            50% 100%,
+            0% 50%
+        );
+
+    background:
+        #aaa79d;
+
+    border:
+        1px solid
+        rgba(80, 80, 75, 0.25);
+
+    z-index:
+        6;
+}
+
+
+/* ============================================================
+   BUILDINGS
+   ============================================================ */
+
+.map-buildings-layer-v04 {
+    z-index: 20;
+}
+
+
+.map-building-v04 {
+    position: absolute;
+
+    overflow: visible;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    transform-origin:
+        center bottom;
+}
+
+
+/* ============================================================
+   SHADOW
+   ============================================================ */
+
+.building-shadow-v04 {
+    position: absolute;
+
+    background:
+        rgba(
+            15,
+            20,
+            25,
+            0.25
+        );
+
+    border-radius:
+        50%;
+
+    transform:
+        skewX(-25deg)
+        rotate(-8deg);
+
+    filter:
+        blur(1px);
+
+    z-index:
+        1;
+}
+
+
+/* ============================================================
+   FRONT FACE
+   ============================================================ */
+
+.building-body-v04 {
+    position: absolute;
+
+    left: 0;
+
+    width: 68%;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    clip-path:
+        polygon(
+            0% 12%,
+            100% 0%,
+            100% 88%,
+            0% 100%
+        );
+
+    z-index:
+        5;
+}
+
+
+/* ============================================================
+   SIDE FACE
+   ============================================================ */
+
+.building-side-v04 {
+    position: absolute;
+
+    left: 64%;
+
+    width: 36%;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    clip-path:
+        polygon(
+            0% 0%,
+            100% 12%,
+            100% 100%,
+            0% 88%
+        );
+
+    filter:
+        brightness(0.72);
+
+    z-index:
+        4;
+}
+
+
+/* ============================================================
+   ROOF
+   ============================================================ */
+
+.building-roof-v04 {
+    position: absolute;
+
+    left: 0;
+
+    clip-path:
+        polygon(
+            50% 0%,
+            100% 50%,
+            50% 100%,
+            0% 50%
+        );
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(20, 25, 30, 0.35);
+
+    z-index:
+        8;
+}
+
+
+/* ============================================================
+   RESIDENTIAL BRICK
+   ============================================================ */
+
+.building-residential-v04
+.building-body-v04 {
+
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(70, 30, 20, 0.13)
+            0px,
+            rgba(70, 30, 20, 0.13)
+            2px,
+            transparent
+            2px,
+            transparent
+            9px
+        );
+}
+
+
+/* ============================================================
+   COMMERCIAL
+   ============================================================ */
+
+.building-commercial-v04
+.building-body-v04 {
+
+    background-image:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.12),
+            transparent 30%
+        );
+}
+
+
+/* ============================================================
+   CBD GLASS
+   ============================================================ */
+
+.building-cbd-v04
+.building-body-v04 {
+
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            rgba(255,255,255,0.16)
+            0px,
+            rgba(255,255,255,0.16)
+            2px,
+            transparent
+            2px,
+            transparent
+            22px
+        );
+}
+
+
+.building-cbd-v04
+.building-side-v04 {
+
+    filter:
+        brightness(0.58);
+}
+
+
+/* ============================================================
+   WINDOWS
+   ============================================================ */
+
+.building-windows-v04 {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 68%;
+    height: 100%;
+
+    overflow: hidden;
+
+    z-index: 12;
+}
+
+
+.building-window-v04 {
+    position: absolute;
+
+    width: 10px;
+    height: 9px;
+
+    background:
+        rgba(
+            225,
+            230,
+            218,
+            0.62
+        );
+
+    border:
+        1px solid
+        rgba(30, 35, 35, 0.35);
+
+    box-shadow:
+        inset 1px 1px 0
+        rgba(255,255,255,0.22);
+}
+
+
+.glass-window-v04 {
+    background:
+        rgba(
+            220,
+            242,
+            246,
+            0.48
+        );
+
+    border-color:
+        rgba(
+            220,
+            245,
+            250,
+            0.3
+        );
+}
+
+
+/* ============================================================
+   TREES
+   ============================================================ */
+
+.map-trees-layer-v04 {
+    z-index: 30;
+}
+
+
+.map-tree-v04 {
+    position: absolute;
+
+    width: 28px;
+    height: 42px;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+}
+
+
+/* trunk */
+
+.map-tree-v04::after {
+    content: "";
+
+    position: absolute;
+
+    left: 12px;
+    top: 20px;
+
+    width: 7px;
+    height: 22px;
+
+    background:
+        #6d4d35;
+
+    clip-path:
+        polygon(
+            35% 0%,
+            75% 0%,
+            100% 100%,
+            0% 100%
+        );
+
+    z-index:
+        1;
+}
+
+
+/* foliage */
+
+.map-tree-v04::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius:
+        50%;
+
+    background:
+        #477047;
+
+    box-shadow:
+        8px -4px 0 #5b8050,
+        14px 4px 0 #3f6740,
+        4px 8px 0 #52794a;
+
+    z-index:
+        3;
+}
+
+
+.map-tree-v04[data-variant="1"]::before {
+    background:
+        #527b4b;
+
+    transform:
+        scale(0.86);
+}
+
+
+.map-tree-v04[data-variant="2"]::before {
+    background:
+        #3e6840;
+
+    transform:
+        scale(1.12);
+}
+
+
+/* ============================================================
+   PROPS
+   ============================================================ */
+
+.map-props-layer-v04 {
+    z-index: 35;
+}
+
+
+.map-prop-v04 {
+    position: absolute;
+
+    transform:
+        translate(
+            -50%,
+            -100%
+        );
+}
+
+
+/* ============================================================
+   STREET LAMP
+   ============================================================ */
+
+.prop-lamp-v04 {
+    width: 5px;
+    height: 34px;
+
+    background:
+        #4d5050;
+
+    border-radius:
+        2px;
+}
+
+
+.prop-lamp-v04::before {
+    content: "";
+
+    position: absolute;
+
+    left: -5px;
+    top: -2px;
+
+    width: 15px;
+    height: 8px;
+
+    border-radius:
+        50%;
+
+    background:
+        #ddd6a0;
+
+    box-shadow:
+        0 0 7px
+        rgba(240,225,145,0.55);
+}
+
+
+/* ============================================================
+   BENCH
+   ============================================================ */
+
+.prop-bench-v04 {
+    width: 22px;
+    height: 7px;
+
+    background:
+        #76533a;
+
+    border-radius:
+        2px;
+
+    box-shadow:
+        2px 5px 0 #513a2b;
+}
+
+
+/* ============================================================
+   BIN
+   ============================================================ */
+
+.prop-bin-v04 {
+    width: 8px;
+    height: 11px;
+
+    background:
+        #555b59;
+
+    border-radius:
+        2px;
+}
+
+
+/* ============================================================
+   BILLBOARDS / SIGNS
+   ============================================================ */
+
+.map-signs-layer-v04 {
+    z-index: 60;
+}
+
+
+.map-billboard-v04 {
+    position: absolute;
+
+    transform:
+        translate(
+            -50%,
+            -100%
+        );
+
+    min-width:
+        70px;
+
+    padding:
+        5px 8px;
+
+    box-sizing:
+        border-box;
+
+    background:
+        #d8c75e;
+
+    border:
+        2px solid
+        #555044;
+
+    color:
+        #292b28;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    text-align:
+        center;
+
+    letter-spacing:
+        0.4px;
+
+    box-shadow:
+        3px 4px 0
+        rgba(20,20,20,0.22);
+}
+
+
+/* ============================================================
+   ENVIRONMENT
+   ============================================================ */
+
+.map-environment-layer-v04 {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events:
+        none;
+
+    z-index:
+        90;
+}
+
+
+.environment-day-v04 {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.04),
+            transparent 45%
+        );
+}
+
+
+/* ============================================================
+   CITY LABEL
+   ============================================================ */
+
+.map-city-label-v04 {
+    position: absolute;
+
+    top: 18px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    padding:
+        8px 16px;
+
+    background:
+        rgba(
+            28,
+            33,
+            36,
+            0.9
+        );
+
+    color:
+        #f3f1e9;
+
+    border-radius:
+        5px;
+
+    box-shadow:
+        0 4px 10px
+        rgba(0,0,0,0.25);
+
+    z-index:
+        100;
+
+    white-space:
+        nowrap;
+}
+
+
+.map-city-label-v04 strong {
+    font-size:
+        13px;
+
+    letter-spacing:
+        1.5px;
+}
+
+
+.map-city-label-v04 span {
+    margin-top:
+        2px;
+
+    font-size:
+        8px;
+
+    opacity:
+        0.7;
+
+    letter-spacing:
+        0.7px;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    #ffs-map-container {
+        min-height:
+            520px;
+
+        overflow-x:
+            auto;
+
+        overflow-y:
+            hidden;
+
+        justify-content:
+            flex-start;
+    }
+
+
+    .ffs-map-v04 {
+        transform:
+            scale(0.78);
+
+        transform-origin:
+            center top;
+    }
+
+
+    .map-city-label-v04 {
+        font-size:
+            9px;
+    }
+}

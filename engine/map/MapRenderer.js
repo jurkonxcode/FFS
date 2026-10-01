@@ -90,15 +90,22 @@ export class MapRenderer {
         );
 
         this.renderProps(
-            mapData
-        );
+    mapData
+);
 
-        this.renderSigns(
-            mapData
-        );
+this.renderVehicles(
+    mapData
+);
 
-        this.renderCityLabel();
-    }
+this.renderSigns(
+    mapData
+);
+
+this.renderDistrictLabels(
+    mapData
+);
+
+this.renderCityLabel();
 
 
     // ========================================================

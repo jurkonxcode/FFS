@@ -1,4 +1,11 @@
-import { WorldEngine } from "./engine/world/WorldEngine.js";
+import { WorldEngine }
+    from "./engine/world/WorldEngine.js";
+
+import { MapEngine }
+    from "./engine/map/MapEngine.js";
+
+import { MapRenderer }
+    from "./engine/map/MapRenderer.js";
 
 // ============================================================
 // FFS - FOUNDER FANTASY SIMULATOR
@@ -264,7 +271,12 @@ function setupLanguageButtons() {
 // ============================================================
 
 let WORLD_ENGINE = null;
+
 let WORLD_STATE = null;
+
+let MAP_ENGINE = null;
+
+let MAP_RENDERER = null;
 
 
 function initializeWorldEngine() {
@@ -295,34 +307,53 @@ function initializeWorldEngine() {
 // 10. WORLD ENGINE DEBUG INFORMATION
 // ============================================================
 
-function logWorldInformation() {
+// ============================================================
+// MAP ENGINE
+// ============================================================
 
-    if (!WORLD_ENGINE) {
+function initializeMapEngine() {
+
+    if (!WORLD_STATE) {
 
         console.warn(
-            "[FFS] World Engine has not been initialized."
+            "[FFS] World State is not available."
         );
 
         return;
     }
 
 
-    const world =
-        WORLD_STATE?.world;
+    console.log(
+        "[FFS] Starting Map Engine..."
+    );
+
+
+    MAP_ENGINE =
+        new MapEngine(
+            WORLD_STATE
+        );
+
+
+    const map =
+        MAP_ENGINE.initialize();
+
+
+    MAP_RENDERER =
+        new MapRenderer(
+            "ffs-map-container"
+        );
+
+
+    MAP_RENDERER.render(
+        map
+    );
 
 
     console.log(
-        "========================================"
+        "[FFS] Map Summary:",
+        MAP_ENGINE.getMapSummary()
     );
-
-    console.log(
-        "[FFS] WORLD ENGINE v0.2"
-    );
-
-    console.log(
-        "========================================"
-    );
-
+}
 
     // --------------------------------------------------------
     // WORLD
